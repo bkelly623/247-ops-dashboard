@@ -17,6 +17,9 @@ export async function GET() {
     postfast: {
       configured: Boolean(env.postfastApiKey),
     },
+    brandSite: {
+      configured: Boolean(env.brandSupabaseUrl && env.brandSupabaseSecretKey),
+    },
     retention: {
       heavyAssetTtlDays: 3,
       keepOverrideEnabled: true,

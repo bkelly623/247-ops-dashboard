@@ -61,6 +61,13 @@ Required for PostFast integration:
 POSTFAST_API_KEY=
 ```
 
+Required for private read-only brand-site metrics:
+
+```bash
+BRAND_SUPABASE_URL=
+BRAND_SUPABASE_SECRET_KEY=
+```
+
 Optional deployment/platform management values are stored outside the repo in the local Hermes config directory.
 
 ## Data Retention Rule
