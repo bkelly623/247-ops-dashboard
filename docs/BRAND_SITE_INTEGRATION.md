@@ -6,68 +6,87 @@ Keep the public brand website and private command center separate.
 
 - Public brand site: `/home/precision_focused_solutions/247ROI`
 - Private command center: `/home/precision_focused_solutions/247-ops-dashboard`
+- Command-center Supabase project: `zptpvfcjhziglhdkuwhm` (`247 ops dashboard`)
+- Legacy public audit Supabase project: `ytdufsxqywkvtnpyetco` (`247ROI Audit App`)
 
-The brand site owns the visitor experience, landing pages, AI Opportunity Audit, Infrastructure Blueprint audit, report pages, SEO pages, schema, sitemap, and public tracking events.
+The brand site owns visitor experience, public pages, AI Opportunity Audit UX, report pages, SEO pages, schema, sitemap, and `llms.txt`.
 
-The command center owns private operations: dashboards, SEO/GEO management, funnel review, authority backlog, content decisions, and internal metrics.
+The command center owns operations: analytics, SEO/GEO backlog, content pipeline, AI visibility checks, authority work, conversion review, weekly priorities, and agent decisions.
 
-## Integration Pattern
+## Correct Data Flow
 
-Use server-only data flow.
+New operational event data belongs to the command center.
 
-1. The brand site writes events and sessions to its production systems.
-2. The command center reads selected metrics from backend routes.
-3. No service-role keys are exposed to browser components.
-4. The command center stores derived snapshots and decisions in its own database later.
+1. Browser activity on the public site posts to `/api/events` on `get247roi.com`.
+2. The public site's server forwards the event to the command-center ingestion endpoint.
+3. The command center validates the shared secret.
+4. The command center writes the event to its own Supabase `site_events` table.
+5. Command-center dashboards and operating boards read from the command-center database.
 
-## Existing Brand-Site Data Sources
-
-The brand site already persists:
-
-- `scan_sessions`: Infrastructure Blueprint sessions, status, warm tier, report, viewed timestamps, and CTA clicks.
-- `hire_sessions`: AI Opportunity Audit chat sessions, discovery state, proposal, contact fields, and unlock timestamps.
-- `site_events`: page views, CTA clicks, phone clicks, email clicks, AI Opportunity Audit milestones, source/UTM context, anonymous visitor ID, anonymous session ID, and metadata.
-
-Current migrations live in:
-
-- `/home/precision_focused_solutions/247ROI/supabase/migrations/001_initial_schema.sql`
-- `/home/precision_focused_solutions/247ROI/supabase/migrations/002_hire_audits.sql`
-- `/home/precision_focused_solutions/247ROI/supabase/migrations/003_site_events.sql`
-
-## Command Center Endpoint
-
-Added:
-
-- `/api/brand-site/overview`
-
-It returns private aggregate counts for:
-
-- Infrastructure Blueprint total sessions.
-- Infrastructure Blueprint sessions in the last 30 days.
-- Warm/hot/client Infrastructure Blueprint leads in the last 30 days.
-- Infrastructure Blueprint CTA clicks in the last 30 days.
-- AI Opportunity Audit total sessions.
-- AI Opportunity Audit sessions in the last 30 days.
-- AI Opportunity Audit unlocked reports in the last 30 days.
-- Site-event readiness.
-- Page views, CTA clicks, phone clicks, email clicks, AI Opportunity Audit starts, and AI Opportunity Audit unlocks in the last 7 days.
+Do not expose Supabase secret keys to browser components. Do not write new operational stats directly from the browser to Supabase.
 
 ## Required Environment Variables
 
-Set these in the command center deployment, not the public brand site:
+Public brand site:
 
 ```bash
-BRAND_SUPABASE_URL=
-BRAND_SUPABASE_SECRET_KEY=
+COMMAND_CENTER_EVENTS_URL=https://247-ops-dashboard.vercel.app/api/site-events/ingest
+COMMAND_CENTER_EVENTS_SECRET=
 ```
 
-`BRAND_SUPABASE_SECRET_KEY` must stay server-only. It is used only in backend routes.
+Private command center:
 
-## Next Integration Steps
+```bash
+COMMAND_CENTER_EVENTS_SECRET=
+```
 
-1. Add a public-site event table for page views, CTA clicks, source attribution, and AI Opportunity Audit funnel steps.
-2. Add a lightweight client event helper in the brand site that posts to a public API route.
-3. Store events in Supabase with session ID, route, referrer, UTM fields, event name, and metadata.
-4. Add command-center cards that call `/api/brand-site/overview`.
-5. Add scheduled snapshots so weekly progress can be compared without recalculating everything live.
-6. Add integrations for Search Console, Bing Webmaster, and deployment health.
+The same secret must be present in both apps. It is used only server-to-server.
+
+## Legacy Audit Data
+
+The old project `ytdufsxqywkvtnpyetco` appears to be the historical 247ROI audit-app backend. It contains, or was designed to contain:
+
+- `scan_sessions`
+- `hire_sessions`
+- `audit_rate_limits`
+- `rep_sessions`
+
+Treat it as legacy until inventory confirms what live production still depends on.
+
+Do not add new ops tables there. Do not use it as the command-center source of truth.
+
+If historical audit data is still valuable, migrate or replicate the specific aggregates into the command-center database through an explicit job later.
+
+## Command-Center Event Table
+
+Migration:
+
+- `/home/precision_focused_solutions/247-ops-dashboard/supabase/migrations/001_ops_site_events.sql`
+
+Events currently tracked:
+
+- `page_view`
+- `cta_click`
+- `phone_click`
+- `email_click`
+- `hire_session_started`
+- `hire_chat_message_sent`
+- `hire_gate_shown`
+- `hire_gate_submit`
+- `hire_report_unlocked`
+
+## Operating Goal
+
+The integration exists to support a growth operating system, not vanity analytics.
+
+Every metric should help decide one of:
+
+- improve a page
+- build a page
+- change a CTA
+- fix technical SEO
+- improve AI visibility/entity clarity
+- add authority/proof
+- create content from a proven framework
+- follow up on lead quality
+- deliberately hold because the signal is not strong enough

@@ -53,6 +53,7 @@ NEXT_PUBLIC_SUPABASE_URL=
 NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=
 SUPABASE_SECRET_KEY=
 SUPABASE_PROJECT_REF=
+COMMAND_CENTER_EVENTS_SECRET=
 ```
 
 Required for PostFast integration:
@@ -61,12 +62,14 @@ Required for PostFast integration:
 POSTFAST_API_KEY=
 ```
 
-Required for private read-only brand-site metrics:
+Required in the public brand-site deployment so website events flow into the command center:
 
 ```bash
-BRAND_SUPABASE_URL=
-BRAND_SUPABASE_SECRET_KEY=
+COMMAND_CENTER_EVENTS_URL=https://247-ops-dashboard.vercel.app/api/site-events/ingest
+COMMAND_CENTER_EVENTS_SECRET=
 ```
+
+`COMMAND_CENTER_EVENTS_SECRET` must match the command-center value and stay server-only.
 
 Optional deployment/platform management values are stored outside the repo in the local Hermes config directory.
 

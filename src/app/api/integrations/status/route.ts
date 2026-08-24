@@ -18,7 +18,7 @@ export async function GET() {
       configured: Boolean(env.postfastApiKey),
     },
     brandSite: {
-      configured: Boolean(env.brandSupabaseUrl && env.brandSupabaseSecretKey),
+      configured: Boolean(env.commandCenterEventsSecret),
     },
     retention: {
       heavyAssetTtlDays: 3,

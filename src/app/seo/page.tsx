@@ -4,8 +4,11 @@ import {
   CheckCircle2,
   FileSearch,
   Link2,
+  ListChecks,
   Search,
   ShieldCheck,
+  Sparkles,
+  Target,
   Waypoints,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -16,38 +19,38 @@ export const dynamic = "force-dynamic";
 
 const operatingMetrics = [
   {
-    label: "Search visibility",
-    value: "Needs live feed",
-    note: "Google Search Console, Bing Webmaster, indexed pages, query movement, CTR, and sitemap coverage.",
+    label: "Acquisition",
+    value: "Build demand",
+    note: "Keywords, SERPs, competitor examples, answer pages, social frameworks, and qualified traffic.",
     icon: Search,
   },
   {
-    label: "AI visibility",
-    value: "Manual checks first",
-    note: "Track whether answer engines understand 247ROI as business systems, AI automation, dashboards, apps, and agents.",
+    label: "Conversion",
+    value: "Improve action",
+    note: "Audit starts, report unlocks, CTA clicks, calls, lead quality, and page friction.",
     icon: Activity,
   },
   {
-    label: "Authority",
-    value: "Backlog open",
-    note: "Directories, partner mentions, guest content, proof assets, case studies, and backlink quality.",
+    label: "Authority / GEO",
+    value: "Earn trust",
+    note: "Schema, llms.txt, entity clarity, internal links, proof assets, citations, and backlinks.",
     icon: Link2,
   },
   {
-    label: "Funnel impact",
-    value: "Audit-led",
-    note: "Tie SEO and content work back to AI Opportunity Audit starts, qualified leads, booked calls, and pipeline.",
+    label: "Taste",
+    value: "Avoid sludge",
+    note: "External examples, B's corrections, objections, founder POV, and high-performing adjacent formats.",
     icon: BarChart3,
   },
 ];
 
 const priorityBacklog = [
-  "Connect Search Console, Bing Webmaster, analytics, and form/audit events.",
-  "Audit current get247roi.com sitemap, robots.txt, schema, llms.txt, llms-full.txt, and internal links.",
-  "Build the AI Opportunity Audit keyword cluster and make it the primary conversion path.",
-  "Ship answer-style pages for bottlenecks: dropped leads, manual reporting, inbox/admin overload, CRM handoffs, spreadsheet operations, and research workflows.",
+  "Correct command-center-owned event ingestion and stop using the legacy audit Supabase for new operational stats.",
+  "Audit get247roi.com for conversion, SEO/GEO structure, schema, sitemap, llms.txt, internal links, proof, and mobile CTA friction.",
+  "Build the AI Opportunity Audit keyword cluster around bottleneck diagnosis, AI automation consulting, AI employees, dashboards, internal apps, and business process automation.",
+  "Ship answer-style pages for dropped leads, slow follow-up, manual reporting, inbox/admin overload, CRM handoffs, spreadsheet operations, and research workflows.",
   "Create authority assets: sample audit report, bottleneck checklist, ROI calculator, contractor AI readiness checklist, and workflow before/after examples.",
-  "Start a clean backlink/authority list focused on directories, contractor ecosystems, local business groups, partner blogs, podcasts, and useful resource pages.",
+  "Add Search Console, Bing Webmaster, Vercel analytics, and answer-engine visibility checks.",
 ];
 
 const moduleRules = [
@@ -56,6 +59,46 @@ const moduleRules = [
   "Use AI Employees as a sales metaphor and content cluster, not the whole front-door category.",
   "Anchor conversion around the AI Opportunity Audit.",
   "Avoid spam backlinks, thin AI pages, fake proof, and overclaiming AI results.",
+];
+
+const externalInputs = [
+  "Competitor landing pages and posts",
+  "SERPs and People Also Ask patterns",
+  "ChatGPT, Gemini, Perplexity, and AI Overview answers",
+  "Business-owner language from calls, forums, reviews, and objections",
+  "B's corrections, opinions, phrases, and examples",
+  "Adjacent high-performing posts with reusable structure",
+];
+
+const contentRules = [
+  "Hook first; the opening line must create curiosity, urgency, frustration, or recognition.",
+  "Use short lines and visible structure. No walls of text.",
+  "Never use generic AI filler: delve, testament, revolutionize, tapestry, in conclusion.",
+  "Every page section or post must teach, provoke, demonstrate, clarify, or convert.",
+  "Extract frameworks from examples without copying the wording.",
+];
+
+const thirtyDayMap = [
+  {
+    week: "Week 1",
+    title: "Foundation and Audit",
+    actions: "Fix event ingestion, audit conversion flow, inventory schema/internal links, define page gaps.",
+  },
+  {
+    week: "Week 2",
+    title: "Money Pages",
+    actions: "Improve homepage and AI Opportunity Audit path; build or upgrade core service pages.",
+  },
+  {
+    week: "Week 3",
+    title: "Answer Engine Cluster",
+    actions: "Publish answer pages for bottleneck workflows and AI employee use cases.",
+  },
+  {
+    week: "Week 4",
+    title: "Authority and Iteration",
+    actions: "Add proof assets, start authority target list, run AI visibility checks, improve pages with signal.",
+  },
 ];
 
 async function loadBrandOverview() {
@@ -77,7 +120,7 @@ export default async function SeoPage() {
     {
       label: "Page views",
       value: metricValue(brandOverview?.siteEvents.pageViews7Days),
-      note: "Last 7 days from public-site event tracking.",
+      note: "Last 7 days from command-center-owned site events.",
       icon: Activity,
     },
     {
@@ -97,6 +140,12 @@ export default async function SeoPage() {
       value: metricValue(brandOverview?.siteEvents.aiOpportunityAuditUnlocks7Days),
       note: "AI Opportunity Audit reports unlocked in the last 7 days.",
       icon: BarChart3,
+    },
+    {
+      label: "30d visitors",
+      value: metricValue(brandOverview?.siteEvents.uniqueVisitorEvents30Days),
+      note: "Visitor event count until distinct visitor snapshots are added.",
+      icon: Target,
     },
   ];
 
@@ -131,9 +180,9 @@ export default async function SeoPage() {
 
       {!brandOverview?.siteEvents.tableReady && (
         <div className="mb-5 rounded-md border border-[#e2c16d] bg-[#fff7df] px-4 py-3 text-sm leading-6 text-[#665d4e]">
-          Brand-site event feed is waiting on credentials or the `site_events`
-          migration. Existing audit-session aggregates can still be read once
-          `BRAND_SUPABASE_URL` and `BRAND_SUPABASE_SECRET_KEY` are set.
+          Command-center event feed is waiting on the `site_events` migration,
+          `COMMAND_CENTER_EVENTS_SECRET`, and the public site&apos;s
+          `COMMAND_CENTER_EVENTS_URL`.
         </div>
       )}
 
@@ -175,6 +224,23 @@ export default async function SeoPage() {
         </DashboardCard>
 
         <div className="space-y-5">
+          <DashboardCard title="30-Day Execution Map" eyebrow="Growth cycle">
+            <div className="space-y-3">
+              {thirtyDayMap.map((item) => (
+                <div key={item.week} className="rounded-md border border-[#ded6c8] bg-white/55 p-3">
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-xs font-semibold uppercase tracking-[0.16em] text-[#8b6a22]">
+                      {item.week}
+                    </p>
+                    <ListChecks size={16} className="text-[#8b6a22]" />
+                  </div>
+                  <p className="mt-2 text-sm font-semibold text-[#171511]">{item.title}</p>
+                  <p className="mt-1 text-sm leading-6 text-[#665d4e]">{item.actions}</p>
+                </div>
+              ))}
+            </div>
+          </DashboardCard>
+
           <DashboardCard title="Operating Rule" eyebrow="Module contract">
             <div className="space-y-4 text-sm leading-6 text-[#665d4e]">
               <div className="flex gap-3">
@@ -195,18 +261,31 @@ export default async function SeoPage() {
               </div>
             </div>
           </DashboardCard>
-
-          <DashboardCard title="Rules" eyebrow="Do not drift">
-            <ul className="space-y-3 text-sm leading-6 text-[#665d4e]">
-              {moduleRules.map((rule) => (
-                <li key={rule} className="flex gap-3">
-                  <FileSearch size={16} className="mt-1 shrink-0 text-[#8b6a22]" />
-                  <span>{rule}</span>
-                </li>
-              ))}
-            </ul>
-          </DashboardCard>
         </div>
+      </div>
+
+      <div className="mt-5 grid gap-5 xl:grid-cols-2">
+        <DashboardCard title="External Inputs" eyebrow="Anti echo chamber">
+          <div className="grid gap-3 sm:grid-cols-2">
+            {externalInputs.map((input) => (
+              <div key={input} className="flex gap-3 rounded-md border border-[#ded6c8] bg-white/55 p-3">
+                <Sparkles size={16} className="mt-1 shrink-0 text-[#8b6a22]" />
+                <p className="text-sm leading-6 text-[#665d4e]">{input}</p>
+              </div>
+            ))}
+          </div>
+        </DashboardCard>
+
+        <DashboardCard title="Voice and Quality Gates" eyebrow="No generic AI output">
+          <ul className="space-y-3 text-sm leading-6 text-[#665d4e]">
+            {[...contentRules, ...moduleRules].map((rule) => (
+              <li key={rule} className="flex gap-3">
+                <FileSearch size={16} className="mt-1 shrink-0 text-[#8b6a22]" />
+                <span>{rule}</span>
+              </li>
+            ))}
+          </ul>
+        </DashboardCard>
       </div>
     </AppShell>
   );

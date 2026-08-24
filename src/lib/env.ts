@@ -6,8 +6,7 @@ type PublicEnv = {
 type ServerEnv = PublicEnv & {
   supabaseSecretKey?: string;
   supabaseProjectRef?: string;
-  brandSupabaseUrl?: string;
-  brandSupabaseSecretKey?: string;
+  commandCenterEventsSecret?: string;
   postfastApiKey?: string;
 };
 
@@ -33,8 +32,7 @@ export function getServerEnv(): ServerEnv {
     ...getPublicEnv(),
     supabaseSecretKey: process.env.SUPABASE_SECRET_KEY,
     supabaseProjectRef: process.env.SUPABASE_PROJECT_REF,
-    brandSupabaseUrl: process.env.BRAND_SUPABASE_URL,
-    brandSupabaseSecretKey: process.env.BRAND_SUPABASE_SECRET_KEY,
+    commandCenterEventsSecret: process.env.COMMAND_CENTER_EVENTS_SECRET,
     postfastApiKey: process.env.POSTFAST_API_KEY,
   };
 }
