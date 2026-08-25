@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
+import { aiVisibilityTargets, seoKeywordTargets } from "@/data/seo-targets";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
 
 export const dynamic = "force-dynamic";
@@ -114,6 +115,12 @@ function metricValue(value: number | null | undefined) {
   return value.toLocaleString();
 }
 
+function statusTone(status: string) {
+  if (status === "page-live") return "good";
+  if (status === "needs-upgrade") return "warn";
+  return "danger";
+}
+
 export default async function SeoPage() {
   const brandOverview = await loadBrandOverview();
   const liveMetrics = [
@@ -185,6 +192,84 @@ export default async function SeoPage() {
           `COMMAND_CENTER_EVENTS_URL`.
         </div>
       )}
+
+      <div className="mb-5 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
+        <DashboardCard title="Selected SEO Targets" eyebrow="Rank, track, iterate">
+          <div className="mb-4 rounded-md border border-[#ded6c8] bg-white/55 p-3 text-sm leading-6 text-[#665d4e]">
+            These are the active ranking targets. Baselines move from pending
+            to measured after Search Console/Bing access and first manual SERP
+            checks are connected to this board.
+          </div>
+          <div className="overflow-x-auto">
+            <table className="w-full min-w-[840px] border-separate border-spacing-0 text-left text-sm">
+              <thead className="text-xs uppercase tracking-[0.14em] text-[#8b6a22]">
+                <tr>
+                  <th className="border-b border-[#ded6c8] px-3 py-2 font-semibold">Keyword</th>
+                  <th className="border-b border-[#ded6c8] px-3 py-2 font-semibold">Priority</th>
+                  <th className="border-b border-[#ded6c8] px-3 py-2 font-semibold">Target page</th>
+                  <th className="border-b border-[#ded6c8] px-3 py-2 font-semibold">Status</th>
+                  <th className="border-b border-[#ded6c8] px-3 py-2 font-semibold">Baseline</th>
+                  <th className="border-b border-[#ded6c8] px-3 py-2 font-semibold">Next action</th>
+                </tr>
+              </thead>
+              <tbody>
+                {seoKeywordTargets.map((target) => (
+                  <tr key={target.term} className="align-top">
+                    <td className="border-b border-[#eee7da] px-3 py-3 font-semibold text-[#171511]">
+                      {target.term}
+                    </td>
+                    <td className="border-b border-[#eee7da] px-3 py-3">
+                      <StatusBadge tone={target.priority === "P1" ? "gold" : "neutral"}>
+                        {target.priority}
+                      </StatusBadge>
+                    </td>
+                    <td className="border-b border-[#eee7da] px-3 py-3 text-[#665d4e]">
+                      {target.targetPage}
+                    </td>
+                    <td className="border-b border-[#eee7da] px-3 py-3">
+                      <StatusBadge tone={statusTone(target.status)}>
+                        {target.status.replace("-", " ")}
+                      </StatusBadge>
+                    </td>
+                    <td className="border-b border-[#eee7da] px-3 py-3 text-[#665d4e]">
+                      {target.baseline}
+                    </td>
+                    <td className="border-b border-[#eee7da] px-3 py-3 leading-6 text-[#665d4e]">
+                      {target.nextAction}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </DashboardCard>
+
+        <DashboardCard title="AI Visibility Targets" eyebrow="Answer-engine checks">
+          <div className="space-y-3">
+            {aiVisibilityTargets.map((target) => (
+              <div key={target.prompt} className="rounded-md border border-[#ded6c8] bg-white/55 p-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge tone={target.priority === "P1" ? "gold" : "neutral"}>
+                    {target.priority}
+                  </StatusBadge>
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                    {target.currentVisibility}
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-semibold leading-6 text-[#171511]">
+                  {target.prompt}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[#665d4e]">
+                  Target: {target.targetPage}
+                </p>
+                <p className="mt-2 text-sm leading-6 text-[#665d4e]">
+                  {target.nextAction}
+                </p>
+              </div>
+            ))}
+          </div>
+        </DashboardCard>
+      </div>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {operatingMetrics.map((metric) => {
