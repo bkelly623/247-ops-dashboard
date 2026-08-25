@@ -13,7 +13,13 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { aiVisibilityTargets, growthActions, seoKeywordTargets } from "@/data/seo-targets";
+import {
+  aiVisibilityTargets,
+  growthActions,
+  hirePageInterfacePlan,
+  seoKeywordTargets,
+  siteStandingScores,
+} from "@/data/seo-targets";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
 
 export const dynamic = "force-dynamic";
@@ -46,12 +52,12 @@ const operatingMetrics = [
 ];
 
 const priorityBacklog = [
-  "Correct command-center-owned event ingestion and stop using the legacy audit Supabase for new operational stats.",
-  "Audit get247roi.com for conversion, SEO/GEO structure, schema, sitemap, llms.txt, internal links, proof, and mobile CTA friction.",
-  "Build the AI Opportunity Audit keyword cluster around bottleneck diagnosis, AI automation consulting, AI employees, dashboards, internal apps, and business process automation.",
-  "Ship answer-style pages for dropped leads, slow follow-up, manual reporting, inbox/admin overload, CRM handoffs, spreadsheet operations, and research workflows.",
-  "Create authority assets: sample audit report, bottleneck checklist, ROI calculator, contractor AI readiness checklist, and workflow before/after examples.",
-  "Add Search Console, Bing Webmaster, Vercel analytics, and answer-engine visibility checks.",
+  "Add fast triage to /hire so visitors can pick the bottleneck first, then enter the guided audit with context.",
+  "Publish /ai-visibility-optimization as the Package #2 money page and connect it to the AI visibility prompt tracker.",
+  "Baseline the selected SEO keywords and record date, position, ranking URL, SERP notes, and next improvement.",
+  "Run the first AI answer snapshot for tracked prompts across ChatGPT, Gemini, Perplexity, and Google AI surfaces.",
+  "Create a reusable diagnostic asset: What should your business automate first?",
+  "Add internal links from homepage, services, /hire, articles, and related service pages into every P1 target page.",
 ];
 
 const moduleRules = [
@@ -116,11 +122,20 @@ function metricValue(value: number | null | undefined) {
 }
 
 function statusTone(status: string) {
+  if (status === "live") return "good";
+  if (status === "next") return "warn";
   if (status === "page-live") return "good";
   if (status === "active") return "good";
   if (status === "needs-upgrade") return "warn";
   if (status === "queued") return "warn";
   if (status === "done") return "neutral";
+  return "danger";
+}
+
+function trendTone(trend: string) {
+  if (trend === "improving") return "good";
+  if (trend === "baseline") return "gold";
+  if (trend === "stalled") return "warn";
   return "danger";
 }
 
@@ -195,6 +210,81 @@ export default async function SeoPage() {
           `COMMAND_CENTER_EVENTS_URL`.
         </div>
       )}
+
+      <DashboardCard title="Current Standing" eyebrow="Baseline scorecard" className="mb-5">
+        <div className="mb-4 rounded-md border border-[#ded6c8] bg-white/55 p-3 text-sm leading-6 text-[#665d4e]">
+          Scores are deliberately blunt operator ratings. They stay useful only
+          when tied to proof: rankings, traffic, AI answer presence, audit
+          starts, unlocks, qualified conversations, backlinks, and shipped page
+          improvements.
+        </div>
+        <div className="grid gap-3 xl:grid-cols-5">
+          {siteStandingScores.map((item) => (
+            <div key={item.area} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-sm font-semibold text-[#171511]">{item.area}</p>
+                  <p className="mt-2 text-4xl font-semibold tracking-normal text-[#171511]">
+                    {item.score}
+                    <span className="text-base font-medium text-[#7a6e5b]">/10</span>
+                  </p>
+                </div>
+                <StatusBadge tone={trendTone(item.trend)}>
+                  {item.trend}
+                </StatusBadge>
+              </div>
+              <div className="mt-4 h-2 overflow-hidden rounded-full bg-[#ece5d7]">
+                <div
+                  className="h-full rounded-full bg-[#d6a034]"
+                  style={{ width: `${Math.min(item.score * 10, 100)}%` }}
+                />
+              </div>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                Target: {item.targetScore}/10
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">{item.currentStanding}</p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Proof needed: </span>
+                {item.proofNeeded}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Next: </span>
+                {item.nextAction}
+              </p>
+            </div>
+          ))}
+        </div>
+      </DashboardCard>
+
+      <DashboardCard title="/hire Interface Plan" eyebrow="Conversion destination" className="mb-5">
+        <div className="mb-4 rounded-md border border-[#ded6c8] bg-white/55 p-3 text-sm leading-6 text-[#665d4e]">
+          The most effective traffic destination is still /hire, but it should
+          work as a diagnostic landing page, not just a chat screen. SEO and
+          useful tools should feed it; the interface should quickly sort the
+          visitor into the right bottleneck path.
+        </div>
+        <div className="grid gap-3 xl:grid-cols-5">
+          {hirePageInterfacePlan.map((item) => (
+            <div key={item.layer} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusBadge tone={statusTone(item.status)}>{item.status}</StatusBadge>
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                  {item.layer}
+                </span>
+              </div>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">{item.purpose}</p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Build: </span>
+                {item.implementation}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Metric: </span>
+                {item.successMetric}
+              </p>
+            </div>
+          ))}
+        </div>
+      </DashboardCard>
 
       <div className="mb-5 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
         <DashboardCard title="Selected SEO Targets" eyebrow="Rank, track, iterate">

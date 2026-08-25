@@ -26,6 +26,120 @@ export type GrowthAction = {
   nextAction: string;
 };
 
+export type SiteStandingScore = {
+  area: string;
+  score: number;
+  targetScore: number;
+  trend: "baseline" | "improving" | "stalled" | "declining";
+  currentStanding: string;
+  proofNeeded: string;
+  nextAction: string;
+};
+
+export type HirePageInterfaceAction = {
+  layer: string;
+  purpose: string;
+  status: "live" | "next" | "queued";
+  implementation: string;
+  successMetric: string;
+};
+
+export const siteStandingScores: SiteStandingScore[] = [
+  {
+    area: "Current site",
+    score: 6.5,
+    targetScore: 8,
+    trend: "improving",
+    currentStanding:
+      "Positioning is clearer: business systems, bottlenecks, AI, automation, dashboards, internal apps, and agents are now connected.",
+    proofNeeded: "More proof assets, trust markers, examples, calls-to-action, and page-level performance data.",
+    nextAction: "Improve the money pages first: homepage, /hire, services, AI employees, and AI visibility.",
+  },
+  {
+    area: "SEO",
+    score: 4,
+    targetScore: 8,
+    trend: "baseline",
+    currentStanding:
+      "Target list exists and P1 pages are starting to ship, but ranking baselines and Search Console feedback are not yet connected.",
+    proofNeeded: "Tracked keyword positions, impressions, clicks, indexed pages, and query-to-page mapping.",
+    nextAction: "Baseline every selected keyword, finish P1 page gaps, and add internal links from high-value pages.",
+  },
+  {
+    area: "AI visibility",
+    score: 4,
+    targetScore: 8,
+    trend: "baseline",
+    currentStanding:
+      "llms.txt, llms-full.txt, schema, and answer-style pages are in progress, but answer-engine presence has not been proven.",
+    proofNeeded: "Monthly ChatGPT, Gemini, Perplexity, and AI Overview snapshots for tracked prompts.",
+    nextAction: "Publish the AI visibility optimization page, then run and record the first answer-engine snapshot.",
+  },
+  {
+    area: "Conversion ability",
+    score: 6,
+    targetScore: 8,
+    trend: "improving",
+    currentStanding:
+      "/hire is now both a crawlable audit page and an interactive audit flow, but the interface still needs stronger triage and progress clarity.",
+    proofNeeded: "Audit starts, completion rate, report unlocks, CTA clicks, calls, and lead quality.",
+    nextAction: "Turn /hire into a diagnostic landing page with fast paths, examples, and a lower-friction first interaction.",
+  },
+  {
+    area: "Content quality",
+    score: 5.5,
+    targetScore: 8,
+    trend: "improving",
+    currentStanding:
+      "Service-page content is more concrete, but the site still needs higher-utility assets that people would actually use or share.",
+    proofNeeded: "Useful tools, teardown pages, checklists, original examples, saves, shares, backlinks, and qualified traffic.",
+    nextAction: "Build one diagnostic asset around 'what should your business automate first' and point it into /hire.",
+  },
+];
+
+export const hirePageInterfacePlan: HirePageInterfaceAction[] = [
+  {
+    layer: "Search landing page",
+    purpose: "Explain the audit clearly for Google, AI systems, and first-time visitors before the app surface begins.",
+    status: "live",
+    implementation:
+      "Crawlable sections and Service/FAQ schema now explain outputs, best-fit workflows, and not-a-fit filters.",
+    successMetric: "Indexed page, impressions for audit keywords, and clicks into the interactive audit.",
+  },
+  {
+    layer: "Fast triage",
+    purpose: "Help a busy owner identify their likely bottleneck in under 60 seconds before typing into chat.",
+    status: "next",
+    implementation:
+      "Add a visual choice layer: leads/follow-up, admin/inbox, dashboards/reporting, estimates/bids, research/docs, or not sure.",
+    successMetric: "Higher audit starts and first-message completion rate.",
+  },
+  {
+    layer: "Guided diagnostic chat",
+    purpose: "Collect enough context to recommend the first system worth building without feeling like a generic intake form.",
+    status: "live",
+    implementation:
+      "Keep the chat, but make it follow the selected bottleneck path and show progress toward a useful audit result.",
+    successMetric: "Audit completion rate, gate views, report unlocks, and qualified conversations.",
+  },
+  {
+    layer: "Example outputs",
+    purpose: "Show visitors what they get before asking them to invest time in the audit.",
+    status: "next",
+    implementation:
+      "Add sample mini-reports for common workflows: slow lead response, spreadsheet reporting, inbox triage, and estimate follow-up.",
+    successMetric: "Scroll depth, CTA clicks after examples, and audit start lift.",
+  },
+  {
+    layer: "Proof and routing",
+    purpose: "Convert visitors who already know they want help while still supporting those who need diagnosis.",
+    status: "queued",
+    implementation:
+      "Add call/email route, service-page links, and lightweight proof near the audit start without distracting from the diagnostic path.",
+    successMetric: "Phone/email clicks, service-page assisted conversions, and booked calls.",
+  },
+];
+
 export const seoKeywordTargets: SeoKeywordTarget[] = [
   {
     term: "AI opportunity audit",
