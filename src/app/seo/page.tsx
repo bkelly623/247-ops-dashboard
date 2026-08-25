@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { aiVisibilityTargets, seoKeywordTargets } from "@/data/seo-targets";
+import { aiVisibilityTargets, growthActions, seoKeywordTargets } from "@/data/seo-targets";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
 
 export const dynamic = "force-dynamic";
@@ -117,7 +117,10 @@ function metricValue(value: number | null | undefined) {
 
 function statusTone(status: string) {
   if (status === "page-live") return "good";
+  if (status === "active") return "good";
   if (status === "needs-upgrade") return "warn";
+  if (status === "queued") return "warn";
+  if (status === "done") return "neutral";
   return "danger";
 }
 
@@ -270,6 +273,35 @@ export default async function SeoPage() {
           </div>
         </DashboardCard>
       </div>
+
+      <DashboardCard title="One-Time Setup vs Recurring Growth Work" eyebrow="Automation map" className="mb-5">
+        <div className="grid gap-3 xl:grid-cols-2">
+          {growthActions.map((action) => (
+            <div key={action.name} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusBadge tone={action.cadence === "one-time" ? "neutral" : "gold"}>
+                  {action.cadence}
+                </StatusBadge>
+                <StatusBadge tone={statusTone(action.status)}>
+                  {action.status}
+                </StatusBadge>
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                  {action.owner}
+                </span>
+              </div>
+              <h3 className="mt-3 text-base font-semibold text-[#171511]">{action.name}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Proof: </span>
+                {action.proof}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Next: </span>
+                {action.nextAction}
+              </p>
+            </div>
+          ))}
+        </div>
+      </DashboardCard>
 
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
         {operatingMetrics.map((metric) => {

@@ -17,6 +17,15 @@ export type AiVisibilityTarget = {
   nextAction: string;
 };
 
+export type GrowthAction = {
+  name: string;
+  cadence: "one-time" | "weekly" | "monthly" | "continuous";
+  owner: "Athena" | "B" | "Athena + B";
+  status: "active" | "blocked" | "queued" | "done";
+  proof: string;
+  nextAction: string;
+};
+
 export const seoKeywordTargets: SeoKeywordTarget[] = [
   {
     term: "AI opportunity audit",
@@ -43,20 +52,20 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     intent: "service",
     priority: "P1",
     targetPage: "/business-process-automation-consultant",
-    status: "page-needed",
-    baseline: "No target page",
-    current: "Not ranking by design yet",
-    nextAction: "Build the core service page around messy workflows, operations, reporting, CRM, docs, and handoffs.",
+    status: "page-live",
+    baseline: "New page shipped 2026-08-25",
+    current: "Awaiting index/rank baseline",
+    nextAction: "Measure indexation and rankings, then improve based on Search Console queries and manual SERP review.",
   },
   {
     term: "workflow automation consultant",
     intent: "service",
     priority: "P1",
-    targetPage: "/workflow-automation-consultant",
-    status: "page-needed",
-    baseline: "No target page",
-    current: "Not ranking by design yet",
-    nextAction: "Build answer sections for cost, use cases, what to automate, what not to automate, and timeline.",
+    targetPage: "/ai-workflow-automation-agency",
+    status: "needs-upgrade",
+    baseline: "Existing adjacent page",
+    current: "Not yet tracked",
+    nextAction: "Upgrade existing page to support consultant intent: cost, use cases, what to automate, what not to automate, and timeline.",
   },
   {
     term: "custom AI agents for business",
@@ -133,10 +142,10 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     intent: "wedge",
     priority: "P3",
     targetPage: "/ai-lead-response-system",
-    status: "page-needed",
-    baseline: "No target page",
-    current: "Not ranking by design yet",
-    nextAction: "Create a focused wedge page for missed calls, slow follow-up, contractors, and service businesses.",
+    status: "page-live",
+    baseline: "Existing page live",
+    current: "Not yet tracked",
+    nextAction: "Measure baseline and improve around missed calls, slow follow-up, contractors, and service businesses.",
   },
 ];
 
@@ -153,7 +162,7 @@ export const aiVisibilityTargets: AiVisibilityTarget[] = [
     priority: "P1",
     targetPage: "/business-process-automation-consultant",
     currentVisibility: "Not yet checked",
-    nextAction: "Build workflow page with concrete messy-work examples and entity-consistent 247ROI language.",
+    nextAction: "Check AI answer surfaces after indexing, then add stronger examples and citations if 247ROI is absent.",
   },
   {
     prompt: "Who can help me find automation opportunities in my business?",
@@ -196,5 +205,72 @@ export const aiVisibilityTargets: AiVisibilityTarget[] = [
     targetPage: "/ai-visibility-optimization",
     currentVisibility: "Not yet checked",
     nextAction: "Add answer-ready sections, schema, citation plan, and recurring answer-engine checks.",
+  },
+];
+
+export const growthActions: GrowthAction[] = [
+  {
+    name: "Create target pages for selected P1 keywords",
+    cadence: "one-time",
+    owner: "Athena",
+    status: "active",
+    proof: "Target page exists, sitemap/llms coverage, metadata, schema, internal links, build passes.",
+    nextAction: "Finish AI Opportunity Audit, custom AI agents, and AI visibility pages after business-process page.",
+  },
+  {
+    name: "Connect authoritative measurement sources",
+    cadence: "one-time",
+    owner: "Athena + B",
+    status: "blocked",
+    proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
+    nextAction: "Needs access/credentials for Search Console, Bing, Vercel env, and analytics connection.",
+  },
+  {
+    name: "Baseline target keyword rankings",
+    cadence: "monthly",
+    owner: "Athena",
+    status: "queued",
+    proof: "Each selected term has observed position, target URL, date checked, and SERP notes.",
+    nextAction: "Run first manual baseline while measurement APIs are unavailable.",
+  },
+  {
+    name: "Run AI visibility checks",
+    cadence: "monthly",
+    owner: "Athena",
+    status: "queued",
+    proof: "Prompt, answer engine, date, cited domains, 247ROI presence, and next improvement.",
+    nextAction: "Run first snapshot for the eight tracked prompts after the core pages are published.",
+  },
+  {
+    name: "Improve pages from query and conversion data",
+    cadence: "weekly",
+    owner: "Athena",
+    status: "active",
+    proof: "Page edits tied to impressions, clicks, rank movement, audit starts, or CTA behavior.",
+    nextAction: "Use existing site-events once Vercel env is connected; use manual review until then.",
+  },
+  {
+    name: "Produce content people would actually view",
+    cadence: "weekly",
+    owner: "Athena",
+    status: "active",
+    proof: "Content has a concrete buyer problem, useful example, strong hook, internal links, and conversion path.",
+    nextAction: "Prioritize useful assets over generic posts: calculators, checklists, examples, teardown pages, before/after workflows.",
+  },
+  {
+    name: "Refresh llms.txt, sitemap, schema, and internal links",
+    cadence: "continuous",
+    owner: "Athena",
+    status: "active",
+    proof: "New pages are crawlable, included in sitemap/LLM context, and connected from relevant pages.",
+    nextAction: "Add internal links from homepage/services/articles to each new target page.",
+  },
+  {
+    name: "Weekly growth report",
+    cadence: "weekly",
+    owner: "Athena",
+    status: "active",
+    proof: "Delivered Telegram report with shipped work, verification, production status, blockers, and next focus.",
+    nextAction: "Scheduled Friday report job is already active.",
   },
 ];
