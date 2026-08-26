@@ -69,11 +69,11 @@ export const siteStandingScores: SiteStandingScore[] = [
     area: "AI visibility",
     score: 4,
     targetScore: 8,
-    trend: "baseline",
+    trend: "improving",
     currentStanding:
-      "llms.txt, llms-full.txt, schema, and answer-style pages are in progress, but answer-engine presence has not been proven.",
+      "llms.txt, llms-full.txt, schema, and the first dedicated AI visibility page are live, but answer-engine presence has not been proven.",
     proofNeeded: "Monthly ChatGPT, Gemini, Perplexity, and AI Overview snapshots for tracked prompts.",
-    nextAction: "Publish the AI visibility optimization page, then run and record the first answer-engine snapshot.",
+    nextAction: "Run and record the first answer-engine snapshot for the tracked AI visibility prompts.",
   },
   {
     area: "Conversion ability",
@@ -206,10 +206,10 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     intent: "authority",
     priority: "P1",
     targetPage: "/ai-visibility-optimization",
-    status: "page-needed",
-    baseline: "No target page",
-    current: "Not ranking by design yet",
-    nextAction: "Build a practical AI visibility page anchored in SEO, entity clarity, schema, citations, and answer-ready pages.",
+    status: "page-live",
+    baseline: "New page shipped 2026-08-26",
+    current: "Awaiting index/rank baseline",
+    nextAction: "Measure indexation and rankings, then improve from manual SERP review, answer-engine prompt checks, and citation gaps.",
   },
   {
     term: "generative engine optimization consultant",
@@ -310,15 +310,15 @@ export const aiVisibilityTargets: AiVisibilityTarget[] = [
     prompt: "Who can optimize my business for ChatGPT and AI search recommendations?",
     priority: "P2",
     targetPage: "/ai-visibility-optimization",
-    currentVisibility: "Not yet checked",
-    nextAction: "Publish AI visibility page that explains SEO-first GEO work without overclaiming.",
+    currentVisibility: "Target page live; first answer-engine snapshot pending",
+    nextAction: "Check ChatGPT, Gemini, Perplexity, Google, and Bing after indexing, then add citations or clearer answer sections where 247ROI is absent.",
   },
   {
     prompt: "How do I make my company show up in AI search results?",
     priority: "P2",
     targetPage: "/ai-visibility-optimization",
-    currentVisibility: "Not yet checked",
-    nextAction: "Add answer-ready sections, schema, citation plan, and recurring answer-engine checks.",
+    currentVisibility: "Target page live; first answer-engine snapshot pending",
+    nextAction: "Check answer-engine surfaces after indexing, then improve entity clarity, schema, citations, and page-specific examples.",
   },
 ];
 
@@ -329,7 +329,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Target page exists, sitemap/llms coverage, metadata, schema, internal links, build passes.",
-    nextAction: "Next strongest page gap is AI visibility optimization, followed by small-business AI automation consultant.",
+    nextAction: "Next strongest page gap is small-business AI automation consultant, followed by generative engine optimization consultant.",
   },
   {
     name: "Connect authoritative measurement sources",
