@@ -20,6 +20,7 @@ import {
   seoKeywordTargets,
   siteStandingScores,
 } from "@/data/seo-targets";
+import { searchBaselines } from "@/data/search-baselines";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
 
 export const dynamic = "force-dynamic";
@@ -387,6 +388,39 @@ export default async function SeoPage() {
               <p className="mt-2 text-sm leading-6 text-[#665d4e]">
                 <span className="font-semibold text-[#171511]">Next: </span>
                 {action.nextAction}
+              </p>
+            </div>
+          ))}
+        </div>
+      </DashboardCard>
+
+      <DashboardCard title="Manual Search Baseline" eyebrow="Indexing proof" className="mb-5">
+        <div className="mb-4 rounded-md border border-[#ded6c8] bg-white/55 p-3 text-sm leading-6 text-[#665d4e]">
+          This is the first manual search baseline while Search Console and Bing are not connected.
+          It prevents the growth loop from pretending rankings are measured when they are not.
+        </div>
+        <div className="grid gap-3 xl:grid-cols-2">
+          {searchBaselines.map((baseline) => (
+            <div key={baseline.query} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusBadge tone={baseline.standing === "indexed" ? "good" : baseline.standing === "stale-result" ? "warn" : "danger"}>
+                  {baseline.standing.replace("-", " ")}
+                </StatusBadge>
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                  {baseline.checkedAt}
+                </span>
+              </div>
+              <h3 className="mt-3 text-sm font-semibold text-[#171511]">{baseline.query}</h3>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">{baseline.notes}</p>
+              {baseline.observed247RoiUrls.length > 0 ? (
+                <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                  <span className="font-semibold text-[#171511]">Observed: </span>
+                  {baseline.observed247RoiUrls.join(", ")}
+                </p>
+              ) : null}
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Next: </span>
+                {baseline.nextAction}
               </p>
             </div>
           ))}

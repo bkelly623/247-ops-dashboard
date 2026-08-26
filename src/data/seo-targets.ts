@@ -57,13 +57,13 @@ export const siteStandingScores: SiteStandingScore[] = [
   },
   {
     area: "SEO",
-    score: 4.5,
+    score: 5,
     targetScore: 8,
-    trend: "baseline",
+    trend: "improving",
     currentStanding:
-      "Target list exists and commercial pages are shipping, including AI automation consultant, GEO consultant, custom dashboard, and internal tools pages. Ranking baselines and Search Console feedback are still not connected.",
+      "Target list exists, commercial pages are live, and homepage/services/footer now link into the newer P1/P2 pages. Ranking baselines and Search Console feedback are still not connected.",
     proofNeeded: "Tracked keyword positions, impressions, clicks, indexed pages, and query-to-page mapping.",
-    nextAction: "Baseline every selected keyword, check indexation for the new pages, and add internal links from high-value pages.",
+    nextAction: "Baseline every selected keyword, check indexation for the new pages, and improve pages from manual SERP review until Search Console is connected.",
   },
   {
     area: "AI visibility",
@@ -327,9 +327,9 @@ export const growthActions: GrowthAction[] = [
     name: "Create target pages for selected P1 keywords",
     cadence: "one-time",
     owner: "Athena",
-    status: "active",
+    status: "done",
     proof: "Target page exists, sitemap/llms coverage, metadata, schema, internal links, build passes.",
-    nextAction: "New traffic pages added for AI automation consultant, GEO consultant, custom dashboards, and internal tools; next proof is build, production deploy, indexing, and internal-link coverage.",
+    nextAction: "Core P1/P2 traffic pages are live and now linked from homepage, services, footer, sitemap, and llms files; next proof is indexing and rank/impression baseline.",
   },
   {
     name: "Connect authoritative measurement sources",
@@ -377,7 +377,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "New pages are crawlable, included in sitemap/LLM context, and connected from relevant pages.",
-    nextAction: "Add internal links from homepage/services/articles to each new target page.",
+    nextAction: "Internal links were added from homepage, services, and footer; next pass should use Search Console or manual SERP evidence to decide which page needs more support.",
   },
   {
     name: "Weekly growth report",
