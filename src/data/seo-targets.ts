@@ -77,13 +77,13 @@ export const siteStandingScores: SiteStandingScore[] = [
   },
   {
     area: "Conversion ability",
-    score: 6,
+    score: 7.5,
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "/hire is now both a crawlable audit page and an interactive audit flow, but the interface still needs stronger triage and progress clarity.",
+      "/hire is now both a crawlable audit page and an interactive audit flow with fast bottleneck triage, sample mini-report outputs, and direct call/email/service routing.",
     proofNeeded: "Audit starts, completion rate, report unlocks, CTA clicks, calls, and lead quality.",
-    nextAction: "Turn /hire into a diagnostic landing page with fast paths, examples, and a lower-friction first interaction.",
+    nextAction: "Measure triage selections, direct-route clicks, first-message completion, gate views, unlocks, and qualified conversations.",
   },
   {
     area: "Content quality",
@@ -109,9 +109,9 @@ export const hirePageInterfacePlan: HirePageInterfaceAction[] = [
   {
     layer: "Fast triage",
     purpose: "Help a busy owner identify their likely bottleneck in under 60 seconds before typing into chat.",
-    status: "next",
+    status: "live",
     implementation:
-      "Add a visual choice layer: leads/follow-up, admin/inbox, dashboards/reporting, estimates/bids, research/docs, or not sure.",
+      "Visual choice layer now routes visitors into leads/follow-up, admin/inbox, dashboards/reporting, estimates/bids, research/docs, or not sure.",
     successMetric: "Higher audit starts and first-message completion rate.",
   },
   {
@@ -125,17 +125,17 @@ export const hirePageInterfacePlan: HirePageInterfaceAction[] = [
   {
     layer: "Example outputs",
     purpose: "Show visitors what they get before asking them to invest time in the audit.",
-    status: "next",
+    status: "live",
     implementation:
-      "Add sample mini-reports for common workflows: slow lead response, spreadsheet reporting, inbox triage, and estimate follow-up.",
+      "Sample mini-reports now show diagnosis, system shape, human control, success metric, and first move for slow lead response, spreadsheet reporting, inbox triage, and estimate follow-up.",
     successMetric: "Scroll depth, CTA clicks after examples, and audit start lift.",
   },
   {
     layer: "Proof and routing",
     purpose: "Convert visitors who already know they want help while still supporting those who need diagnosis.",
-    status: "queued",
+    status: "live",
     implementation:
-      "Add call/email route, service-page links, and lightweight proof near the audit start without distracting from the diagnostic path.",
+      "A compact proof/routing panel near the audit start now provides call, email, and service-page routes while reinforcing diagnosis-first positioning and human approval rules.",
     successMetric: "Phone/email clicks, service-page assisted conversions, and booked calls.",
   },
 ];
