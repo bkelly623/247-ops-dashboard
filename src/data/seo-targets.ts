@@ -335,9 +335,9 @@ export const growthActions: GrowthAction[] = [
     name: "Connect authoritative measurement sources",
     cadence: "one-time",
     owner: "Athena + B",
-    status: "blocked",
+    status: "active",
     proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
-    nextAction: "Public /api/events currently returns command_center_events_unconfigured. Configure Vercel env for command-center event forwarding, then connect Search Console/Bing or run manual exports.",
+    nextAction: "Event ingestion is now live and verified. Next blocker is account-level Search Console and Bing Webmaster access; B needs to grant/add access or provide verification/API credentials.",
   },
   {
     name: "Baseline target keyword rankings",
@@ -361,7 +361,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Page edits tied to impressions, clicks, rank movement, audit starts, or CTA behavior.",
-    nextAction: "Use existing site-events once Vercel env is connected; use manual review until then.",
+    nextAction: "Use live command-center site events for behavioral signals; use manual search baselines until Search Console and Bing data are connected.",
   },
   {
     name: "Produce content people would actually view",
