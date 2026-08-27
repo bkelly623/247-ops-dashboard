@@ -65,6 +65,17 @@ export const searchBaselines: SearchBaseline[] = [
       "Strengthen links from AI visibility optimization and About/entity pages, then recheck after crawl delay.",
   },
   {
+    query: 'site:get247roi.com "workflow automation consultant"',
+    checkedAt: "2026-08-27T14:13:00Z",
+    source: "manual-search",
+    observed247RoiUrls: [],
+    standing: "not-observed",
+    notes:
+      "Before this run, the command-center target pointed to workflow automation consultant intent, but the public site did not have a dedicated /workflow-automation-consultant URL.",
+    nextAction:
+      "Dedicated page is now being shipped; verify production, sitemap, and llms coverage, then recheck indexation after crawl delay.",
+  },
+  {
     query: "site:get247roi.com contact 247ROI",
     checkedAt: "2026-08-26T22:59:00Z",
     source: "manual-search",
