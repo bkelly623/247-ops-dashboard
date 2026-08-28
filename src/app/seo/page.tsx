@@ -170,7 +170,7 @@ export default async function SeoPage() {
     {
       label: "30d visitors",
       value: metricValue(brandOverview?.siteEvents.uniqueVisitorEvents30Days),
-      note: "Visitor event count until distinct visitor snapshots are added.",
+      note: "Distinct tracked visitor IDs from command-center-owned site events.",
       icon: Target,
     },
   ];

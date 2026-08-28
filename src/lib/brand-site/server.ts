@@ -6,22 +6,28 @@ type CountResult = {
   error: { message: string } | null;
 };
 
+type VisitorIdResult = {
+  data: { visitor_id: string | null }[] | null;
+  error: { message: string } | null;
+};
+
 function daysAgo(days: number) {
   const date = new Date();
   date.setUTCDate(date.getUTCDate() - days);
   return date.toISOString();
 }
 
-async function countQuery(query: PromiseLike<CountResult>) {
-  const { count, error } = await query;
-  if (error) throw new Error(error.message);
-  return count ?? 0;
-}
-
 async function optionalCountQuery(query: PromiseLike<CountResult>) {
   const { count, error } = await query;
   if (error) return null;
   return count ?? 0;
+}
+
+async function optionalUniqueVisitorCount(query: PromiseLike<VisitorIdResult>) {
+  const { data, error } = await query;
+  if (error) return null;
+
+  return new Set((data ?? []).map((row) => row.visitor_id).filter(Boolean)).size;
 }
 
 export async function getBrandSiteOverview() {
@@ -96,10 +102,10 @@ export async function getBrandSiteOverview() {
         .eq("event_name", "hire_report_unlocked")
         .gte("created_at", since7),
     ),
-    countQuery(
+    optionalUniqueVisitorCount(
       supabase
         .from("site_events")
-        .select("visitor_id", { count: "exact", head: true })
+        .select("visitor_id")
         .not("visitor_id", "is", null)
         .gte("created_at", since30),
     ),

@@ -77,13 +77,13 @@ export const siteStandingScores: SiteStandingScore[] = [
   },
   {
     area: "Conversion ability",
-    score: 5,
+    score: 5.5,
     targetScore: 8,
-    trend: "stalled",
+    trend: "improving",
     currentStanding:
-      "/hire is technically built, but B flagged that the flow is strategically off and public event forwarding is not configured, so conversion performance is not proven.",
+      "/hire is technically built and public-site event forwarding is now live, so page views, CTA clicks, audit starts, report unlocks, phone clicks, and email clicks can be measured from production behavior.",
     proofNeeded: "Reliable page views, CTA clicks, audit starts, completion rate, report unlocks, calls, email clicks, and lead quality.",
-    nextAction: "Do not polish /hire before traffic. First fix event forwarding and measure actual behavior once acquisition starts.",
+    nextAction: "Do not polish /hire before traffic. Drive qualified acquisition paths, watch live events, and improve only when behavior shows friction.",
   },
   {
     area: "Content quality",
@@ -337,7 +337,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena + B",
     status: "active",
     proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
-    nextAction: "Event ingestion is now live and verified. Next blocker is account-level Search Console and Bing Webmaster access; B needs to grant/add access or provide verification/API credentials.",
+    nextAction: "Event ingestion is live and verified. Next blocker is account-level Search Console and Bing Webmaster access; B needs to grant/add access or provide verification/API credentials.",
   },
   {
     name: "Baseline target keyword rankings",
