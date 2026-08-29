@@ -132,36 +132,43 @@ export const moduleCards = [
 
 export const pipelineItems: PipelineItem[] = [
   {
-    title: "Robot work manifesto short",
-    stage: "Production",
-    owner: "Hermes",
-    due: "Today",
-    risk: "Medium",
-  },
-  {
-    title: "$18/hour task costs $180k/year",
-    stage: "Script",
-    owner: "Hermes",
+    title: "What should I automate first checklist",
+    stage: "Scheduled",
+    owner: "Athena",
     due: "Today",
     risk: "Low",
   },
   {
-    title: "AI employee replaces admin follow-up",
-    stage: "QC",
-    owner: "Hermes",
-    due: "Tomorrow",
-    risk: "High",
+    title: "Owner DM: bottleneck worth fixing first",
+    stage: "Script",
+    owner: "Athena",
+    due: "Today",
+    risk: "Low",
   },
   {
-    title: "Business owners are hiring wrong",
+    title: "Workflow teardown: lead follow-up queue",
+    stage: "QC",
+    owner: "Athena",
+    due: "Tomorrow",
+    risk: "Medium",
+  },
+  {
+    title: "AI visibility wedge for owner-led firms",
     stage: "Hook",
-    owner: "B",
+    owner: "Athena + B",
     due: "Tomorrow",
     risk: "Low",
   },
 ];
 
 export const hookCandidates: HookCandidate[] = [
+  {
+    hook: "Do not automate the annoying task first. Automate the expensive bottleneck first.",
+    audience: "Owner-led service businesses",
+    trigger: "Useful contrarian advice",
+    proof: "Checklist page routes owners through frequency, value, clarity, and control before the audit CTA.",
+    score: 96,
+  },
   {
     hook: "Your business is making humans do robot work.",
     audience: "Successful SMB owners",
@@ -186,6 +193,13 @@ export const hookCandidates: HookCandidate[] = [
 ];
 
 export const experiments: Experiment[] = [
+  {
+    name: "Diagnostic checklist warm traffic",
+    hypothesis:
+      "A useful 'what should I automate first' asset will earn more warm clicks and replies than a direct audit pitch.",
+    signal: "Page views, CTA clicks, audit starts, and reply quality from warm-network sharing.",
+    verdict: "Iterate",
+  },
   {
     name: "Confrontational owner truth",
     hypothesis:

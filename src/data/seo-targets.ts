@@ -152,6 +152,17 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     nextAction: "Measure indexation, audit starts, CTA behavior, and query impressions; refine headline and proof from data.",
   },
   {
+    term: "what should my business automate first",
+    intent: "conversion",
+    priority: "P1",
+    targetPage: "/what-should-my-business-automate-first",
+    status: "page-live",
+    baseline: "Diagnostic landing page and shareable article shipped 2026-08-29",
+    current: "Awaiting production deploy, index/rank baseline, and warm-traffic clicks",
+    nextAction:
+      "Use this as the first warm-traffic link for owners who are curious but not ready for a sales page; measure page views, CTA clicks, and audit starts.",
+  },
+  {
     term: "business automation audit",
     intent: "conversion",
     priority: "P1",
@@ -369,7 +380,8 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Content has a concrete buyer problem, useful example, strong hook, internal links, and conversion path.",
-    nextAction: "Prioritize useful assets over generic posts: calculators, checklists, examples, teardown pages, before/after workflows.",
+    nextAction:
+      "First diagnostic checklist asset is now queued for production: /what-should-my-business-automate-first plus matching article. Next: use it in warm outreach and build one workflow teardown asset.",
   },
   {
     name: "Refresh llms.txt, sitemap, schema, and internal links",
