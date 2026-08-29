@@ -10,6 +10,50 @@ export type SearchBaseline = {
 
 export const searchBaselines: SearchBaseline[] = [
   {
+    query: 'site:get247roi.com "what should my business automate first"',
+    checkedAt: "2026-08-29T14:48:00Z",
+    source: "manual-search",
+    observed247RoiUrls: [],
+    standing: "not-observed",
+    notes:
+      "The diagnostic page and article are live and in sitemap/llms files, but they were published today and have not been observed in search results yet.",
+    nextAction:
+      "Submit/check in Search Console when available, share through warm traffic now, and recheck indexation after crawl delay.",
+  },
+  {
+    query: 'site:get247roi.com "business process automation consultant"',
+    checkedAt: "2026-08-29T14:48:00Z",
+    source: "manual-search",
+    observed247RoiUrls: ["/ai-employees-for-small-business"],
+    standing: "stale-result",
+    notes:
+      "Manual search did not surface the dedicated target page in the observed result set; search instead returned another 247ROI service page with broader business-systems language.",
+    nextAction:
+      "Strengthen internal links and recheck after crawl delay; submit the dedicated URL in Search Console when access is connected.",
+  },
+  {
+    query: 'site:get247roi.com "custom AI agents for business"',
+    checkedAt: "2026-08-29T14:48:00Z",
+    source: "manual-search",
+    observed247RoiUrls: ["/ai-employees-for-small-business"],
+    standing: "stale-result",
+    notes:
+      "Manual search saw 247ROI content, but not the dedicated /ai-agents-for-business target page in the observed result set.",
+    nextAction:
+      "Add more supporting links and proof examples around custom AI agents; recheck indexation and rankings after recrawl.",
+  },
+  {
+    query: 'site:get247roi.com "AI visibility optimization"',
+    checkedAt: "2026-08-29T14:48:00Z",
+    source: "manual-search",
+    observed247RoiUrls: [],
+    standing: "not-observed",
+    notes:
+      "The AI visibility page is live and technically available, but was not observed in the first manual search result set.",
+    nextAction:
+      "Strengthen entity/citation support from About, llms files, and authority profiles; recheck after crawl delay.",
+  },
+  {
     query: "site:get247roi.com 247ROI",
     checkedAt: "2026-08-26T22:59:00Z",
     source: "manual-search",

@@ -36,6 +36,15 @@ export type SiteStandingScore = {
   nextAction: string;
 };
 
+export type AuthorityTarget = {
+  name: string;
+  type: "profile" | "directory" | "partner" | "proof";
+  priority: "P1" | "P2" | "P3";
+  status: "needed" | "queued" | "blocked" | "done";
+  rationale: string;
+  nextAction: string;
+};
+
 export type HirePageInterfaceAction = {
   layer: string;
   purpose: string;
@@ -46,14 +55,44 @@ export type HirePageInterfaceAction = {
 
 export const siteStandingScores: SiteStandingScore[] = [
   {
-    area: "Current site",
-    score: 6.5,
+    area: "Overall site",
+    score: 5.8,
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "Positioning is clearer: business systems, bottlenecks, AI, automation, dashboards, internal apps, and agents are now connected.",
-    proofNeeded: "More proof assets, trust markers, examples, calls-to-action, and page-level performance data.",
-    nextAction: "Improve the money pages first: homepage, /hire, services, AI employees, and AI visibility.",
+      "Technically live, strategically clearer, and now has a shareable warm-traffic asset, but rankings, traffic, proof, and conversion evidence are still immature.",
+    proofNeeded: "Sustained qualified visits, indexed money pages, AI answer visibility, audit starts, report unlocks, calls, backlinks, and real proof assets.",
+    nextAction: "Keep shipping acquisition/proof assets and use live behavior to decide which money pages to improve.",
+  },
+  {
+    area: "Positioning",
+    score: 7,
+    targetScore: 8.5,
+    trend: "improving",
+    currentStanding:
+      "The front-door message is now coherent: find the bottleneck worth fixing first, then build practical systems with AI, automation, dashboards, apps, and agents.",
+    proofNeeded: "More buyer-language validation from real conversations, replies, audit starts, and warm traffic.",
+    nextAction: "Keep using the bottleneck-first language across every traffic asset and cut anything that sounds tool-first.",
+  },
+  {
+    area: "Technical health",
+    score: 8,
+    targetScore: 9,
+    trend: "improving",
+    currentStanding:
+      "Core production pages return 200, builds pass, sitemap/robots/llms files work, and event forwarding is live.",
+    proofNeeded: "Ongoing production checks, lower lint noise, Search Console coverage, and error monitoring.",
+    nextAction: "Clean existing lint warnings and connect Search Console/Bing when credentials are available.",
+  },
+  {
+    area: "Crawlability",
+    score: 7.5,
+    targetScore: 9,
+    trend: "improving",
+    currentStanding:
+      "Strategic pages are crawlable and included in sitemap plus llms files. Internal links now support the newer pages.",
+    proofNeeded: "Search Console indexing status, Bing indexing status, and recrawl confirmation for newer pages.",
+    nextAction: "Submit/check the new diagnostic and commercial URLs when Search Console/Bing access is connected.",
   },
   {
     area: "SEO",
@@ -66,6 +105,16 @@ export const siteStandingScores: SiteStandingScore[] = [
     nextAction: "Baseline every selected keyword, check indexation for the new pages, and improve pages from manual SERP review until Search Console is connected.",
   },
   {
+    area: "Ranking proof",
+    score: 3,
+    targetScore: 8,
+    trend: "baseline",
+    currentStanding:
+      "Search sees 247ROI and several core pages, but newer commercial pages are not reliably observed yet and true positions are not stored.",
+    proofNeeded: "Keyword positions, target URL matches, impressions, clicks, indexed status, and monthly baseline deltas.",
+    nextAction: "Run manual SERP baselines now and replace them with Search Console/Bing data once connected.",
+  },
+  {
     area: "AI visibility",
     score: 4,
     targetScore: 8,
@@ -76,24 +125,127 @@ export const siteStandingScores: SiteStandingScore[] = [
     nextAction: "Run and record the first answer-engine snapshot for the tracked AI visibility prompts.",
   },
   {
-    area: "Conversion ability",
-    score: 5.5,
+    area: "Content quality",
+    score: 6,
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "/hire is technically built and public-site event forwarding is now live, so page views, CTA clicks, audit starts, report unlocks, phone clicks, and email clicks can be measured from production behavior.",
-    proofNeeded: "Reliable page views, CTA clicks, audit starts, completion rate, report unlocks, calls, email clicks, and lead quality.",
-    nextAction: "Do not polish /hire before traffic. Drive qualified acquisition paths, watch live events, and improve only when behavior shows friction.",
+      "Core pages are more specific and the first diagnostic checklist asset is live, but there are not enough high-utility teardown/proof assets yet.",
+    proofNeeded: "Useful tools, teardown pages, checklists, original examples, saves, shares, backlinks, and qualified traffic.",
+    nextAction: "Build the next workflow teardown asset and use warm replies to decide the example.",
   },
   {
-    area: "Content quality",
-    score: 5.5,
+    area: "Warm traffic",
+    score: 6,
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "Service-page content is more concrete, but the site still needs higher-utility assets that people would actually use or share.",
-    proofNeeded: "Useful tools, teardown pages, checklists, original examples, saves, shares, backlinks, and qualified traffic.",
-    nextAction: "Build one diagnostic asset around 'what should your business automate first' and point it into /hire.",
+      "The checklist page and share kit are ready, but actual distribution still needs approved sharing or connected publishing.",
+    proofNeeded: "Warm-network clicks, replies, introductions, post engagement, and assisted audit starts.",
+    nextAction: "Use the starter kit with B-approved posts, direct shares, and referral-partner notes.",
+  },
+  {
+    area: "Conversion path",
+    score: 6,
+    targetScore: 8,
+    trend: "improving",
+    currentStanding:
+      "/hire is technically built with triage, guided chat, examples, and tracking. The site has CTA paths from major pages.",
+    proofNeeded: "CTA clicks, audit starts, completion rate, report unlocks, calls, email clicks, and lead quality.",
+    nextAction: "Drive more qualified traffic before polishing further; improve only when behavior shows friction.",
+  },
+  {
+    area: "Conversion proof",
+    score: 2,
+    targetScore: 8,
+    trend: "baseline",
+    currentStanding:
+      "Command-center events show tiny volume: 5 page views in 7 days, 1 audit start in 30 days, and no CTA/phone/email/report unlock proof yet.",
+    proofNeeded: "At least 100 qualified page views, multiple audit starts, report unlocks, calls/emails, and lead-quality notes.",
+    nextAction: "Prioritize traffic and proof before drawing conversion conclusions.",
+  },
+  {
+    area: "Authority",
+    score: 2,
+    targetScore: 8,
+    trend: "baseline",
+    currentStanding:
+      "No meaningful backlink, directory, partner, third-party mention, or public profile baseline is connected yet.",
+    proofNeeded: "Quality citations, founder profiles, partner/referral pages, directory listings, mentions, and real proof assets.",
+    nextAction: "Create and work an authority target list; avoid spam backlinks.",
+  },
+  {
+    area: "Measurement",
+    score: 6.5,
+    targetScore: 8.5,
+    trend: "improving",
+    currentStanding:
+      "Public event ingestion is live, command-center metrics work, and 30-day visitor IDs are deduped. Search Console, Bing, and revenue attribution remain missing.",
+    proofNeeded: "Search Console, Bing Webmaster, keyword baselines, AI visibility snapshots, lead quality, bookings, and revenue attribution.",
+    nextAction: "Manual baseline until account-level data sources are connected.",
+  },
+  {
+    area: "Trust/proof assets",
+    score: 3.5,
+    targetScore: 8,
+    trend: "baseline",
+    currentStanding:
+      "The site has example workflows and sample outputs, but not enough public proof, real before/after artifacts, case examples, or third-party credibility.",
+    proofNeeded: "Named proof when available, anonymized teardowns, screenshots, before/after workflow artifacts, and referral/partner validation.",
+    nextAction: "Add proof ladder and publish one workflow teardown that shows the system output without inventing client claims.",
+  },
+];
+
+export const authorityTargets: AuthorityTarget[] = [
+  {
+    name: "Brendan Kelly founder profile",
+    type: "profile",
+    priority: "P1",
+    status: "queued",
+    rationale:
+      "Search and AI systems need consistent entity signals connecting Brendan Kelly, 247ROI, business systems, AI automation, and get247roi.com.",
+    nextAction:
+      "Create a public founder/profile asset and use the same description across approved LinkedIn, business listings, and referral outreach.",
+  },
+  {
+    name: "Referral partner one-pager",
+    type: "partner",
+    priority: "P1",
+    status: "queued",
+    rationale:
+      "Warm traffic should come from people who already serve SMB owners but do not build custom AI/business systems.",
+    nextAction:
+      "Publish a partner-facing page explaining when to refer 247ROI and which bottlenecks are a fit.",
+  },
+  {
+    name: "Local and professional directories",
+    type: "directory",
+    priority: "P1",
+    status: "needed",
+    rationale:
+      "Clean citations help entity clarity and give prospects third-party places to verify the business.",
+    nextAction:
+      "Build a directory checklist for Google Business Profile, Bing Places, LinkedIn company page, Crunchbase-style profiles if appropriate, and relevant local/business directories.",
+  },
+  {
+    name: "Anonymized workflow teardown",
+    type: "proof",
+    priority: "P1",
+    status: "queued",
+    rationale:
+      "The site needs proof-style artifacts that show useful output without fabricating client results.",
+    nextAction:
+      "Build one teardown for lead follow-up, owner dashboard, or inbox/admin handoff and link it from demo, services, and the checklist page.",
+  },
+  {
+    name: "Podcast/newsletter outreach list",
+    type: "profile",
+    priority: "P2",
+    status: "needed",
+    rationale:
+      "Relevant appearances and expert quotes can create warm traffic plus credible mentions.",
+    nextAction:
+      "Create a vetted list of SMB, contractor, ops, AI-for-business, and local business shows/newsletters with pitch angles.",
   },
 ];
 

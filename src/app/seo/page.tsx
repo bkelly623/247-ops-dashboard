@@ -15,6 +15,7 @@ import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
 import {
   aiVisibilityTargets,
+  authorityTargets,
   growthActions,
   hirePageInterfacePlan,
   seoKeywordTargets,
@@ -130,6 +131,8 @@ function statusTone(status: string) {
   if (status === "needs-upgrade") return "warn";
   if (status === "queued") return "warn";
   if (status === "done") return "neutral";
+  if (status === "needed") return "danger";
+  if (status === "blocked") return "danger";
   return "danger";
 }
 
@@ -388,6 +391,37 @@ export default async function SeoPage() {
               <p className="mt-2 text-sm leading-6 text-[#665d4e]">
                 <span className="font-semibold text-[#171511]">Next: </span>
                 {action.nextAction}
+              </p>
+            </div>
+          ))}
+        </div>
+      </DashboardCard>
+
+      <DashboardCard title="Authority Target List" eyebrow="Trust and citations" className="mb-5">
+        <div className="mb-4 rounded-md border border-[#ded6c8] bg-white/55 p-3 text-sm leading-6 text-[#665d4e]">
+          Authority is the weakest controllable area right now. This list keeps
+          backlinks, mentions, profiles, partner traffic, and proof assets
+          attached to specific actions instead of vague SEO wishes.
+        </div>
+        <div className="grid gap-3 xl:grid-cols-5">
+          {authorityTargets.map((target) => (
+            <div key={target.name} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusBadge tone={target.priority === "P1" ? "gold" : "neutral"}>
+                  {target.priority}
+                </StatusBadge>
+                <StatusBadge tone={statusTone(target.status)}>
+                  {target.status}
+                </StatusBadge>
+                <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                  {target.type}
+                </span>
+              </div>
+              <h3 className="mt-3 text-sm font-semibold text-[#171511]">{target.name}</h3>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">{target.rationale}</p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Next: </span>
+                {target.nextAction}
               </p>
             </div>
           ))}
