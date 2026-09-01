@@ -4,16 +4,22 @@ import {
   BarChart3,
   Bot,
   CircleDot,
+  Eye,
   Flame,
   LayoutDashboard,
+  ListChecks,
+  MonitorUp,
   Search,
   Settings,
 } from "lucide-react";
 
 const navItems = [
-  { href: "/", label: "Overview", icon: LayoutDashboard },
+  { href: "/", label: "Snapshot", icon: LayoutDashboard },
+  { href: "/work", label: "Work Ledger", icon: ListChecks },
   { href: "/social", label: "Social", icon: Flame },
   { href: "/seo", label: "SEO / Visibility", icon: Search },
+  { href: "/visibility", label: "Rank Proof", icon: Eye },
+  { href: "/progress", label: "Visual Progress", icon: MonitorUp },
   { href: "/settings", label: "Settings", icon: Settings },
 ];
 
@@ -55,11 +61,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             <div className="mt-auto rounded-md border border-[#3a352d] bg-[#1c1b18] p-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[#f7f1e3]">
                 <CircleDot size={16} className="text-[#d6a034]" />
-                Build Status
+              Build Status
               </div>
               <p className="mt-2 text-sm leading-6 text-[#b9b09f]">
-                Initial command-center scaffold active. Social module is the
-                first production surface.
+                Rebuilt around work tracking, proof, blockers, and visual
+                progress for 247ROI.
               </p>
             </div>
           </div>

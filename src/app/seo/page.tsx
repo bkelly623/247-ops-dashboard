@@ -19,8 +19,8 @@ import {
   growthActions,
   hirePageInterfacePlan,
   seoKeywordTargets,
-  siteStandingScores,
 } from "@/data/seo-targets";
+import { standingScores } from "@/data/growth-standing";
 import { searchBaselines } from "@/data/search-baselines";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
 
@@ -223,8 +223,8 @@ export default async function SeoPage() {
           improvements.
         </div>
         <div className="grid gap-3 xl:grid-cols-5">
-          {siteStandingScores.map((item) => (
-            <div key={item.area} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
+          {standingScores.map((item) => (
+            <div key={item.id} className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
               <div className="flex items-start justify-between gap-3">
                 <div>
                   <p className="text-sm font-semibold text-[#171511]">{item.area}</p>
@@ -244,12 +244,16 @@ export default async function SeoPage() {
                 />
               </div>
               <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
-                Target: {item.targetScore}/10
+                Target: {item.targetScore}/10 / Updated {item.lastUpdated}
               </p>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">{item.currentStanding}</p>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
-                <span className="font-semibold text-[#171511]">Proof needed: </span>
-                {item.proofNeeded}
+                <span className="font-semibold text-[#171511]">Proof have: </span>
+                {item.proofHave}
+              </p>
+              <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+                <span className="font-semibold text-[#171511]">Proof missing: </span>
+                {item.proofMissing}
               </p>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
                 <span className="font-semibold text-[#171511]">Next: </span>

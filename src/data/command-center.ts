@@ -113,12 +113,36 @@ export const moduleCards = [
     icon: Flame,
   },
   {
-    title: "SEO / AI Visibility",
-    href: "/seo",
-    status: "Reserved",
+    title: "Work Ledger",
+    href: "/work",
+    status: "Active build",
     description:
-      "Search presence, AI answer visibility, technical SEO, and website operations.",
+      "Shipped changes, why they happened, expected effect, evidence status, commits, and follow-up work.",
+    icon: BadgeCheck,
+  },
+  {
+    title: "SEO / Growth",
+    href: "/seo",
+    status: "Active build",
+    description:
+      "Site quality, SEO targets, conversion path, authority, and recurring growth actions.",
     icon: Target,
+  },
+  {
+    title: "Rank Proof",
+    href: "/visibility",
+    status: "Active build",
+    description:
+      "Manual and future connected checks for Google, Bing, ChatGPT, Gemini, Perplexity, and AI surfaces.",
+    icon: Radar,
+  },
+  {
+    title: "Visual Progress",
+    href: "/progress",
+    status: "Active build",
+    description:
+      "Before/after page improvements, screenshot queue, and visual evidence for meaningful site changes.",
+    icon: Activity,
   },
   {
     title: "Settings",
