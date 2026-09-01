@@ -56,11 +56,11 @@ export type HirePageInterfaceAction = {
 export const siteStandingScores: SiteStandingScore[] = [
   {
     area: "Overall site",
-    score: 5.8,
+    score: 6,
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "Technically live, strategically clearer, and now has a shareable warm-traffic asset, but rankings, traffic, proof, and conversion evidence are still immature.",
+      "Technically live, strategically clearer, and now has a shareable warm-traffic asset plus a crawlable referral-partner page, but rankings, traffic, proof, and conversion evidence are still immature.",
     proofNeeded: "Sustained qualified visits, indexed money pages, AI answer visibility, audit starts, report unlocks, calls, backlinks, and real proof assets.",
     nextAction: "Keep shipping acquisition/proof assets and use live behavior to decide which money pages to improve.",
   },
@@ -136,11 +136,11 @@ export const siteStandingScores: SiteStandingScore[] = [
   },
   {
     area: "Warm traffic",
-    score: 6,
+    score: 6.5,
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "The checklist page and share kit are ready, but actual distribution still needs approved sharing or connected publishing.",
+      "The checklist page, share kit, and referral-partner one-pager are ready, but actual distribution still needs approved sharing or connected publishing.",
     proofNeeded: "Warm-network clicks, replies, introductions, post engagement, and assisted audit starts.",
     nextAction: "Use the starter kit with B-approved posts, direct shares, and referral-partner notes.",
   },
@@ -160,17 +160,17 @@ export const siteStandingScores: SiteStandingScore[] = [
     targetScore: 8,
     trend: "baseline",
     currentStanding:
-      "Command-center events show tiny volume: 5 page views in 7 days, 1 audit start in 30 days, and no CTA/phone/email/report unlock proof yet.",
+      "Command-center events show tiny volume: 6 page views in 7 days, 2 audit starts in 30 days, and no CTA/phone/email/report unlock proof yet.",
     proofNeeded: "At least 100 qualified page views, multiple audit starts, report unlocks, calls/emails, and lead-quality notes.",
     nextAction: "Prioritize traffic and proof before drawing conversion conclusions.",
   },
   {
     area: "Authority",
-    score: 2,
+    score: 2.5,
     targetScore: 8,
     trend: "baseline",
     currentStanding:
-      "No meaningful backlink, directory, partner, third-party mention, or public profile baseline is connected yet.",
+      "A referral-partner page is now live to support warm introductions and entity clarity, but no meaningful backlink, directory, third-party mention, or public profile baseline is connected yet.",
     proofNeeded: "Quality citations, founder profiles, partner/referral pages, directory listings, mentions, and real proof assets.",
     nextAction: "Create and work an authority target list; avoid spam backlinks.",
   },
@@ -211,11 +211,11 @@ export const authorityTargets: AuthorityTarget[] = [
     name: "Referral partner one-pager",
     type: "partner",
     priority: "P1",
-    status: "queued",
+    status: "done",
     rationale:
       "Warm traffic should come from people who already serve SMB owners but do not build custom AI/business systems.",
     nextAction:
-      "Publish a partner-facing page explaining when to refer 247ROI and which bottlenecks are a fit.",
+      "Use /referral-partners in approved warm introductions and track assisted visits, replies, and audit starts.",
   },
   {
     name: "Local and professional directories",
@@ -533,7 +533,7 @@ export const growthActions: GrowthAction[] = [
     status: "active",
     proof: "Content has a concrete buyer problem, useful example, strong hook, internal links, and conversion path.",
     nextAction:
-      "First diagnostic checklist asset is now queued for production: /what-should-my-business-automate-first plus matching article. Next: use it in warm outreach and build one workflow teardown asset.",
+      "First diagnostic checklist asset and referral-partner page are live. Next: use them in approved warm outreach and build one workflow teardown asset.",
   },
   {
     name: "Refresh llms.txt, sitemap, schema, and internal links",
