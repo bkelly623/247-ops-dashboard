@@ -43,7 +43,9 @@ export async function getBrandSiteOverview() {
     phoneClicks7d,
     emailClicks7d,
     hireStarts7d,
+    hireStarts30d,
     hireUnlocks7d,
+    hireUnlocks30d,
     uniqueVisitors30d,
   ] = await Promise.all([
     optionalCountQuery(
@@ -99,8 +101,22 @@ export async function getBrandSiteOverview() {
       supabase
         .from("site_events")
         .select("id", { count: "exact", head: true })
+        .eq("event_name", "hire_session_started")
+        .gte("created_at", since30),
+    ),
+    optionalCountQuery(
+      supabase
+        .from("site_events")
+        .select("id", { count: "exact", head: true })
         .eq("event_name", "hire_report_unlocked")
         .gte("created_at", since7),
+    ),
+    optionalCountQuery(
+      supabase
+        .from("site_events")
+        .select("id", { count: "exact", head: true })
+        .eq("event_name", "hire_report_unlocked")
+        .gte("created_at", since30),
     ),
     optionalUniqueVisitorCount(
       supabase
@@ -110,6 +126,21 @@ export async function getBrandSiteOverview() {
         .gte("created_at", since30),
     ),
   ]);
+
+  const siteEventValues = [
+    pageViews7d,
+    pageViews30d,
+    ctaClicks7d,
+    ctaClicks30d,
+    phoneClicks7d,
+    emailClicks7d,
+    hireStarts7d,
+    hireStarts30d,
+    hireUnlocks7d,
+    hireUnlocks30d,
+    uniqueVisitors30d,
+  ];
+  const resolvedSiteEventValues = siteEventValues.filter((value) => value !== null).length;
 
   return {
     generatedAt: new Date().toISOString(),
@@ -126,12 +157,18 @@ export async function getBrandSiteOverview() {
     },
     aiOpportunityAudit: {
       total: null,
-      last30Days: hireStarts7d,
-      unlockedLast30Days: hireUnlocks7d,
+      last30Days: hireStarts30d,
+      unlockedLast30Days: hireUnlocks30d,
       source: "command_center_site_events",
     },
     siteEvents: {
-      tableReady: pageViews7d !== null,
+      tableReady: resolvedSiteEventValues > 0,
+      feedStatus:
+        resolvedSiteEventValues === siteEventValues.length
+          ? "ready"
+          : resolvedSiteEventValues > 0
+            ? "partial"
+            : "unavailable",
       pageViews7Days: pageViews7d,
       pageViews30Days: pageViews30d,
       ctaClicks7Days: ctaClicks7d,
@@ -139,7 +176,9 @@ export async function getBrandSiteOverview() {
       phoneClicks7Days: phoneClicks7d,
       emailClicks7Days: emailClicks7d,
       aiOpportunityAuditStarts7Days: hireStarts7d,
+      aiOpportunityAuditStarts30Days: hireStarts30d,
       aiOpportunityAuditUnlocks7Days: hireUnlocks7d,
+      aiOpportunityAuditUnlocks30Days: hireUnlocks30d,
       uniqueVisitorEvents30Days: uniqueVisitors30d,
     },
   };

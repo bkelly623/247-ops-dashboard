@@ -26,6 +26,20 @@ export type WorkLedgerEntry = {
 
 export const workLedger: WorkLedgerEntry[] = [
   {
+    date: "2026-09-02",
+    area: "Measurement",
+    title: "Corrected brand-site metric readiness",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: ["src/lib/brand-site/server.ts", "/seo"],
+    why: "The production overview could show live event counts while still labeling the site_events feed unready, which made the measurement layer look blocked when it was only partially unresolved.",
+    expectedEffect:
+      "More trustworthy operator metrics, clearer health status, and accurate 30-day audit start/unlock counts.",
+    evidenceStatus: "verified",
+    evidence: "Typecheck, lint, and build passed locally; production API recheck follows deployment.",
+    followUp: "Connect Search Console, Bing, and lead/booking attribution so source-of-truth metrics cover acquisition and revenue.",
+  },
+  {
     date: "2026-09-01",
     area: "Authority",
     title: "Added referral partner growth page",

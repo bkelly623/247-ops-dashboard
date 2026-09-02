@@ -207,7 +207,15 @@ export default async function SeoPage() {
         })}
       </div>
 
-      {!brandOverview?.siteEvents.tableReady && (
+      {brandOverview?.siteEvents.feedStatus === "partial" && (
+        <div className="mb-5 rounded-md border border-[#e2c16d] bg-[#fff7df] px-4 py-3 text-sm leading-6 text-[#665d4e]">
+          Command-center event feed is returning production metrics, but at least
+          one metric query is currently unresolved. Treat visible counts as live
+          and recheck before making conversion decisions.
+        </div>
+      )}
+
+      {brandOverview?.siteEvents.feedStatus === "unavailable" && (
         <div className="mb-5 rounded-md border border-[#e2c16d] bg-[#fff7df] px-4 py-3 text-sm leading-6 text-[#665d4e]">
           Command-center event feed is waiting on the `site_events` migration,
           `COMMAND_CENTER_EVENTS_SECRET`, and the public site&apos;s

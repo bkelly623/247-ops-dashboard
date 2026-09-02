@@ -178,14 +178,14 @@ export const standingScores: StandingScore[] = [
     score: 6.5,
     targetScore: 8.5,
     trend: "improving",
-    lastUpdated: "2026-09-01",
+    lastUpdated: "2026-09-02",
     currentStanding:
-      "Public event ingestion is live and visible in the command center. Search and revenue attribution are still missing.",
+      "Public event ingestion is live and visible in the command center. The overview API now separates 7-day and 30-day audit counts and reports partial metric failures without calling the whole feed unready.",
     proofHave:
-      "Supabase, PostFast, and brand-site integration status are configured; site event counts return from production.",
+      "Supabase, PostFast, and brand-site integration status are configured; site event counts return from production with a clearer feed health status.",
     proofMissing:
       "Search Console, Bing Webmaster, keyword baseline automation, AI snapshot automation, booked-call attribution, and revenue attribution.",
-    nextAction: "Use manual proof tracking until account-level sources are connected.",
+    nextAction: "Use manual proof tracking until account-level sources are connected, then replace partial API counts with connected search and lead data.",
     evidence: ["/settings", "https://247-ops-dashboard.vercel.app/api/brand-site/overview"],
   },
 ];
