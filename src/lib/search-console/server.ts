@@ -43,6 +43,7 @@ export type SearchConsolePerformance = SearchConsoleSnapshot & {
   queries: SearchConsoleRow[];
   pages: SearchConsoleRow[];
   queryPages: SearchConsoleRow[];
+  dailyQueries: SearchConsoleRow[];
 };
 
 const scope = "https://www.googleapis.com/auth/webmasters.readonly";
@@ -318,13 +319,14 @@ export async function getSearchConsolePerformance(days = 28): Promise<SearchCons
       queries: [],
       pages: [],
       queryPages: [],
+      dailyQueries: [],
     };
   }
 
   const accessToken = await getAccessToken(config);
   const startDate = dateDaysAgo(days + 2);
   const endDate = dateDaysAgo(2);
-  const [summaryPayload, queryPayload, pagePayload, queryPagePayload] = await Promise.all([
+  const [summaryPayload, queryPayload, pagePayload, queryPagePayload, dailyQueryPayload] = await Promise.all([
     querySearchConsole({ accessToken, config, startDate, endDate, rowLimit: 1 }),
     querySearchConsole({
       accessToken,
@@ -350,6 +352,14 @@ export async function getSearchConsolePerformance(days = 28): Promise<SearchCons
       dimensions: ["query", "page"],
       rowLimit: 20,
     }),
+    querySearchConsole({
+      accessToken,
+      config,
+      startDate,
+      endDate,
+      dimensions: ["date", "query"],
+      rowLimit: 250,
+    }),
   ]);
   const row = summaryPayload.rows?.[0];
 
@@ -365,6 +375,7 @@ export async function getSearchConsolePerformance(days = 28): Promise<SearchCons
     queries: normalizeRows(queryPayload.rows),
     pages: normalizeRows(pagePayload.rows),
     queryPages: normalizeRows(queryPagePayload.rows),
+    dailyQueries: normalizeRows(dailyQueryPayload.rows),
   };
 }
 

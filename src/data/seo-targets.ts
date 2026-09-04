@@ -29,6 +29,25 @@ export type GrowthAction = {
   nextAction: string;
 };
 
+export type LongTailCampaign = {
+  cluster: string;
+  status: "active" | "queued" | "planned";
+  targetPage: string;
+  supportingPages: string[];
+  proofSource: string;
+  nextAction: string;
+};
+
+export type RecurringOperatorRole = {
+  role: string;
+  status: "active" | "queued" | "blocked";
+  cadence: string;
+  mechanism: "OpenClaw cron" | "heartbeat" | "manual";
+  sourceOfTruth: string;
+  nextRun: string;
+  responsibility: string;
+};
+
 export type SiteStandingScore = {
   area: string;
   score: number;
@@ -252,6 +271,87 @@ export const authorityTargets: AuthorityTarget[] = [
   },
 ];
 
+export const recurringOperatorRoles: RecurringOperatorRole[] = [
+  {
+    role: "Autonomous Growth Operator",
+    status: "active",
+    cadence: "Weekdays at 14:00 UTC, with up to 15 minutes of stagger",
+    mechanism: "OpenClaw cron",
+    sourceOfTruth: "Cron job: 247ROI Autonomous Growth Operator",
+    nextRun: "Next weekday 14:00 UTC window",
+    responsibility:
+      "Inspect live metrics, pick the highest-leverage growth action, implement when safe, verify, commit, deploy when appropriate, and update memory/scorecards.",
+  },
+  {
+    role: "Weekly Growth Reporter",
+    status: "active",
+    cadence: "Fridays at 16:00 UTC, with up to 10 minutes of stagger",
+    mechanism: "OpenClaw cron",
+    sourceOfTruth: "Cron job: 247ROI Weekly Growth Report",
+    nextRun: "Friday 16:00 UTC window",
+    responsibility:
+      "Summarize shipped work, verification, production status, blockers, and next week's focus in Telegram.",
+  },
+  {
+    role: "Heartbeat Watch",
+    status: "active",
+    cadence: "Opportunistic main-session checks when heartbeat events arrive",
+    mechanism: "heartbeat",
+    sourceOfTruth: "Workspace heartbeat guidance and memory files",
+    nextRun: "When OpenClaw sends a heartbeat event",
+    responsibility:
+      "Batch light checks, avoid bothering B late at night, and escalate only meaningful changes or blockers.",
+  },
+];
+
+export const longTailCampaigns: LongTailCampaign[] = [
+  {
+    cluster: "AI employees for small business",
+    status: "active",
+    targetPage: "/ai-employees-for-small-business",
+    supportingPages: [
+      "/ai-employees",
+      "/ai-employees-for-service-businesses",
+      "/ai-employees/ai-operations-coordinator",
+      "/ai-automation-consultant-small-business",
+    ],
+    proofSource: "Search Console shows current impressions for this exact phrase family.",
+    nextAction:
+      "Tune the target page first, then add internal links and role-specific support pages around operations coordinator, follow-up, estimator, and inbox/admin workflows.",
+  },
+  {
+    cluster: "What should my business automate first",
+    status: "active",
+    targetPage: "/what-should-my-business-automate-first",
+    supportingPages: ["/hire", "/business-process-automation-consultant", "/workflow-automation-consultant"],
+    proofSource: "High-fit buyer question with low competition and direct audit intent.",
+    nextAction:
+      "Use this as the long-tail conversion asset for warm traffic, FAQs, LinkedIn posts, and internal links into the AI Opportunity Audit.",
+  },
+  {
+    cluster: "Workflow automation consultant",
+    status: "queued",
+    targetPage: "/workflow-automation-consultant",
+    supportingPages: [
+      "/business-process-automation-consultant",
+      "/internal-tools-for-small-business",
+      "/custom-business-dashboard",
+    ],
+    proofSource: "Commercial middle of the market between broad automation and specific pain searches.",
+    nextAction:
+      "Build narrower examples for inbox, spreadsheets, CRM updates, reporting, and approvals, then connect them back to the consultant page.",
+  },
+  {
+    cluster: "AI visibility and GEO consultant",
+    status: "planned",
+    targetPage: "/ai-visibility-optimization",
+    supportingPages: ["/generative-engine-optimization-consultant", "/hire"],
+    proofSource: "Strategic Package #2 category, but needs authority and answer-engine proof before heavy expansion.",
+    nextAction:
+      "Run answer-engine snapshots, then write long-tail pages only where ChatGPT, Gemini, Perplexity, or AI Overviews show a real gap.",
+  },
+];
+
 export const hirePageInterfacePlan: HirePageInterfaceAction[] = [
   {
     layer: "Search landing page",
@@ -382,11 +482,11 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     competition: "medium",
     value: "high",
     play: "commercial",
-    targetPage: "/ai-employees",
+    targetPage: "/ai-employees-for-small-business",
     status: "page-live",
-    baseline: "Baseline needed",
-    current: "Not yet tracked",
-    nextAction: "Upgrade the existing page around role-based systems, proof, FAQs, and links to the audit.",
+    baseline: "Search Console shows impressions for the exact query family",
+    current: "First page to tune from real Google signal, not the only target",
+    nextAction: "Tune title, H1, intro answer block, role examples, FAQs, internal links, and audit CTA for the exact small-business intent.",
   },
   {
     term: "AI visibility optimization",
@@ -542,7 +642,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena + B",
     status: "active",
     proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
-    nextAction: "Event ingestion is live and verified. Next blocker is account-level Search Console and Bing Webmaster access; B needs to grant/add access or provide verification/API credentials.",
+    nextAction: "Search Console and event ingestion are live. Next measurement source is Bing Webmaster plus richer rank history storage.",
   },
   {
     name: "Baseline target keyword rankings",
@@ -550,7 +650,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Each selected term has observed position, target URL, date checked, and SERP notes.",
-    nextAction: "Run first manual baseline while measurement APIs are unavailable.",
+    nextAction: "Use Search Console rows now, keep manual SERP checks for terms with no GSC data, and store visible deltas.",
   },
   {
     name: "Run AI visibility checks",
@@ -566,7 +666,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Page edits tied to impressions, clicks, rank movement, audit starts, or CTA behavior.",
-    nextAction: "Use live command-center site events for behavioral signals; use manual search baselines until Search Console and Bing data are connected.",
+    nextAction: "Tune /ai-employees-for-small-business first because it has the strongest live GSC query signal.",
   },
   {
     name: "Produce content people would actually view",
