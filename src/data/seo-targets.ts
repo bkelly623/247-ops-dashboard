@@ -48,6 +48,14 @@ export type RecurringOperatorRole = {
   responsibility: string;
 };
 
+export type OfferLanguageTrack = {
+  label: string;
+  status: "core" | "supporting" | "testing";
+  strength: string;
+  risk: string;
+  bestUse: string;
+};
+
 export type SiteStandingScore = {
   area: string;
   score: number;
@@ -350,7 +358,60 @@ export const longTailCampaigns: LongTailCampaign[] = [
     nextAction:
       "Run answer-engine snapshots, then write long-tail pages only where ChatGPT, Gemini, Perplexity, or AI Overviews show a real gap.",
   },
+  {
+    cluster: "Trade-specific service businesses",
+    status: "queued",
+    targetPage: "/ai-automation-for-plumbers",
+    supportingPages: [
+      "/workflow-automation-consultant",
+      "/ai-lead-response-system",
+      "/custom-business-dashboard",
+    ],
+    proofSource:
+      "High-fit long-tail wedge for plumbers, HVAC, roofers, and contractors where lead response, estimates, admin, and reporting pain is concrete.",
+    nextAction:
+      "Build the first plumber or HVAC page as a real workflow page, not a thin doorway page; track language fit between AI employees, custom automation, AI agents, and business systems.",
+  },
 ];
+
+export const offerLanguageTracks: OfferLanguageTrack[] = [
+  {
+    label: "Business systems + custom automation",
+    status: "core",
+    strength: "Plain-English, serious, broad enough for messy real work.",
+    risk: "Less flashy; needs sharp examples to avoid sounding generic.",
+    bestUse: "Homepage, services, audit positioning, sales language, and most trade pages.",
+  },
+  {
+    label: "Custom AI agents",
+    status: "core",
+    strength: "Accurate to the delivery model and strong for AI-aware buyers.",
+    risk: "Can sound abstract unless tied to inboxes, reports, CRM, follow-up, docs, and approvals.",
+    bestUse: "Service pages, AI visibility prompts, proof assets, and technical buyer explanations.",
+  },
+  {
+    label: "AI employees",
+    status: "supporting",
+    strength: "Memorable metaphor and currently visible in Search Console query data.",
+    risk: "Can imply fake staff, novelty chatbots, or fixed AI receptionist products.",
+    bestUse: "Dedicated SEO family and role examples, with human control and measurable workflow outcomes.",
+  },
+  {
+    label: "Custom software / internal tools",
+    status: "testing",
+    strength: "Signals seriousness, flexibility, and higher-value implementation work.",
+    risk: "May sound expensive or slow without bottleneck-first framing.",
+    bestUse: "Dashboards, internal apps, operational reporting, and higher-trust proof pages.",
+  },
+  {
+    label: "AI implementation",
+    status: "testing",
+    strength: "Matches buyers who know they want AI but do not know where it fits.",
+    risk: "Very broad and consultancy-coded; needs a concrete audit path.",
+    bestUse: "Educational pages, referral partner copy, and AI Opportunity Audit support sections.",
+  },
+];
+
 
 export const hirePageInterfacePlan: HirePageInterfaceAction[] = [
   {
@@ -667,6 +728,26 @@ export const growthActions: GrowthAction[] = [
     status: "active",
     proof: "Page edits tied to impressions, clicks, rank movement, audit starts, or CTA behavior.",
     nextAction: "Tune /ai-employees-for-small-business first because it has the strongest live GSC query signal.",
+  },
+  {
+    name: "Validate offer language from real signals",
+    cadence: "weekly",
+    owner: "Athena",
+    status: "active",
+    proof:
+      "Search Console queries, page views, audit starts, warm replies, and AI answer snapshots show which terms attract qualified attention.",
+    nextAction:
+      "Keep AI employees as a supporting phrase, but compare it against custom automation, custom AI agents, business systems, custom software, and AI implementation before expanding too far.",
+  },
+  {
+    name: "Build trade-specific long-tail campaign",
+    cadence: "weekly",
+    owner: "Athena",
+    status: "queued",
+    proof:
+      "Industry pages for plumbers, HVAC, roofers, or contractors include real workflows, internal links, schema, and measured Search Console/site-event response.",
+    nextAction:
+      "Start with plumbers or HVAC because the pain is concrete: missed leads, estimate follow-up, admin handoffs, CRM updates, scheduling, and owner reporting.",
   },
   {
     name: "Produce content people would actually view",

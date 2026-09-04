@@ -20,6 +20,7 @@ import {
   authorityTargets,
   growthActions,
   longTailCampaigns,
+  offerLanguageTracks,
   recurringOperatorRoles,
   seoKeywordTargets,
 } from "@/data/seo-targets";
@@ -294,6 +295,26 @@ export default async function SeoPage() {
           rows={searchConsole?.dailyQueries ?? []}
           fallbackQuery={aiEmployeeSignal?.keys[0] ?? firstTuneTarget?.keys[0]}
         />
+      </DashboardCard>
+
+      <DashboardCard title="Offer Language Strategy" eyebrow="What we are testing" className="mb-5">
+        <div className="grid gap-3 xl:grid-cols-5">
+          {offerLanguageTracks.map((track) => (
+            <div key={track.label} className="rounded-md border border-white/10 bg-white/5 p-4">
+              <div className="flex flex-wrap gap-2">
+                <StatusBadge tone={track.status === "core" ? "good" : track.status === "supporting" ? "gold" : "neutral"}>
+                  {track.status}
+                </StatusBadge>
+              </div>
+              <h3 className="mt-3 text-sm font-semibold text-white">{track.label}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">{track.strength}</p>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#ff6a2a]">Risk</p>
+              <p className="mt-1 text-sm leading-6 text-[#c9c9c9]">{track.risk}</p>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#ff6a2a]">Best use</p>
+              <p className="mt-1 text-sm leading-6 text-[#c9c9c9]">{track.bestUse}</p>
+            </div>
+          ))}
+        </div>
       </DashboardCard>
 
       <div className="mb-5 grid gap-5 xl:grid-cols-[1.05fr_0.95fr]">
