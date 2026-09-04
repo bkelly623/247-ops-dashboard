@@ -15,17 +15,17 @@ export function DashboardCard({
   return (
     <section
       className={cn(
-        "rounded-lg border border-[#d8d1c2] bg-[#fffaf0] p-5 shadow-[0_1px_0_rgba(17,17,17,0.04)]",
+        "rounded-lg border border-white/10 bg-[#111111] p-5 text-white shadow-[0_18px_60px_rgba(0,0,0,0.28)]",
         className,
       )}
     >
       <div className="mb-4">
         {eyebrow ? (
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b6a22]">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ff6a2a]">
             {eyebrow}
           </p>
         ) : null}
-        <h2 className="mt-1 text-lg font-semibold text-[#171511]">{title}</h2>
+        <h2 className="mt-1 text-lg font-semibold text-white">{title}</h2>
       </div>
       {children}
     </section>
@@ -43,11 +43,11 @@ export function StatusBadge({
     <span
       className={cn(
         "inline-flex items-center rounded px-2 py-1 text-xs font-semibold",
-        tone === "neutral" && "bg-[#ece5d7] text-[#615746]",
-        tone === "good" && "bg-[#dce8d6] text-[#2f5a2e]",
-        tone === "warn" && "bg-[#f5e5c8] text-[#76500c]",
-        tone === "danger" && "bg-[#f1d7d2] text-[#7e2c22]",
-        tone === "gold" && "bg-[#d6a034] text-[#171511]",
+        tone === "neutral" && "bg-white/10 text-[#d6d6d6]",
+        tone === "good" && "bg-[#16a34a]/18 text-[#86efac]",
+        tone === "warn" && "bg-[#ff8a3d]/18 text-[#ffb37a]",
+        tone === "danger" && "bg-[#ef4444]/18 text-[#fca5a5]",
+        tone === "gold" && "bg-[#ff5a1f] text-white",
       )}
     >
       {children}
@@ -67,15 +67,15 @@ export function PageHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="mb-7 flex flex-col gap-4 border-b border-[#d8d1c2] pb-6 lg:flex-row lg:items-end lg:justify-between">
+    <div className="mb-7 flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8b6a22]">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ff6a2a]">
           {eyebrow}
         </p>
-        <h1 className="mt-2 max-w-4xl text-3xl font-semibold tracking-normal text-[#171511] sm:text-4xl">
+        <h1 className="mt-2 max-w-4xl text-3xl font-semibold tracking-normal text-white sm:text-4xl">
           {title}
         </h1>
-        <p className="mt-3 max-w-3xl text-base leading-7 text-[#665d4e]">
+        <p className="mt-3 max-w-3xl text-base leading-7 text-[#c9c9c9]">
           {description}
         </p>
       </div>

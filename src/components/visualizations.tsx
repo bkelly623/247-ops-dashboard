@@ -3,11 +3,11 @@ import { cn } from "@/lib/utils";
 type Tone = "good" | "warn" | "danger" | "gold" | "neutral";
 
 const toneClasses: Record<Tone, string> = {
-  good: "bg-[#477844]",
-  warn: "bg-[#c7862b]",
-  danger: "bg-[#b85646]",
-  gold: "bg-[#d6a034]",
-  neutral: "bg-[#9c917f]",
+  good: "bg-[#22c55e]",
+  warn: "bg-[#ff8a3d]",
+  danger: "bg-[#ef4444]",
+  gold: "bg-[#ff5a1f]",
+  neutral: "bg-white/35",
 };
 
 export function HorizontalBar({
@@ -28,10 +28,10 @@ export function HorizontalBar({
   return (
     <div>
       <div className="mb-2 flex items-center justify-between gap-3 text-sm">
-        <span className="font-semibold text-[#171511]">{label}</span>
-        <span className="shrink-0 text-[#665d4e]">{detail ?? `${value}/${max}`}</span>
+        <span className="font-semibold text-white">{label}</span>
+        <span className="shrink-0 text-[#c9c9c9]">{detail ?? `${value}/${max}`}</span>
       </div>
-      <div className="h-3 overflow-hidden rounded-full bg-[#ece5d7]">
+      <div className="h-3 overflow-hidden rounded-full bg-white/10">
         <div className={cn("h-full rounded-full", toneClasses[tone])} style={{ width: `${width}%` }} />
       </div>
     </div>
@@ -53,21 +53,21 @@ export function DonutMetric({
 }) {
   const percent = max > 0 ? Math.min(Math.max((value / max) * 100, 0), 100) : 0;
   const color =
-    tone === "good" ? "#477844" : tone === "warn" ? "#c7862b" : tone === "danger" ? "#b85646" : "#d6a034";
+    tone === "good" ? "#22c55e" : tone === "warn" ? "#ff8a3d" : tone === "danger" ? "#ef4444" : "#ff5a1f";
 
   return (
-    <div className="flex items-center gap-4 rounded-md border border-[#ded6c8] bg-white/55 p-4">
+    <div className="flex items-center gap-4 rounded-md border border-white/10 bg-white/5 p-4">
       <div
         className="grid size-24 shrink-0 place-items-center rounded-full"
-        style={{ background: `conic-gradient(${color} ${percent}%, #ece5d7 0)` }}
+        style={{ background: `conic-gradient(${color} ${percent}%, rgba(255,255,255,0.1) 0)` }}
       >
-        <div className="grid size-16 place-items-center rounded-full bg-[#fffaf0] text-lg font-semibold text-[#171511]">
+        <div className="grid size-16 place-items-center rounded-full bg-[#111111] text-lg font-semibold text-white">
           {value}
         </div>
       </div>
       <div>
-        <p className="font-semibold text-[#171511]">{label}</p>
-        <p className="mt-1 text-sm leading-6 text-[#665d4e]">{caption}</p>
+        <p className="font-semibold text-white">{label}</p>
+        <p className="mt-1 text-sm leading-6 text-[#c9c9c9]">{caption}</p>
       </div>
     </div>
   );
@@ -82,7 +82,7 @@ export function SegmentedBar({
 
   return (
     <div>
-      <div className="flex h-4 overflow-hidden rounded-full bg-[#ece5d7]">
+      <div className="flex h-4 overflow-hidden rounded-full bg-white/10">
         {segments.map((segment) => (
           <div
             key={segment.label}
@@ -93,9 +93,9 @@ export function SegmentedBar({
       </div>
       <div className="mt-3 grid gap-2 sm:grid-cols-3">
         {segments.map((segment) => (
-          <div key={segment.label} className="flex items-center gap-2 text-sm text-[#665d4e]">
+          <div key={segment.label} className="flex items-center gap-2 text-sm text-[#c9c9c9]">
             <span className={cn("size-3 rounded-sm", toneClasses[segment.tone])} />
-            <span className="font-semibold text-[#171511]">{segment.value}</span>
+            <span className="font-semibold text-white">{segment.value}</span>
             <span>{segment.label}</span>
           </div>
         ))}
@@ -103,4 +103,3 @@ export function SegmentedBar({
     </div>
   );
 }
-
