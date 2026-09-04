@@ -31,6 +31,20 @@ export type SearchConsoleSnapshot = {
   ctr: number | null;
 };
 
+export type SearchConsoleRow = {
+  keys: string[];
+  clicks: number;
+  impressions: number;
+  ctr: number;
+  position: number;
+};
+
+export type SearchConsolePerformance = SearchConsoleSnapshot & {
+  queries: SearchConsoleRow[];
+  pages: SearchConsoleRow[];
+  queryPages: SearchConsoleRow[];
+};
+
 const scope = "https://www.googleapis.com/auth/webmasters.readonly";
 
 function base64UrlEncode(value: string | ArrayBuffer) {
@@ -203,16 +217,21 @@ async function getAccessToken(config: SearchConsoleConfig) {
   return getOauthAccessToken(config);
 }
 
-export async function getSearchConsoleSnapshot(days = 28): Promise<SearchConsoleSnapshot> {
-  const config = getSearchConsoleConfig();
-
-  if (!config) {
-    return emptySnapshot(days);
-  }
-
-  const accessToken = await getAccessToken(config);
-  const startDate = dateDaysAgo(days + 2);
-  const endDate = dateDaysAgo(2);
+async function querySearchConsole({
+  accessToken,
+  config,
+  startDate,
+  endDate,
+  dimensions,
+  rowLimit,
+}: {
+  accessToken: string;
+  config: SearchConsoleConfig;
+  startDate: string;
+  endDate: string;
+  dimensions?: string[];
+  rowLimit: number;
+}) {
   const response = await fetch(
     `https://searchconsole.googleapis.com/webmasters/v3/sites/${encodeURIComponent(
       config.siteUrl,
@@ -227,7 +246,8 @@ export async function getSearchConsoleSnapshot(days = 28): Promise<SearchConsole
       body: JSON.stringify({
         startDate,
         endDate,
-        rowLimit: 1,
+        dimensions,
+        rowLimit,
       }),
       next: { revalidate: 3600 },
     },
@@ -237,14 +257,44 @@ export async function getSearchConsoleSnapshot(days = 28): Promise<SearchConsole
     throw new Error(`Search Console query failed: ${response.status}`);
   }
 
-  const payload = (await response.json()) as {
+  return (await response.json()) as {
     rows?: Array<{
+      keys?: string[];
       clicks?: number;
       impressions?: number;
       position?: number;
       ctr?: number;
     }>;
   };
+}
+
+function normalizeRows(rows: Awaited<ReturnType<typeof querySearchConsole>>["rows"]): SearchConsoleRow[] {
+  return (rows ?? []).map((row) => ({
+    keys: row.keys ?? [],
+    clicks: row.clicks ?? 0,
+    impressions: row.impressions ?? 0,
+    ctr: row.ctr ?? 0,
+    position: row.position ?? 0,
+  }));
+}
+
+export async function getSearchConsoleSnapshot(days = 28): Promise<SearchConsoleSnapshot> {
+  const config = getSearchConsoleConfig();
+
+  if (!config) {
+    return emptySnapshot(days);
+  }
+
+  const accessToken = await getAccessToken(config);
+  const startDate = dateDaysAgo(days + 2);
+  const endDate = dateDaysAgo(2);
+  const payload = await querySearchConsole({
+    accessToken,
+    config,
+    startDate,
+    endDate,
+    rowLimit: 1,
+  });
   const row = payload.rows?.[0];
 
   return {
@@ -256,6 +306,65 @@ export async function getSearchConsoleSnapshot(days = 28): Promise<SearchConsole
     impressions: row?.impressions ?? 0,
     averagePosition: row?.position ?? null,
     ctr: row?.ctr ?? null,
+  };
+}
+
+export async function getSearchConsolePerformance(days = 28): Promise<SearchConsolePerformance> {
+  const config = getSearchConsoleConfig();
+
+  if (!config) {
+    return {
+      ...emptySnapshot(days),
+      queries: [],
+      pages: [],
+      queryPages: [],
+    };
+  }
+
+  const accessToken = await getAccessToken(config);
+  const startDate = dateDaysAgo(days + 2);
+  const endDate = dateDaysAgo(2);
+  const [summaryPayload, queryPayload, pagePayload, queryPagePayload] = await Promise.all([
+    querySearchConsole({ accessToken, config, startDate, endDate, rowLimit: 1 }),
+    querySearchConsole({
+      accessToken,
+      config,
+      startDate,
+      endDate,
+      dimensions: ["query"],
+      rowLimit: 10,
+    }),
+    querySearchConsole({
+      accessToken,
+      config,
+      startDate,
+      endDate,
+      dimensions: ["page"],
+      rowLimit: 10,
+    }),
+    querySearchConsole({
+      accessToken,
+      config,
+      startDate,
+      endDate,
+      dimensions: ["query", "page"],
+      rowLimit: 20,
+    }),
+  ]);
+  const row = summaryPayload.rows?.[0];
+
+  return {
+    configured: true,
+    siteUrl: config.siteUrl,
+    startDate,
+    endDate,
+    clicks: row?.clicks ?? 0,
+    impressions: row?.impressions ?? 0,
+    averagePosition: row?.position ?? null,
+    ctr: row?.ctr ?? null,
+    queries: normalizeRows(queryPayload.rows),
+    pages: normalizeRows(pagePayload.rows),
+    queryPages: normalizeRows(queryPagePayload.rows),
   };
 }
 

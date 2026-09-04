@@ -1,14 +1,21 @@
 import {
   Activity,
+  ArrowUpRight,
   BarChart3,
   CheckCircle2,
+  Eye,
   FileSearch,
+  Gauge,
   Link2,
   ListChecks,
+  MousePointerClick,
+  Route,
   Search,
   ShieldCheck,
   Sparkles,
   Target,
+  Telescope,
+  TrendingUp,
   Waypoints,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -24,7 +31,7 @@ import {
 import { standingScores } from "@/data/growth-standing";
 import { searchBaselines } from "@/data/search-baselines";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
-import { getSearchConsoleSnapshot } from "@/lib/search-console/server";
+import { getSearchConsolePerformance, type SearchConsoleRow } from "@/lib/search-console/server";
 
 export const dynamic = "force-dynamic";
 
@@ -120,9 +127,9 @@ async function loadBrandOverview() {
   }
 }
 
-async function loadSearchConsoleSnapshot() {
+async function loadSearchConsolePerformance() {
   try {
-    return await getSearchConsoleSnapshot();
+    return await getSearchConsolePerformance();
   } catch {
     return null;
   }
@@ -153,9 +160,69 @@ function trendTone(trend: string) {
   return "danger";
 }
 
+function pct(value: number | null | undefined) {
+  if (typeof value !== "number") return "Pending";
+  return `${(value * 100).toFixed(value > 0 && value < 0.01 ? 2 : 1)}%`;
+}
+
+function pos(value: number | null | undefined) {
+  if (typeof value !== "number") return "Pending";
+  return value.toFixed(value >= 10 ? 1 : 2);
+}
+
+function rankingTone(position: number) {
+  if (position <= 10) return "good";
+  if (position <= 30) return "gold";
+  if (position <= 60) return "warn";
+  return "danger";
+}
+
+function pageLabel(url: string) {
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname === "/" ? "/" : parsed.pathname;
+  } catch {
+    return url;
+  }
+}
+
+function SearchConsoleRowCard({ row, index }: { row: SearchConsoleRow; index: number }) {
+  const query = row.keys[0] ?? "Unknown query";
+  const width = Math.max(4, Math.min(100, (100 - Math.min(row.position, 100)) * 0.9));
+
+  return (
+    <div className="rounded-md border border-[#ded6c8] bg-white/60 p-4">
+      <div className="mb-3 flex items-start justify-between gap-4">
+        <div className="flex min-w-0 items-start gap-3">
+          <div className="flex size-8 shrink-0 items-center justify-center rounded-md bg-[#171511] text-sm font-semibold text-[#d6a034]">
+            {index + 1}
+          </div>
+          <div className="min-w-0">
+            <p className="text-sm font-semibold leading-6 text-[#171511]">{query}</p>
+            <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+              {row.impressions} impressions / {row.clicks} clicks / CTR {pct(row.ctr)}
+            </p>
+          </div>
+        </div>
+        <StatusBadge tone={rankingTone(row.position)}>Avg {pos(row.position)}</StatusBadge>
+      </div>
+      <div className="h-3 overflow-hidden rounded-full bg-[#ece5d7]">
+        <div className="h-full rounded-full bg-[#d6a034]" style={{ width: `${width}%` }} />
+      </div>
+      <p className="mt-3 text-sm leading-6 text-[#665d4e]">
+        {row.position <= 20
+          ? "Near enough to deserve supporting links and a sharper answer block."
+          : row.impressions >= 10
+            ? "Google is testing the topic, but the page needs more authority and relevance."
+            : "Early discovery signal. Track it, but do not over-optimize from one row."}
+      </p>
+    </div>
+  );
+}
+
 export default async function SeoPage() {
   const brandOverview = await loadBrandOverview();
-  const searchConsole = await loadSearchConsoleSnapshot();
+  const searchConsole = await loadSearchConsolePerformance();
   const averageStanding =
     standingScores.reduce((sum, item) => sum + item.score, 0) / standingScores.length;
   const targetAverage =
@@ -168,6 +235,47 @@ export default async function SeoPage() {
   ).length;
   const authorityDoneTargets = authorityTargets.filter((target) => target.status === "done").length;
   const authorityOpenTargets = authorityTargets.length - authorityDoneTargets;
+  const queryRows = [...(searchConsole?.queries ?? [])].sort(
+    (a, b) => b.impressions - a.impressions || a.position - b.position,
+  );
+  const pageRows = [...(searchConsole?.pages ?? [])].sort(
+    (a, b) => b.impressions - a.impressions || a.position - b.position,
+  );
+  const queryPageRows = [...(searchConsole?.queryPages ?? [])].sort(
+    (a, b) => b.impressions - a.impressions || a.position - b.position,
+  );
+  const topQuery = queryRows[0];
+  const topPage = pageRows[0];
+  const strikingDistanceQueries = queryRows.filter((row) => row.position <= 20).length;
+  const buriedQueries = queryRows.filter((row) => row.position > 50).length;
+  const impressionNoClickQueries = queryRows.filter((row) => row.impressions > 0 && row.clicks === 0).length;
+  const pagesWithImpressions = pageRows.length;
+  const aiReadyTargets = aiVisibilityTargets.length - aiPendingTargets;
+  const proofActions = [
+    {
+      title: "Rewrite the AI employee page title/meta around the exact query Google is already testing.",
+      proof: topQuery ? `${topQuery.keys[0]} has ${topQuery.impressions} impressions` : "Waiting for query data",
+      icon: FileSearch,
+    },
+    {
+      title: "Push the operations coordinator page because it is closest to page-one visibility.",
+      proof:
+        queryRows.find((row) => row.keys[0]?.includes("operations coordinator"))
+          ? "Average position 11 for the live query"
+          : "Use the closest GSC query once available",
+      icon: TrendingUp,
+    },
+    {
+      title: "Build supporting internal links from homepage/services/articles into the pages Google is testing.",
+      proof: `${pagesWithImpressions} pages have impressions`,
+      icon: Route,
+    },
+    {
+      title: "Run AI answer snapshots so the visibility module stops guessing about ChatGPT/Gemini/Perplexity.",
+      proof: `${aiPendingTargets} prompt checks still pending`,
+      icon: Telescope,
+    },
+  ];
   const liveMetrics = [
     {
       label: "Page views",
@@ -221,29 +329,97 @@ export default async function SeoPage() {
     <AppShell>
       <PageHeader
         eyebrow="SEO / GEO Command"
-        title="Make 247ROI easier to find, understand, trust, and choose."
-        description="This module owns website quality, technical SEO, AI visibility, content architecture, authority building, and the AI Opportunity Audit conversion path."
-        action={<StatusBadge tone="gold">Active owner: Athena</StatusBadge>}
+        title="Google is testing 247ROI. Now turn impressions into proof."
+        description="This tab translates Search Console, site events, ranking gaps, AI visibility, and authority work into the next moves that should improve discovery and demand."
+        action={
+          <div className="flex flex-wrap gap-2">
+            <StatusBadge tone="good">GSC live</StatusBadge>
+            <StatusBadge tone="gold">Active owner: Athena</StatusBadge>
+          </div>
+        }
       />
 
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        {liveMetrics.map((metric) => {
-          const Icon = metric.icon;
-
-          return (
-            <DashboardCard key={metric.label} title={metric.label}>
-              <div className="flex min-h-36 flex-col justify-between gap-4">
-                <div className="flex items-start justify-between gap-4">
-                  <p className="text-3xl font-semibold leading-tight">{metric.value}</p>
-                  <div className="flex size-10 shrink-0 items-center justify-center rounded-md bg-[#171511] text-[#d6a034]">
-                    <Icon size={20} />
-                  </div>
+      <div className="mb-5 grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
+        <section className="rounded-lg border border-[#171511] bg-[#171511] p-5 text-[#fffaf0]">
+          <div className="flex flex-col gap-5 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#d6a034]">
+                Search Console read
+              </p>
+              <h2 className="mt-2 max-w-3xl text-2xl font-semibold leading-tight sm:text-3xl">
+                {searchConsole?.impressions
+                  ? `${searchConsole.impressions} impressions, ${searchConsole.clicks ?? 0} clicks`
+                  : "Waiting for usable Google demand"}
+              </h2>
+              <p className="mt-3 max-w-3xl text-sm leading-6 text-[#d9cfbd]">
+                {searchConsole?.siteUrl
+                  ? `${searchConsole.startDate} to ${searchConsole.endDate}. Google is showing 247ROI for AI employee and operations-coordinator searches, but the current job is relevance and authority, not conversion optimization.`
+                  : "Search Console is not returning usable data yet. The SEO page should stay in setup mode until impressions appear."}
+              </p>
+            </div>
+            <div className="grid min-w-64 grid-cols-2 gap-3">
+              <div className="rounded-md border border-white/12 bg-white/8 p-4">
+                <div className="flex items-center gap-2 text-[#d6a034]">
+                  <Eye size={17} />
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em]">Impressions</span>
                 </div>
-                <p className="text-sm leading-6 text-[#665d4e]">{metric.note}</p>
+                <p className="mt-3 text-3xl font-semibold">{metricValue(searchConsole?.impressions)}</p>
               </div>
-            </DashboardCard>
-          );
-        })}
+              <div className="rounded-md border border-white/12 bg-white/8 p-4">
+                <div className="flex items-center gap-2 text-[#d6a034]">
+                  <MousePointerClick size={17} />
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em]">CTR</span>
+                </div>
+                <p className="mt-3 text-3xl font-semibold">{pct(searchConsole?.ctr)}</p>
+              </div>
+              <div className="rounded-md border border-white/12 bg-white/8 p-4">
+                <div className="flex items-center gap-2 text-[#d6a034]">
+                  <Gauge size={17} />
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em]">Avg pos</span>
+                </div>
+                <p className="mt-3 text-3xl font-semibold">{pos(searchConsole?.averagePosition)}</p>
+              </div>
+              <div className="rounded-md border border-white/12 bg-white/8 p-4">
+                <div className="flex items-center gap-2 text-[#d6a034]">
+                  <Search size={17} />
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em]">Queries</span>
+                </div>
+                <p className="mt-3 text-3xl font-semibold">{queryRows.length}</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <DashboardCard title="Operator Read" eyebrow="What this means">
+          <div className="space-y-4">
+            <div className="rounded-md border border-[#ded6c8] bg-white/60 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                Best current signal
+              </p>
+              <p className="mt-2 text-lg font-semibold leading-7 text-[#171511]">
+                {topQuery?.keys[0] ?? "No query signal yet"}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[#665d4e]">
+                {topQuery
+                  ? `${topQuery.impressions} impressions at average position ${pos(topQuery.position)}.`
+                  : "Need Search Console rows before picking a query to improve."}
+              </p>
+            </div>
+            <div className="rounded-md border border-[#ded6c8] bg-white/60 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                Best current page
+              </p>
+              <p className="mt-2 text-lg font-semibold leading-7 text-[#171511]">
+                {topPage ? pageLabel(topPage.keys[0] ?? "") : "No page signal yet"}
+              </p>
+              <p className="mt-2 text-sm leading-6 text-[#665d4e]">
+                {topPage
+                  ? `${topPage.impressions} impressions. Use it as the first page to tune from real demand.`
+                  : "Need page-level GSC data before choosing the first page."}
+              </p>
+            </div>
+          </div>
+        </DashboardCard>
       </div>
 
       {brandOverview?.siteEvents.feedStatus === "partial" && (
@@ -261,6 +437,173 @@ export default async function SeoPage() {
           `COMMAND_CENTER_EVENTS_URL`.
         </div>
       )}
+
+      <div className="mb-5 grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
+        <DashboardCard title="Ranking Distance" eyebrow="How close are we?">
+          <div className="space-y-4">
+            <HorizontalBar
+              label="Near page one"
+              value={strikingDistanceQueries}
+              max={Math.max(queryRows.length, 1)}
+              detail={`${strikingDistanceQueries}/${queryRows.length} queries at avg position 20 or better`}
+              tone={strikingDistanceQueries > 0 ? "good" : "warn"}
+            />
+            <HorizontalBar
+              label="Buried"
+              value={buriedQueries}
+              max={Math.max(queryRows.length, 1)}
+              detail={`${buriedQueries}/${queryRows.length} queries past position 50`}
+              tone={buriedQueries > 0 ? "danger" : "good"}
+            />
+            <HorizontalBar
+              label="No-click demand"
+              value={impressionNoClickQueries}
+              max={Math.max(queryRows.length, 1)}
+              detail={`${impressionNoClickQueries}/${queryRows.length} queries shown with no clicks`}
+              tone={impressionNoClickQueries > 0 ? "warn" : "good"}
+            />
+          </div>
+          <p className="mt-5 text-sm leading-6 text-[#665d4e]">
+            This is the fast read: green means push harder, gold means tune,
+            red means the page needs more relevance, support, or authority.
+          </p>
+        </DashboardCard>
+
+        <DashboardCard title="Proof Funnel" eyebrow="Demand to action">
+          <div className="grid gap-4 md:grid-cols-4">
+            {[
+              {
+                label: "Google impressions",
+                value: metricValue(searchConsole?.impressions),
+                detail: "Discovery signal",
+                icon: Eye,
+              },
+              {
+                label: "Clicks",
+                value: metricValue(searchConsole?.clicks),
+                detail: "Search result pull",
+                icon: MousePointerClick,
+              },
+              {
+                label: "Audit starts",
+                value: metricValue(brandOverview?.siteEvents.aiOpportunityAuditStarts7Days),
+                detail: "Intent captured",
+                icon: Search,
+              },
+              {
+                label: "Audit unlocks",
+                value: metricValue(brandOverview?.siteEvents.aiOpportunityAuditUnlocks7Days),
+                detail: "Lead proof",
+                icon: CheckCircle2,
+              },
+            ].map((step, index) => {
+              const Icon = step.icon;
+
+              return (
+                <div key={step.label} className="relative rounded-md border border-[#ded6c8] bg-white/60 p-4">
+                  {index < 3 ? (
+                    <ArrowUpRight className="absolute right-3 top-3 text-[#8b6a22]" size={16} />
+                  ) : null}
+                  <Icon size={20} className="text-[#8b6a22]" />
+                  <p className="mt-4 text-2xl font-semibold text-[#171511]">{step.value}</p>
+                  <p className="mt-1 text-sm font-semibold text-[#171511]">{step.label}</p>
+                  <p className="mt-1 text-xs uppercase tracking-[0.12em] text-[#8b6a22]">{step.detail}</p>
+                </div>
+              );
+            })}
+          </div>
+        </DashboardCard>
+      </div>
+
+      <div className="mb-5 grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
+        <DashboardCard title="Live Query Opportunities" eyebrow="From Google Search Console">
+          {queryRows.length > 0 ? (
+            <div className="space-y-3">
+              {queryRows.slice(0, 6).map((row, index) => (
+                <SearchConsoleRowCard key={row.keys.join("-")} row={row} index={index} />
+              ))}
+            </div>
+          ) : (
+            <p className="text-sm leading-6 text-[#665d4e]">
+              No query rows returned yet. Once Google has more data, this area
+              becomes the weekly page-improvement queue.
+            </p>
+          )}
+        </DashboardCard>
+
+        <div className="space-y-5">
+          <DashboardCard title="Immediate Moves" eyebrow="What I should do next">
+            <div className="space-y-3">
+              {proofActions.map((action) => {
+                const Icon = action.icon;
+
+                return (
+                  <div key={action.title} className="rounded-md border border-[#ded6c8] bg-white/60 p-4">
+                    <div className="flex gap-3">
+                      <div className="flex size-9 shrink-0 items-center justify-center rounded-md bg-[#171511] text-[#d6a034]">
+                        <Icon size={18} />
+                      </div>
+                      <div>
+                        <p className="text-sm font-semibold leading-6 text-[#171511]">{action.title}</p>
+                        <p className="mt-1 text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                          {action.proof}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </DashboardCard>
+
+          <DashboardCard title="Target Coverage" eyebrow="Supply vs proof">
+            <div className="space-y-5">
+              <div>
+                <p className="mb-3 text-sm font-semibold text-[#171511]">SEO page inventory</p>
+                <SegmentedBar
+                  segments={[
+                    { label: "page live", value: pageLiveTargets, tone: "good" },
+                    { label: "needs upgrade", value: needsUpgradeTargets, tone: "warn" },
+                    { label: "page needed", value: pageNeededTargets, tone: "danger" },
+                  ]}
+                />
+              </div>
+              <div>
+                <p className="mb-3 text-sm font-semibold text-[#171511]">Authority and AI visibility</p>
+                <SegmentedBar
+                  segments={[
+                    { label: "authority done", value: authorityDoneTargets, tone: "good" },
+                    { label: "authority open", value: authorityOpenTargets, tone: "danger" },
+                    { label: "AI checks ready", value: aiReadyTargets, tone: "neutral" },
+                    { label: "AI checks pending", value: aiPendingTargets, tone: "warn" },
+                  ]}
+                />
+              </div>
+            </div>
+          </DashboardCard>
+        </div>
+      </div>
+
+      <DashboardCard title="Pages Google Is Testing" eyebrow="Query to URL fit" className="mb-5">
+        <div className="grid gap-3 xl:grid-cols-2">
+          {queryPageRows.length > 0 ? (
+            queryPageRows.slice(0, 8).map((row) => (
+              <div key={row.keys.join("-")} className="rounded-md border border-[#ded6c8] bg-white/60 p-4">
+                <div className="flex flex-wrap items-center gap-2">
+                  <StatusBadge tone={rankingTone(row.position)}>Avg {pos(row.position)}</StatusBadge>
+                  <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                    {row.impressions} impressions
+                  </span>
+                </div>
+                <p className="mt-3 text-sm font-semibold leading-6 text-[#171511]">{row.keys[0]}</p>
+                <p className="mt-2 text-sm leading-6 text-[#665d4e]">{pageLabel(row.keys[1] ?? "")}</p>
+              </div>
+            ))
+          ) : (
+            <p className="text-sm leading-6 text-[#665d4e]">No query-page rows returned yet.</p>
+          )}
+        </div>
+      </DashboardCard>
 
       <div className="mb-5 grid gap-5 xl:grid-cols-[1fr_1fr]">
         <DashboardCard title="Growth Score Shape" eyebrow="Visual baseline">
@@ -294,34 +637,27 @@ export default async function SeoPage() {
           </div>
         </DashboardCard>
 
-        <DashboardCard title="Target Coverage" eyebrow="What exists vs what needs proof">
-          <div className="space-y-5">
-            <div>
-              <p className="mb-3 text-sm font-semibold text-[#171511]">SEO page inventory</p>
-              <SegmentedBar
-                segments={[
-                  { label: "page live", value: pageLiveTargets, tone: "good" },
-                  { label: "needs upgrade", value: needsUpgradeTargets, tone: "warn" },
-                  { label: "page needed", value: pageNeededTargets, tone: "danger" },
-                ]}
-              />
-            </div>
-            <div>
-              <p className="mb-3 text-sm font-semibold text-[#171511]">Authority and AI visibility</p>
-              <SegmentedBar
-                segments={[
-                  { label: "authority done", value: authorityDoneTargets, tone: "good" },
-                  { label: "authority open", value: authorityOpenTargets, tone: "danger" },
-                  { label: "AI checks pending", value: aiPendingTargets, tone: "warn" },
-                ]}
-              />
-            </div>
+        <DashboardCard title="Live Site Demand" eyebrow="Traffic and conversion">
+          <div className="grid gap-3 sm:grid-cols-2">
+            {liveMetrics.map((metric) => {
+              const Icon = metric.icon;
+
+              return (
+                <div key={metric.label} className="rounded-md border border-[#ded6c8] bg-white/60 p-4">
+                  <div className="flex items-start justify-between gap-3">
+                    <div>
+                      <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                        {metric.label}
+                      </p>
+                      <p className="mt-2 text-2xl font-semibold text-[#171511]">{metric.value}</p>
+                    </div>
+                    <Icon size={18} className="text-[#8b6a22]" />
+                  </div>
+                  <p className="mt-3 text-sm leading-6 text-[#665d4e]">{metric.note}</p>
+                </div>
+              );
+            })}
           </div>
-          <p className="mt-5 text-sm leading-6 text-[#665d4e]">
-            The visible problem is not lack of pages anymore. It is proof:
-            rankings, AI mentions, citations, visits, audit starts, and
-            qualified conversations.
-          </p>
         </DashboardCard>
       </div>
 
