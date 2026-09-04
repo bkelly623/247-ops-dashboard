@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
+import { HorizontalBar, SegmentedBar } from "@/components/visualizations";
 import {
   aiVisibilityTargets,
   authorityTargets,
@@ -23,6 +24,7 @@ import {
 import { standingScores } from "@/data/growth-standing";
 import { searchBaselines } from "@/data/search-baselines";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
+import { getSearchConsoleSnapshot } from "@/lib/search-console/server";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +120,14 @@ async function loadBrandOverview() {
   }
 }
 
+async function loadSearchConsoleSnapshot() {
+  try {
+    return await getSearchConsoleSnapshot();
+  } catch {
+    return null;
+  }
+}
+
 function metricValue(value: number | null | undefined) {
   if (typeof value !== "number") return "Pending";
   return value.toLocaleString();
@@ -145,6 +155,19 @@ function trendTone(trend: string) {
 
 export default async function SeoPage() {
   const brandOverview = await loadBrandOverview();
+  const searchConsole = await loadSearchConsoleSnapshot();
+  const averageStanding =
+    standingScores.reduce((sum, item) => sum + item.score, 0) / standingScores.length;
+  const targetAverage =
+    standingScores.reduce((sum, item) => sum + item.targetScore, 0) / standingScores.length;
+  const pageLiveTargets = seoKeywordTargets.filter((target) => target.status === "page-live").length;
+  const needsUpgradeTargets = seoKeywordTargets.filter((target) => target.status === "needs-upgrade").length;
+  const pageNeededTargets = seoKeywordTargets.filter((target) => target.status === "page-needed").length;
+  const aiPendingTargets = aiVisibilityTargets.filter((target) =>
+    target.currentVisibility.toLowerCase().includes("pending"),
+  ).length;
+  const authorityDoneTargets = authorityTargets.filter((target) => target.status === "done").length;
+  const authorityOpenTargets = authorityTargets.length - authorityDoneTargets;
   const liveMetrics = [
     {
       label: "Page views",
@@ -175,6 +198,22 @@ export default async function SeoPage() {
       value: metricValue(brandOverview?.siteEvents.uniqueVisitorEvents30Days),
       note: "Distinct tracked visitor IDs from command-center-owned site events.",
       icon: Target,
+    },
+    {
+      label: "GSC clicks",
+      value: metricValue(searchConsole?.clicks),
+      note: searchConsole?.siteUrl
+        ? `${searchConsole.startDate} to ${searchConsole.endDate} from Search Console.`
+        : "Pending Search Console service-account credentials.",
+      icon: FileSearch,
+    },
+    {
+      label: "GSC impressions",
+      value: metricValue(searchConsole?.impressions),
+      note: searchConsole?.siteUrl
+        ? `${searchConsole.startDate} to ${searchConsole.endDate} from Search Console.`
+        : "Pending Search Console service-account credentials.",
+      icon: Sparkles,
     },
   ];
 
@@ -222,6 +261,69 @@ export default async function SeoPage() {
           `COMMAND_CENTER_EVENTS_URL`.
         </div>
       )}
+
+      <div className="mb-5 grid gap-5 xl:grid-cols-[1fr_1fr]">
+        <DashboardCard title="Growth Score Shape" eyebrow="Visual baseline">
+          <div className="space-y-4">
+            <HorizontalBar
+              label="Current average"
+              value={Number(averageStanding.toFixed(1))}
+              max={10}
+              detail={`${averageStanding.toFixed(1)}/10`}
+              tone="gold"
+            />
+            <HorizontalBar
+              label="Target average"
+              value={Number(targetAverage.toFixed(1))}
+              max={10}
+              detail={`${targetAverage.toFixed(1)}/10`}
+              tone="good"
+            />
+            {standingScores
+              .filter((item) => item.score < 5)
+              .map((item) => (
+                <HorizontalBar
+                  key={item.id}
+                  label={item.area}
+                  value={item.score}
+                  max={10}
+                  detail={`${item.score}/10`}
+                  tone={item.score < 3 ? "danger" : "warn"}
+                />
+              ))}
+          </div>
+        </DashboardCard>
+
+        <DashboardCard title="Target Coverage" eyebrow="What exists vs what needs proof">
+          <div className="space-y-5">
+            <div>
+              <p className="mb-3 text-sm font-semibold text-[#171511]">SEO page inventory</p>
+              <SegmentedBar
+                segments={[
+                  { label: "page live", value: pageLiveTargets, tone: "good" },
+                  { label: "needs upgrade", value: needsUpgradeTargets, tone: "warn" },
+                  { label: "page needed", value: pageNeededTargets, tone: "danger" },
+                ]}
+              />
+            </div>
+            <div>
+              <p className="mb-3 text-sm font-semibold text-[#171511]">Authority and AI visibility</p>
+              <SegmentedBar
+                segments={[
+                  { label: "authority done", value: authorityDoneTargets, tone: "good" },
+                  { label: "authority open", value: authorityOpenTargets, tone: "danger" },
+                  { label: "AI checks pending", value: aiPendingTargets, tone: "warn" },
+                ]}
+              />
+            </div>
+          </div>
+          <p className="mt-5 text-sm leading-6 text-[#665d4e]">
+            The visible problem is not lack of pages anymore. It is proof:
+            rankings, AI mentions, citations, visits, audit starts, and
+            qualified conversations.
+          </p>
+        </DashboardCard>
+      </div>
 
       <DashboardCard title="Current Standing" eyebrow="Baseline scorecard" className="mb-5">
         <div className="mb-4 rounded-md border border-[#ded6c8] bg-white/55 p-3 text-sm leading-6 text-[#665d4e]">

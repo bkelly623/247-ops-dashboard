@@ -4,6 +4,7 @@ import {
   CalendarClock,
   Flame,
   Gauge,
+  SearchCheck,
   LucideIcon,
   Radar,
   Recycle,
@@ -330,6 +331,13 @@ export const integrationStatus = [
     state: "Pending key",
     detail: "Add POSTFAST_API_KEY to enable scheduling and analytics.",
     icon: CalendarClock,
+  },
+  {
+    name: "Google Search Console",
+    state: "Pending key",
+    detail:
+      "Add service-account credentials and the verified site property URL to enable ranking proof.",
+    icon: SearchCheck,
   },
 ];
 

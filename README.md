@@ -62,6 +62,26 @@ Required for PostFast integration:
 POSTFAST_API_KEY=
 ```
 
+Required for Google Search Console ranking proof:
+
+```bash
+GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL=
+GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY=
+GOOGLE_SEARCH_CONSOLE_CLIENT_ID=
+GOOGLE_SEARCH_CONSOLE_CLIENT_SECRET=
+GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN=
+GOOGLE_SEARCH_CONSOLE_QUOTA_PROJECT_ID=
+GSC_SITE_URL=sc-domain:get247roi.com
+```
+
+Create a Google Cloud service account with Search Console API enabled, add the
+service-account email as a user on the verified `get247roi.com` Search Console
+property, then store the private key as a server-only env var. For user OAuth,
+store the client ID, client secret, refresh token, and quota project ID instead.
+`GSC_SITE_URL` must exactly match the Search Console property, commonly
+`sc-domain:get247roi.com` for a domain property or
+`https://www.get247roi.com/` for a URL-prefix property.
+
 Required in the public brand-site deployment so website events flow into the command center:
 
 ```bash

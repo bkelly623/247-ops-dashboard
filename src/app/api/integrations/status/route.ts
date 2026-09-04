@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerEnv } from "@/lib/env";
+import { isSearchConsoleConfigured } from "@/lib/search-console/server";
 
 export async function GET() {
   const env = getServerEnv();
@@ -16,6 +17,10 @@ export async function GET() {
     },
     postfast: {
       configured: Boolean(env.postfastApiKey),
+    },
+    searchConsole: {
+      configured: isSearchConsoleConfigured(),
+      siteUrl: env.googleSearchConsoleSiteUrl ?? null,
     },
     brandSite: {
       configured: Boolean(env.commandCenterEventsSecret),

@@ -1,6 +1,8 @@
 import { Bot, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
+import { DonutMetric, HorizontalBar, SegmentedBar } from "@/components/visualizations";
+import { rankTrackingTools } from "@/data/rank-tracking-tools";
 import { visibilitySnapshots } from "@/data/visibility-snapshots";
 import { searchBaselines } from "@/data/search-baselines";
 
@@ -15,6 +17,14 @@ export default function VisibilityPage() {
   const present = visibilitySnapshots.filter((item) => item.standing === "present").length;
   const absent = visibilitySnapshots.filter((item) => item.standing === "absent").length;
   const pending = visibilitySnapshots.filter((item) => item.standing === "pending").length;
+  const stale = visibilitySnapshots.filter((item) => item.standing === "stale").length;
+  const indexedBaselines = searchBaselines.filter((item) => item.standing === "indexed").length;
+  const staleBaselines = searchBaselines.filter((item) => item.standing === "stale-result").length;
+  const missingBaselines = searchBaselines.filter((item) => item.standing === "not-observed").length;
+  const googleSnapshots = visibilitySnapshots.filter((item) => item.engine === "Google").length;
+  const aiSnapshots = visibilitySnapshots.filter(
+    (item) => item.engine === "ChatGPT" || item.engine === "Gemini" || item.engine === "Perplexity",
+  ).length;
 
   return (
     <AppShell>
@@ -37,6 +47,94 @@ export default function VisibilityPage() {
           </DashboardCard>
         ))}
       </div>
+
+      <div className="mb-5 grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+        <DashboardCard title="Visibility Mix" eyebrow="Current snapshot health">
+          <SegmentedBar
+            segments={[
+              { label: "present", value: present, tone: "good" },
+              { label: "stale", value: stale, tone: "warn" },
+              { label: "absent", value: absent, tone: "danger" },
+              { label: "pending", value: pending, tone: "neutral" },
+            ]}
+          />
+          <div className="mt-5 grid gap-3 sm:grid-cols-2">
+            <DonutMetric
+              label="Google checks"
+              value={googleSnapshots}
+              max={visibilitySnapshots.length}
+              caption="Search-engine observations currently stored."
+              tone="gold"
+            />
+            <DonutMetric
+              label="AI checks"
+              value={aiSnapshots}
+              max={visibilitySnapshots.length}
+              caption="ChatGPT, Gemini, or Perplexity snapshots currently stored."
+              tone={aiSnapshots > 0 ? "warn" : "danger"}
+            />
+          </div>
+        </DashboardCard>
+
+        <DashboardCard title="Manual Baseline Coverage" eyebrow="Indexed vs missing">
+          <div className="space-y-4">
+            <HorizontalBar
+              label="Indexed"
+              value={indexedBaselines}
+              max={searchBaselines.length}
+              detail={`${indexedBaselines}/${searchBaselines.length}`}
+              tone="good"
+            />
+            <HorizontalBar
+              label="Wrong or stale page"
+              value={staleBaselines}
+              max={searchBaselines.length}
+              detail={`${staleBaselines}/${searchBaselines.length}`}
+              tone="warn"
+            />
+            <HorizontalBar
+              label="Not observed"
+              value={missingBaselines}
+              max={searchBaselines.length}
+              detail={`${missingBaselines}/${searchBaselines.length}`}
+              tone="danger"
+            />
+          </div>
+          <p className="mt-5 text-sm leading-6 text-[#665d4e]">
+            This is still a manual baseline. It shows discovery and absence,
+            not reliable rank movement. Search Console or a self-hosted tracker
+            should replace manual checks as soon as we connect data.
+          </p>
+        </DashboardCard>
+      </div>
+
+      <DashboardCard title="Rank Tracking Options" eyebrow="Free and open-source stack" className="mb-5">
+        <div className="grid gap-3 xl:grid-cols-5">
+          {rankTrackingTools.map((tool) => (
+            <a
+              key={tool.name}
+              href={tool.sourceUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="rounded-md border border-[#ded6c8] bg-white/55 p-4 transition hover:border-[#d6a034] hover:bg-white"
+            >
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusBadge tone={tool.fit === "best-fit" ? "gold" : tool.fit === "useful" ? "good" : "neutral"}>
+                  {tool.fit.replace("-", " ")}
+                </StatusBadge>
+                <StatusBadge tone={tool.type === "open-source" ? "good" : "neutral"}>
+                  {tool.type}
+                </StatusBadge>
+              </div>
+              <h2 className="mt-3 text-sm font-semibold text-[#171511]">{tool.name}</h2>
+              <p className="mt-2 text-sm leading-6 text-[#665d4e]">{tool.strength}</p>
+              <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#8b6a22]">
+                {tool.cost}
+              </p>
+            </a>
+          ))}
+        </div>
+      </DashboardCard>
 
       <DashboardCard title="Visibility Snapshots" eyebrow="Search and AI answer checks" className="mb-5">
         <div className="space-y-4">
