@@ -9,7 +9,7 @@
 1. Prove measurement: public-site page views, CTA clicks, phone/email clicks, audit starts, gate submits, report unlocks, and lead quality are visible in the command center.
 2. Build qualified acquisition: core commercial pages are live, indexed, internally linked, and improving from search/AI visibility evidence.
 3. Earn AI visibility: ChatGPT, Gemini, Perplexity, Google AI surfaces, and Bing can correctly describe 247ROI as a business systems, AI automation, dashboard, internal app, and AI agent builder.
-4. Improve conversion: the homepage, services pages, and `/hire` produce enough tracked behavior to identify friction and justify page changes.
+4. Improve conversion: the homepage, services pages, and `/ai-opportunity-audit` produce enough tracked behavior to identify friction and justify page changes.
 5. Add proof and authority: publish useful diagnostic assets, workflow examples, teardown content, and legitimate citations/backlinks.
 
 ## Operating Loops
@@ -41,4 +41,4 @@
 3. Submit and monitor sitemap/indexation for all P1 and P2 pages.
 4. Run first AI visibility prompt snapshot.
 5. Build one high-utility diagnostic asset around what a business should automate first.
-6. Improve `/hire` only after traffic and behavior data show where visitors drop.
+6. Improve `/ai-opportunity-audit` only after traffic and behavior data show where visitors drop.

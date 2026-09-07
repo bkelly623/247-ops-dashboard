@@ -196,7 +196,7 @@ export const workLedger: WorkLedgerEntry[] = [
     title: "Improved hire audit conversion flow",
     repo: "247ROI",
     commit: "fd2ad42",
-    changed: ["/hire"],
+    changed: ["/ai-opportunity-audit"],
     why: "The AI Opportunity Audit needed to feel like a useful diagnostic path instead of a generic chat/intake.",
     expectedEffect: "More audit starts, better completion, and clearer lead context.",
     evidenceStatus: "needs-data",

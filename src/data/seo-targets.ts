@@ -180,7 +180,7 @@ export const siteStandingScores: SiteStandingScore[] = [
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "/hire is technically built with triage, guided chat, examples, and tracking. The site has CTA paths from major pages.",
+      "/ai-opportunity-audit is technically built with triage, guided chat, examples, and tracking. The site has CTA paths from major pages.",
     proofNeeded: "CTA clicks, audit starts, completion rate, report unlocks, calls, email clicks, and lead quality.",
     nextAction: "Drive more qualified traffic before polishing further; improve only when behavior shows friction.",
   },
@@ -331,7 +331,7 @@ export const longTailCampaigns: LongTailCampaign[] = [
     cluster: "What should my business automate first",
     status: "active",
     targetPage: "/what-should-my-business-automate-first",
-    supportingPages: ["/hire", "/business-process-automation-consultant", "/workflow-automation-consultant"],
+    supportingPages: ["/ai-opportunity-audit", "/business-process-automation-consultant", "/workflow-automation-consultant"],
     proofSource: "High-fit buyer question with low competition and direct audit intent.",
     nextAction:
       "Use this as the long-tail conversion asset for warm traffic, FAQs, LinkedIn posts, and internal links into the AI Opportunity Audit.",
@@ -353,7 +353,7 @@ export const longTailCampaigns: LongTailCampaign[] = [
     cluster: "AI visibility and GEO consultant",
     status: "planned",
     targetPage: "/ai-visibility-optimization",
-    supportingPages: ["/generative-engine-optimization-consultant", "/hire"],
+    supportingPages: ["/generative-engine-optimization-consultant", "/ai-opportunity-audit"],
     proofSource: "Strategic Package #2 category, but needs authority and answer-engine proof before heavy expansion.",
     nextAction:
       "Run answer-engine snapshots, then write long-tail pages only where ChatGPT, Gemini, Perplexity, or AI Overviews show a real gap.",
@@ -464,7 +464,7 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     competition: "low",
     value: "high",
     play: "long-tail",
-    targetPage: "/hire",
+    targetPage: "/ai-opportunity-audit",
     status: "page-live",
     baseline: "Crawlable audit sections and schema added 2026-08-25",
     current: "Awaiting index/rank baseline",
@@ -491,7 +491,7 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     competition: "medium",
     value: "high",
     play: "commercial",
-    targetPage: "/hire",
+    targetPage: "/ai-opportunity-audit",
     status: "page-live",
     baseline: "Crawlable audit positioning added 2026-08-25",
     current: "Awaiting index/rank baseline",
@@ -647,7 +647,7 @@ export const aiVisibilityTargets: AiVisibilityTarget[] = [
   {
     prompt: "Who can help me find automation opportunities in my business?",
     priority: "P1",
-    targetPage: "/hire",
+    targetPage: "/ai-opportunity-audit",
     currentVisibility: "Not yet checked",
     nextAction: "Make AI Opportunity Audit the clear answer for diagnosis before implementation.",
   },

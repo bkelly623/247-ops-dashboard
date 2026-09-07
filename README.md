@@ -87,9 +87,13 @@ Required in the public brand-site deployment so website events flow into the com
 ```bash
 COMMAND_CENTER_EVENTS_URL=https://247-ops-dashboard.vercel.app/api/site-events/ingest
 COMMAND_CENTER_EVENTS_SECRET=
+ANALYTICS_INTERNAL_IPS=
+ANALYTICS_INTERNAL_IP_HASHES=
+ANALYTICS_INTERNAL_USER_AGENT_PATTERNS=
 ```
 
 `COMMAND_CENTER_EVENTS_SECRET` must match the command-center value and stay server-only.
+Set `ANALYTICS_INTERNAL_IPS` on the public brand site to comma-separated VM or office IPs that should be retained in raw events but excluded from qualified operating metrics. The built-in filter also excludes common agent, audit, curl, Playwright, and headless browser user agents.
 
 Optional deployment/platform management values are stored outside the repo in the local Hermes config directory.
 

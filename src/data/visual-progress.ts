@@ -32,7 +32,7 @@ export const visualProgressItems: VisualProgressItem[] = [
   {
     date: "2026-08-26",
     page: "AI Opportunity Audit",
-    url: "https://www.get247roi.com/hire",
+    url: "https://www.get247roi.com/ai-opportunity-audit",
     viewport: "desktop + mobile",
     title: "Guided audit flow and triage",
     before:

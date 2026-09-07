@@ -14,6 +14,8 @@ create table if not exists site_events (
   visitor_id text,
   ip_hash text,
   user_agent text,
+  excluded_from_metrics boolean not null default false,
+  exclusion_reason text,
   metadata jsonb not null default '{}'::jsonb
 );
 
@@ -22,6 +24,8 @@ create index if not exists idx_site_events_event_name on site_events (event_name
 create index if not exists idx_site_events_path on site_events (path);
 create index if not exists idx_site_events_session_id on site_events (session_id);
 create index if not exists idx_site_events_visitor_id on site_events (visitor_id);
+create index if not exists idx_site_events_excluded_created
+  on site_events (excluded_from_metrics, created_at desc);
 
 alter table site_events enable row level security;
 

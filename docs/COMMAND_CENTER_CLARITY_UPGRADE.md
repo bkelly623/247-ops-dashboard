@@ -28,7 +28,7 @@ Recent public-site changes since 2026-08-24 include:
 - Event tracking foundation and command-center event forwarding.
 - Sharper homepage audit conversion path.
 - Business process automation, AI agents, AI automation consultant, AI visibility, GEO, dashboard, internal tools, and workflow automation landing pages.
-- `/hire` audit conversion-flow improvements.
+- `/ai-opportunity-audit` audit conversion-flow improvements.
 - Internal-link and audit-language consistency work.
 - IndexNow key file.
 - Warm traffic starter kit.
@@ -171,7 +171,7 @@ Goal: let B see improvements rather than infer them.
 Capture:
 
 - Homepage before/after.
-- `/hire` before/after.
+- `/ai-opportunity-audit` before/after.
 - Service page before/after.
 - New SEO pages.
 - Demo/proof changes.

@@ -7,6 +7,9 @@ type ServerEnv = PublicEnv & {
   supabaseSecretKey?: string;
   supabaseProjectRef?: string;
   commandCenterEventsSecret?: string;
+  analyticsInternalIps?: string;
+  analyticsInternalIpHashes?: string;
+  analyticsInternalUserAgentPatterns?: string;
   postfastApiKey?: string;
   googleSearchConsoleClientEmail?: string;
   googleSearchConsolePrivateKey?: string;
@@ -40,6 +43,9 @@ export function getServerEnv(): ServerEnv {
     supabaseSecretKey: process.env.SUPABASE_SECRET_KEY,
     supabaseProjectRef: process.env.SUPABASE_PROJECT_REF,
     commandCenterEventsSecret: process.env.COMMAND_CENTER_EVENTS_SECRET,
+    analyticsInternalIps: process.env.ANALYTICS_INTERNAL_IPS,
+    analyticsInternalIpHashes: process.env.ANALYTICS_INTERNAL_IP_HASHES,
+    analyticsInternalUserAgentPatterns: process.env.ANALYTICS_INTERNAL_USER_AGENT_PATTERNS,
     postfastApiKey: process.env.POSTFAST_API_KEY,
     googleSearchConsoleClientEmail: process.env.GOOGLE_SEARCH_CONSOLE_CLIENT_EMAIL,
     googleSearchConsolePrivateKey: process.env.GOOGLE_SEARCH_CONSOLE_PRIVATE_KEY,

@@ -1,14 +1,11 @@
 import "server-only";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 
-type CountResult = {
-  count: number | null;
-  error: { message: string } | null;
-};
-
-type VisitorIdResult = {
-  data: { visitor_id: string | null }[] | null;
-  error: { message: string } | null;
+type SiteEventRow = {
+  created_at: string;
+  event_name: string;
+  visitor_id: string | null;
+  metadata: unknown;
 };
 
 function daysAgo(days: number) {
@@ -17,17 +14,33 @@ function daysAgo(days: number) {
   return date.toISOString();
 }
 
-async function optionalCountQuery(query: PromiseLike<CountResult>) {
-  const { count, error } = await query;
-  if (error) return null;
-  return count ?? 0;
+function isExcludedFromMetrics(row: SiteEventRow) {
+  const metadata = row.metadata;
+  if (!metadata || typeof metadata !== "object" || Array.isArray(metadata)) return false;
+
+  const trafficClass = (metadata as Record<string, unknown>).trafficClass;
+  if (!trafficClass || typeof trafficClass !== "object" || Array.isArray(trafficClass)) {
+    return false;
+  }
+
+  return (trafficClass as Record<string, unknown>).excludedFromMetrics === true;
 }
 
-async function optionalUniqueVisitorCount(query: PromiseLike<VisitorIdResult>) {
-  const { data, error } = await query;
-  if (error) return null;
+function countEvents(rows: SiteEventRow[], eventName: string, since: string) {
+  return rows.filter(
+    (row) =>
+      row.event_name === eventName &&
+      row.created_at >= since &&
+      !isExcludedFromMetrics(row),
+  ).length;
+}
 
-  return new Set((data ?? []).map((row) => row.visitor_id).filter(Boolean)).size;
+function uniqueVisitors(rows: SiteEventRow[], since: string) {
+  return new Set(
+    rows
+      .filter((row) => row.created_at >= since && row.visitor_id && !isExcludedFromMetrics(row))
+      .map((row) => row.visitor_id),
+  ).size;
 }
 
 export async function getBrandSiteOverview() {
@@ -35,112 +48,33 @@ export async function getBrandSiteOverview() {
   const since7 = daysAgo(7);
   const since30 = daysAgo(30);
 
-  const [
-    pageViews7d,
-    pageViews30d,
-    ctaClicks7d,
-    ctaClicks30d,
-    phoneClicks7d,
-    emailClicks7d,
-    hireStarts7d,
-    hireStarts30d,
-    hireUnlocks7d,
-    hireUnlocks30d,
-    uniqueVisitors30d,
-  ] = await Promise.all([
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "page_view")
-        .gte("created_at", since7),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "page_view")
-        .gte("created_at", since30),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "cta_click")
-        .gte("created_at", since7),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "cta_click")
-        .gte("created_at", since30),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "phone_click")
-        .gte("created_at", since7),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "email_click")
-        .gte("created_at", since7),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "hire_session_started")
-        .gte("created_at", since7),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "hire_session_started")
-        .gte("created_at", since30),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "hire_report_unlocked")
-        .gte("created_at", since7),
-    ),
-    optionalCountQuery(
-      supabase
-        .from("site_events")
-        .select("id", { count: "exact", head: true })
-        .eq("event_name", "hire_report_unlocked")
-        .gte("created_at", since30),
-    ),
-    optionalUniqueVisitorCount(
-      supabase
-        .from("site_events")
-        .select("visitor_id")
-        .not("visitor_id", "is", null)
-        .gte("created_at", since30),
-    ),
-  ]);
+  const { data, error } = await supabase
+    .from("site_events")
+    .select("created_at,event_name,visitor_id,metadata")
+    .gte("created_at", since30)
+    .order("created_at", { ascending: false })
+    .limit(5000);
 
-  const siteEventValues = [
-    pageViews7d,
-    pageViews30d,
-    ctaClicks7d,
-    ctaClicks30d,
-    phoneClicks7d,
-    emailClicks7d,
-    hireStarts7d,
-    hireStarts30d,
-    hireUnlocks7d,
-    hireUnlocks30d,
-    uniqueVisitors30d,
-  ];
-  const resolvedSiteEventValues = siteEventValues.filter((value) => value !== null).length;
+  const rows = (data ?? []) as SiteEventRow[];
+  const siteEventsAvailable = !error;
+
+  const pageViews7d = siteEventsAvailable ? countEvents(rows, "page_view", since7) : null;
+  const pageViews30d = siteEventsAvailable ? countEvents(rows, "page_view", since30) : null;
+  const ctaClicks7d = siteEventsAvailable ? countEvents(rows, "cta_click", since7) : null;
+  const ctaClicks30d = siteEventsAvailable ? countEvents(rows, "cta_click", since30) : null;
+  const phoneClicks7d = siteEventsAvailable ? countEvents(rows, "phone_click", since7) : null;
+  const emailClicks7d = siteEventsAvailable ? countEvents(rows, "email_click", since7) : null;
+  const hireStarts7d = siteEventsAvailable ? countEvents(rows, "hire_session_started", since7) : null;
+  const hireStarts30d = siteEventsAvailable ? countEvents(rows, "hire_session_started", since30) : null;
+  const hireUnlocks7d = siteEventsAvailable ? countEvents(rows, "hire_report_unlocked", since7) : null;
+  const hireUnlocks30d = siteEventsAvailable ? countEvents(rows, "hire_report_unlocked", since30) : null;
+  const uniqueVisitors30d = siteEventsAvailable ? uniqueVisitors(rows, since30) : null;
+  const rawPageViews30d = siteEventsAvailable
+    ? rows.filter((row) => row.event_name === "page_view" && row.created_at >= since30).length
+    : null;
+  const excludedEvents30d = siteEventsAvailable
+    ? rows.filter((row) => row.created_at >= since30 && isExcludedFromMetrics(row)).length
+    : null;
 
   return {
     generatedAt: new Date().toISOString(),
@@ -162,13 +96,8 @@ export async function getBrandSiteOverview() {
       source: "command_center_site_events",
     },
     siteEvents: {
-      tableReady: resolvedSiteEventValues > 0,
-      feedStatus:
-        resolvedSiteEventValues === siteEventValues.length
-          ? "ready"
-          : resolvedSiteEventValues > 0
-            ? "partial"
-            : "unavailable",
+      tableReady: siteEventsAvailable,
+      feedStatus: siteEventsAvailable ? "ready" : "unavailable",
       pageViews7Days: pageViews7d,
       pageViews30Days: pageViews30d,
       ctaClicks7Days: ctaClicks7d,
@@ -180,6 +109,8 @@ export async function getBrandSiteOverview() {
       aiOpportunityAuditUnlocks7Days: hireUnlocks7d,
       aiOpportunityAuditUnlocks30Days: hireUnlocks30d,
       uniqueVisitorEvents30Days: uniqueVisitors30d,
+      rawPageViews30Days: rawPageViews30d,
+      excludedEvents30Days: excludedEvents30d,
     },
   };
 }

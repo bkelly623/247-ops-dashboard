@@ -102,7 +102,7 @@ export default function ProgressPage() {
         <DashboardCard title="Screenshot Standard" eyebrow="What counts as proof">
           <div className="grid gap-3 md:grid-cols-3">
             {[
-              "Capture desktop and mobile for homepage, /hire, services, proof/demo, and major new assets.",
+              "Capture desktop and mobile for homepage, /ai-opportunity-audit, services, proof/demo, and major new assets.",
               "Only track changes that affect clarity, trust, conversion, SEO/GEO, or buyer confidence.",
               "Pair screenshots with the Work Ledger so every visual improvement has a reason and follow-up.",
             ].map((item) => (
