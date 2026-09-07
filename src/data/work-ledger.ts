@@ -35,8 +35,9 @@ export const workLedger: WorkLedgerEntry[] = [
     why: "247ROI needed a crawlable person-to-brand authority signal connecting Brendan Kelly, the company, and the business systems / AI consulting category.",
     expectedEffect:
       "Cleaner entity clarity for search and AI answer engines, stronger trust for warm referrals, and a canonical profile URL for approved external listings.",
-    evidenceStatus: "pending",
-    evidence: "Local lint/build and production verification follow this source update.",
+    evidenceStatus: "verified",
+    evidence:
+      "Public lint/build passed with only pre-existing audit warnings; production /brendan-kelly returns 200, includes founder text and Person schema, and sitemap plus LLM files include the URL.",
     followUp: "Use the founder page as the canonical profile link in approved public profiles, directories, and referral partner materials.",
   },
   {
@@ -48,8 +49,8 @@ export const workLedger: WorkLedgerEntry[] = [
     changed: ["src/data/seo-targets.ts", "src/data/work-ledger.ts"],
     why: "The recurring operator task loop needs completed authority work marked done instead of leaving old tasks in the queue.",
     expectedEffect: "A cleaner authority backlog and more accurate growth standing for future runs.",
-    evidenceStatus: "pending",
-    evidence: "Local typecheck, lint, and build follow this source update.",
+    evidenceStatus: "verified",
+    evidence: "Command-center lint, typecheck, and build passed; production /seo shows the founder-profile authority task.",
     followUp: "Keep the next authority task focused on clean directories, vetted profiles, or proof assets rather than spam backlink work.",
   },
   {
