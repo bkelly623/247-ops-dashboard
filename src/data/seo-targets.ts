@@ -231,11 +231,11 @@ export const authorityTargets: AuthorityTarget[] = [
     name: "Brendan Kelly founder profile",
     type: "profile",
     priority: "P1",
-    status: "queued",
+    status: "done",
     rationale:
       "Search and AI systems need consistent entity signals connecting Brendan Kelly, 247ROI, business systems, AI automation, and get247roi.com.",
     nextAction:
-      "Create a public founder/profile asset and use the same description across approved LinkedIn, business listings, and referral outreach.",
+      "Use /brendan-kelly as the canonical founder/entity page across approved LinkedIn, business listings, referral outreach, and future citations.",
   },
   {
     name: "Referral partner one-pager",

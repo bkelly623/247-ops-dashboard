@@ -26,6 +26,33 @@ export type WorkLedgerEntry = {
 
 export const workLedger: WorkLedgerEntry[] = [
   {
+    date: "2026-09-07",
+    area: "Authority",
+    title: "Added Brendan Kelly founder entity page",
+    repo: "247ROI",
+    commit: "4e17244",
+    changed: ["/brendan-kelly", "/about", "sitemap.xml", "llms.txt", "llms-full.txt", "footer"],
+    why: "247ROI needed a crawlable person-to-brand authority signal connecting Brendan Kelly, the company, and the business systems / AI consulting category.",
+    expectedEffect:
+      "Cleaner entity clarity for search and AI answer engines, stronger trust for warm referrals, and a canonical profile URL for approved external listings.",
+    evidenceStatus: "pending",
+    evidence: "Local lint/build and production verification follow this source update.",
+    followUp: "Use the founder page as the canonical profile link in approved public profiles, directories, and referral partner materials.",
+  },
+  {
+    date: "2026-09-07",
+    area: "Command Center",
+    title: "Closed founder-profile authority task",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: ["src/data/seo-targets.ts", "src/data/work-ledger.ts"],
+    why: "The recurring operator task loop needs completed authority work marked done instead of leaving old tasks in the queue.",
+    expectedEffect: "A cleaner authority backlog and more accurate growth standing for future runs.",
+    evidenceStatus: "pending",
+    evidence: "Local typecheck, lint, and build follow this source update.",
+    followUp: "Keep the next authority task focused on clean directories, vetted profiles, or proof assets rather than spam backlink work.",
+  },
+  {
     date: "2026-09-02",
     area: "Measurement",
     title: "Corrected brand-site metric readiness",
