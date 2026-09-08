@@ -102,12 +102,12 @@ export const standingScores: StandingScore[] = [
     trend: "improving",
     lastUpdated: "2026-09-01",
     currentStanding:
-      "Target pages exist for the main commercial clusters, but true ranking and impression data is still not connected.",
+      "Target pages exist for the main commercial clusters, and Search Console now provides live query, page, and query-to-page performance data.",
     proofHave:
-      "P1 and P2 page list exists; manual site searches show Google has discovered the domain and several core URLs.",
+      "P1 and P2 page list exists; manual site searches show Google has discovered the domain and several core URLs; GSC reports live impressions.",
     proofMissing:
-      "Keyword positions, query impressions, click data, ranking URL matches, and monthly deltas.",
-    nextAction: "Run manual baselines now and replace them with Search Console/Bing data later.",
+      "Clicks, stronger target URL matches, Bing data, and monthly deltas.",
+    nextAction: "Use the Search Console performance endpoint for recurring rank proof, then supplement with manual checks where GSC has no rows.",
     evidence: ["/seo", "/visibility"],
   },
   {
@@ -180,12 +180,16 @@ export const standingScores: StandingScore[] = [
     trend: "improving",
     lastUpdated: "2026-09-02",
     currentStanding:
-      "Public event ingestion is live and visible in the command center. The overview API now separates 7-day and 30-day audit counts and reports partial metric failures without calling the whole feed unready.",
+      "Public event ingestion is live and visible in the command center. The overview API separates 7-day and 30-day audit counts, and Search Console performance is now exposed through a read-only JSON endpoint.",
     proofHave:
-      "Supabase, PostFast, and brand-site integration status are configured; site event counts return from production with a clearer feed health status.",
+      "Supabase, PostFast, brand-site tracking, and Search Console are configured; site event counts and GSC rows return from production.",
     proofMissing:
-      "Search Console, Bing Webmaster, keyword baseline automation, AI snapshot automation, booked-call attribution, and revenue attribution.",
-    nextAction: "Use manual proof tracking until account-level sources are connected, then replace partial API counts with connected search and lead data.",
-    evidence: ["/settings", "https://247-ops-dashboard.vercel.app/api/brand-site/overview"],
+      "Bing Webmaster, keyword history storage, AI snapshot automation, booked-call attribution, and revenue attribution.",
+    nextAction: "Use connected search and event APIs for every operator run, then add durable keyword history and Bing coverage.",
+    evidence: [
+      "/settings",
+      "https://247-ops-dashboard.vercel.app/api/brand-site/overview",
+      "https://247-ops-dashboard.vercel.app/api/search-console/performance",
+    ],
   },
 ];

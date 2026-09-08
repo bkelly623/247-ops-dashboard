@@ -26,6 +26,27 @@ export type WorkLedgerEntry = {
 
 export const workLedger: WorkLedgerEntry[] = [
   {
+    date: "2026-09-08",
+    area: "Measurement",
+    title: "Exposed Search Console performance API",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: [
+      "/api/search-console/performance",
+      "/api/integrations/status",
+      "src/data/seo-targets.ts",
+      "src/data/growth-standing.ts",
+    ],
+    why: "The recurring growth operator needed direct JSON access to Search Console query, page, and query-to-page rows instead of relying on the rendered SEO dashboard.",
+    expectedEffect:
+      "Cleaner recurring baselines for impressions, target URLs, average positions, and page-level query evidence.",
+    evidenceStatus: "verified",
+    evidence:
+      "Command-center lint, typecheck, and build passed; production endpoint returned GSC performance rows for the connected get247roi.com property.",
+    followUp:
+      "Persist monthly keyword snapshots and keep manual SERP checks only for terms that have no GSC rows yet.",
+  },
+  {
     date: "2026-09-07",
     area: "Authority",
     title: "Added Brendan Kelly founder entity page",

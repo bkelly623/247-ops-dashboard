@@ -130,9 +130,9 @@ export const siteStandingScores: SiteStandingScore[] = [
     targetScore: 8,
     trend: "improving",
     currentStanding:
-      "Target list exists, commercial pages are live, and homepage/services/footer now link into the newer P1/P2 pages. Ranking baselines and Search Console feedback are still not connected.",
+      "Target list exists, commercial pages are live, homepage/services/footer link into the newer P1/P2 pages, and Search Console is now feeding live query data.",
     proofNeeded: "Tracked keyword positions, impressions, clicks, indexed pages, and query-to-page mapping.",
-    nextAction: "Baseline every selected keyword, check indexation for the new pages, and improve pages from manual SERP review until Search Console is connected.",
+    nextAction: "Use Search Console query-to-page rows first, then keep manual SERP checks only for terms with no GSC data yet.",
   },
   {
     area: "Ranking proof",
@@ -142,7 +142,7 @@ export const siteStandingScores: SiteStandingScore[] = [
     currentStanding:
       "Search sees 247ROI and several core pages, but newer commercial pages are not reliably observed yet and true positions are not stored.",
     proofNeeded: "Keyword positions, target URL matches, impressions, clicks, indexed status, and monthly baseline deltas.",
-    nextAction: "Run manual SERP baselines now and replace them with Search Console/Bing data once connected.",
+    nextAction: "Store recurring Search Console query/page snapshots and compare them with manual SERP checks for strategic terms.",
   },
   {
     area: "AI visibility",
@@ -210,9 +210,9 @@ export const siteStandingScores: SiteStandingScore[] = [
     targetScore: 8.5,
     trend: "improving",
     currentStanding:
-      "Public event ingestion is live, command-center metrics work, and 30-day visitor IDs are deduped. Search Console, Bing, and revenue attribution remain missing.",
-    proofNeeded: "Search Console, Bing Webmaster, keyword baselines, AI visibility snapshots, lead quality, bookings, and revenue attribution.",
-    nextAction: "Manual baseline until account-level data sources are connected.",
+      "Public event ingestion is live, command-center metrics work, 30-day visitor IDs are deduped, and Search Console summary plus performance rows are available from the command center.",
+    proofNeeded: "Bing Webmaster, stored keyword baselines, AI visibility snapshots, lead quality, bookings, and revenue attribution.",
+    nextAction: "Use the Search Console performance endpoint for recurring operator baselines; keep Bing and lead attribution as the next source gaps.",
   },
   {
     area: "Trust/proof assets",
@@ -703,7 +703,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena + B",
     status: "active",
     proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
-    nextAction: "Search Console and event ingestion are live. Next measurement source is Bing Webmaster plus richer rank history storage.",
+    nextAction: "Search Console summary/performance endpoints and event ingestion are live. Next measurement source is Bing Webmaster plus richer rank history storage.",
   },
   {
     name: "Baseline target keyword rankings",
@@ -711,7 +711,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Each selected term has observed position, target URL, date checked, and SERP notes.",
-    nextAction: "Use Search Console rows now, keep manual SERP checks for terms with no GSC data, and store visible deltas.",
+    nextAction: "Use /api/search-console/performance for query, page, and query-to-page rows; keep manual SERP checks for terms with no GSC data.",
   },
   {
     name: "Run AI visibility checks",

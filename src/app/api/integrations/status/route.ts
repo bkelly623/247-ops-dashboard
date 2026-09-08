@@ -21,6 +21,8 @@ export async function GET() {
     searchConsole: {
       configured: isSearchConsoleConfigured(),
       siteUrl: env.googleSearchConsoleSiteUrl ?? null,
+      summaryEndpoint: "/api/search-console/summary",
+      performanceEndpoint: "/api/search-console/performance",
     },
     brandSite: {
       configured: Boolean(env.commandCenterEventsSecret),
