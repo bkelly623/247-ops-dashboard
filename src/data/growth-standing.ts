@@ -184,7 +184,7 @@ export const standingScores: StandingScore[] = [
     proofHave:
       "Supabase, PostFast, brand-site tracking, Search Console, production event counts, GSC rows, and the first stored keyword snapshot are live.",
     proofMissing:
-      "Bing Webmaster, keyword history storage, AI snapshot automation, booked-call attribution, and revenue attribution.",
+      "Bing Webmaster, automated keyword history refreshes, AI snapshot automation, booked-call attribution, and revenue attribution.",
     nextAction: "Use connected search and event APIs for every operator run, refresh keyword history monthly, and add Bing coverage.",
     evidence: [
       "/settings",
