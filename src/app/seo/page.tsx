@@ -16,6 +16,7 @@ import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
 import { KeywordRankChart } from "@/components/keyword-rank-chart";
 import { HorizontalBar, SegmentedBar } from "@/components/visualizations";
+import { keywordSnapshots } from "@/data/keyword-snapshots";
 import {
   authorityTargets,
   growthActions,
@@ -125,6 +126,7 @@ export default async function SeoPage() {
   const activeActions = growthActions.filter((action) => action.status === "active");
   const doneActions = growthActions.filter((action) => action.status === "done").length;
   const activeAuthorityTargets = authorityTargets.filter((target) => target.status !== "done");
+  const latestKeywordSnapshot = keywordSnapshots[0];
 
   const commanderRead = aiEmployeeSignal
     ? "AI employees for small business is the first page to tune because Google is already testing that phrase family. Keep flagship terms alive, but win through long-tail support pages."
@@ -295,6 +297,52 @@ export default async function SeoPage() {
           rows={searchConsole?.dailyQueries ?? []}
           fallbackQuery={aiEmployeeSignal?.keys[0] ?? firstTuneTarget?.keys[0]}
         />
+      </DashboardCard>
+
+      <DashboardCard title="Keyword Snapshot History" eyebrow="Durable baseline" className="mb-5">
+        <div className="rounded-md border border-[#ff5a1f]/30 bg-[#ff5a1f]/10 p-4">
+          <div className="flex flex-col gap-3 lg:flex-row lg:items-start lg:justify-between">
+            <div>
+              <p className="text-sm font-semibold text-white">
+                {latestKeywordSnapshot.windowStart} to {latestKeywordSnapshot.windowEnd}
+              </p>
+              <p className="mt-2 max-w-4xl text-sm leading-6 text-[#c9c9c9]">
+                {latestKeywordSnapshot.summary}
+              </p>
+            </div>
+            <div className="grid shrink-0 grid-cols-3 gap-2">
+              <div className="rounded border border-white/10 bg-black p-3">
+                <p className="text-xs uppercase tracking-[0.13em] text-[#ff6a2a]">Impr.</p>
+                <p className="mt-1 text-xl font-semibold text-white">{latestKeywordSnapshot.impressions}</p>
+              </div>
+              <div className="rounded border border-white/10 bg-black p-3">
+                <p className="text-xs uppercase tracking-[0.13em] text-[#ff6a2a]">Clicks</p>
+                <p className="mt-1 text-xl font-semibold text-white">{latestKeywordSnapshot.clicks}</p>
+              </div>
+              <div className="rounded border border-white/10 bg-black p-3">
+                <p className="text-xs uppercase tracking-[0.13em] text-[#ff6a2a]">Avg</p>
+                <p className="mt-1 text-xl font-semibold text-white">{pos(latestKeywordSnapshot.averagePosition)}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div className="mt-4 grid gap-3 xl:grid-cols-2">
+          {latestKeywordSnapshot.queryRows.map((row) => (
+            <article key={row.query} className="rounded-md border border-white/10 bg-white/5 p-4">
+              <div className="flex flex-wrap items-center gap-2">
+                <StatusBadge tone={rankingTone(row.averagePosition)}>Avg {pos(row.averagePosition)}</StatusBadge>
+                <StatusBadge tone="neutral">{row.impressions} impressions</StatusBadge>
+                <StatusBadge tone="neutral">{row.targetPage}</StatusBadge>
+              </div>
+              <h3 className="mt-3 text-sm font-semibold text-white">{row.query}</h3>
+              <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">{row.read}</p>
+              <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">
+                <span className="font-semibold text-white">Next: </span>
+                {row.nextAction}
+              </p>
+            </article>
+          ))}
+        </div>
       </DashboardCard>
 
       <DashboardCard title="Offer Language Strategy" eyebrow="What we are testing" className="mb-5">

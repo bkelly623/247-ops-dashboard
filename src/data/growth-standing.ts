@@ -106,8 +106,8 @@ export const standingScores: StandingScore[] = [
     proofHave:
       "P1 and P2 page list exists; manual site searches show Google has discovered the domain and several core URLs; GSC reports live impressions.",
     proofMissing:
-      "Clicks, stronger target URL matches, Bing data, and monthly deltas.",
-    nextAction: "Use the Search Console performance endpoint for recurring rank proof, then supplement with manual checks where GSC has no rows.",
+      "Clicks, stronger target URL matches, Bing data, and multiple monthly deltas.",
+    nextAction: "Use the stored GSC keyword snapshot to tune /ai-employees-for-small-business, then refresh monthly for movement.",
     evidence: ["/seo", "/visibility"],
   },
   {
@@ -182,10 +182,10 @@ export const standingScores: StandingScore[] = [
     currentStanding:
       "Public event ingestion is live and visible in the command center. The overview API separates 7-day and 30-day audit counts, and Search Console performance is now exposed through a read-only JSON endpoint.",
     proofHave:
-      "Supabase, PostFast, brand-site tracking, and Search Console are configured; site event counts and GSC rows return from production.",
+      "Supabase, PostFast, brand-site tracking, Search Console, production event counts, GSC rows, and the first stored keyword snapshot are live.",
     proofMissing:
       "Bing Webmaster, keyword history storage, AI snapshot automation, booked-call attribution, and revenue attribution.",
-    nextAction: "Use connected search and event APIs for every operator run, then add durable keyword history and Bing coverage.",
+    nextAction: "Use connected search and event APIs for every operator run, refresh keyword history monthly, and add Bing coverage.",
     evidence: [
       "/settings",
       "https://247-ops-dashboard.vercel.app/api/brand-site/overview",

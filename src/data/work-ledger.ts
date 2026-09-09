@@ -26,6 +26,27 @@ export type WorkLedgerEntry = {
 
 export const workLedger: WorkLedgerEntry[] = [
   {
+    date: "2026-09-09",
+    area: "Measurement",
+    title: "Stored first Search Console keyword snapshot",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: [
+      "src/data/keyword-snapshots.ts",
+      "/seo",
+      "src/data/seo-targets.ts",
+      "src/data/growth-standing.ts",
+    ],
+    why: "Search Console rows were live, but the operator needed durable dated baselines to compare future keyword movement instead of only reading the current API window.",
+    expectedEffect:
+      "Future runs can compare query/page movement against the first GSC baseline and choose page updates from evidence.",
+    evidenceStatus: "verified",
+    evidence:
+      "Stored the 2026-08-10 to 2026-09-07 GSC baseline: 79 impressions, 0 clicks, average position 49.51; strongest query is ai employee for small business.",
+    followUp:
+      "Tune /ai-employees-for-small-business from the snapshot and run the first AI visibility prompt baseline.",
+  },
+  {
     date: "2026-09-08",
     area: "Measurement",
     title: "Exposed Search Console performance API",

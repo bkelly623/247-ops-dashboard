@@ -703,15 +703,15 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena + B",
     status: "active",
     proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
-    nextAction: "Search Console summary/performance endpoints and event ingestion are live. Next measurement source is Bing Webmaster plus richer rank history storage.",
+    nextAction: "Search Console summary/performance endpoints, event ingestion, and the first stored keyword snapshot are live. Next measurement source is Bing Webmaster.",
   },
   {
     name: "Baseline target keyword rankings",
     cadence: "monthly",
     owner: "Athena",
-    status: "active",
+    status: "done",
     proof: "Each selected term has observed position, target URL, date checked, and SERP notes.",
-    nextAction: "Use /api/search-console/performance for query, page, and query-to-page rows; keep manual SERP checks for terms with no GSC data.",
+    nextAction: "First stored GSC keyword snapshot captured 2026-09-09; keep refreshing monthly and use manual SERP checks only for terms with no GSC data.",
   },
   {
     name: "Run AI visibility checks",
@@ -727,7 +727,7 @@ export const growthActions: GrowthAction[] = [
     owner: "Athena",
     status: "active",
     proof: "Page edits tied to impressions, clicks, rank movement, audit starts, or CTA behavior.",
-    nextAction: "Tune /ai-employees-for-small-business first because it has the strongest live GSC query signal.",
+    nextAction: "Tune /ai-employees-for-small-business first from the stored GSC snapshot, then use /ai-employees/ai-operations-coordinator as supporting role proof.",
   },
   {
     name: "Validate offer language from real signals",
