@@ -27,6 +27,29 @@ export type WorkLedgerEntry = {
 export const workLedger: WorkLedgerEntry[] = [
   {
     date: "2026-09-10",
+    area: "Command Center",
+    title: "Rebuilt command center around strategy map and live operating read",
+    repo: "247-ops-dashboard",
+    commit: "10a4a8e",
+    changed: [
+      "/",
+      "/strategy",
+      "src/components/growth-operating-map.tsx",
+      "src/data/growth-control-plane.ts",
+      "src/data/growth-standing.ts",
+      "src/data/seo-targets.ts",
+    ],
+    why: "The command center was not answering the owner questions clearly: where we stand, what has shipped, what metrics matter, what is blocked, and what gets built next.",
+    expectedEffect:
+      "B can open the command center and see live traffic/search metrics, top Google query/page rank context, the operating-system visual, active queue, approval boundaries, and current execution loops.",
+    evidenceStatus: "verified",
+    evidence:
+      "Local lint and production build passed. Production deployment dpl_7XSdpwX5K3pf5JbLTDxPE13TTN4J is live with /strategy returning 200.",
+    followUp:
+      "Turn the remaining static queue records into an editable command-center state backend after the operating model proves useful.",
+  },
+  {
+    date: "2026-09-10",
     area: "SEO",
     title: "Tuned AI employees small-business page from GSC signal",
     repo: "247ROI",
