@@ -26,6 +26,27 @@ export type WorkLedgerEntry = {
 
 export const workLedger: WorkLedgerEntry[] = [
   {
+    date: "2026-09-10",
+    area: "SEO",
+    title: "Tuned AI employees small-business page from GSC signal",
+    repo: "247ROI",
+    commit: "10e35b9",
+    changed: [
+      "/ai-employees-for-small-business",
+      "/ai-employees-for-service-businesses",
+      "src/components/SeoLandingPage.tsx",
+      "src/lib/seoLandingPages.ts",
+    ],
+    why: "Search Console shows the AI employee phrase family is the first query cluster earning impressions, while the AI Operations Coordinator role page has much stronger early ranking signal.",
+    expectedEffect:
+      "Better relevance for small-business AI employee searches and stronger crawlable internal support from role-specific workflow examples.",
+    evidenceStatus: "verified",
+    evidence:
+      "Public lint and build passed; GSC window 2026-08-11 to 2026-09-08 showed 96 impressions, with /ai-employees-for-small-business at 68 page impressions and /ai-employees/ai-operations-coordinator at average position 15.38.",
+    followUp:
+      "Wait for recrawl, then compare the next GSC keyword snapshot for impressions, position movement, and whether small-business AI employee queries begin landing higher.",
+  },
+  {
     date: "2026-09-09",
     area: "Measurement",
     title: "Stored first Search Console keyword snapshot",

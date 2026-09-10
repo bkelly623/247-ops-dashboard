@@ -97,17 +97,17 @@ export const standingScores: StandingScore[] = [
   {
     id: "seo",
     area: "SEO",
-    score: 5,
+    score: 5.5,
     targetScore: 8,
     trend: "improving",
-    lastUpdated: "2026-09-01",
+    lastUpdated: "2026-09-10",
     currentStanding:
-      "Target pages exist for the main commercial clusters, and Search Console now provides live query, page, and query-to-page performance data.",
+      "Target pages exist for the main commercial clusters, Search Console provides live query/page data, and the first GSC-backed page tuning shipped for /ai-employees-for-small-business.",
     proofHave:
-      "P1 and P2 page list exists; manual site searches show Google has discovered the domain and several core URLs; GSC reports live impressions.",
+      "P1 and P2 page list exists; manual site searches show Google has discovered the domain and several core URLs; GSC reports live impressions; /ai-employees-for-small-business now has stronger workflow copy and internal links to role examples.",
     proofMissing:
       "Clicks, stronger target URL matches, Bing data, and multiple monthly deltas.",
-    nextAction: "Use the stored GSC keyword snapshot to tune /ai-employees-for-small-business, then refresh monthly for movement.",
+    nextAction: "Wait for recrawl, then compare the next GSC keyword snapshot and start the first stored AI visibility prompt baseline.",
     evidence: ["/seo", "/visibility"],
   },
   {

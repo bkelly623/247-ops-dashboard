@@ -325,7 +325,7 @@ export const longTailCampaigns: LongTailCampaign[] = [
     ],
     proofSource: "Search Console shows current impressions for this exact phrase family.",
     nextAction:
-      "Tune the target page first, then add internal links and role-specific support pages around operations coordinator, follow-up, estimator, and inbox/admin workflows.",
+      "Page tuned 2026-09-10 with stronger workflow language and role-example links; wait for recrawl, then compare GSC movement against the stored keyword snapshot.",
   },
   {
     cluster: "What should my business automate first",
@@ -546,8 +546,8 @@ export const seoKeywordTargets: SeoKeywordTarget[] = [
     targetPage: "/ai-employees-for-small-business",
     status: "page-live",
     baseline: "Search Console shows impressions for the exact query family",
-    current: "First page to tune from real Google signal, not the only target",
-    nextAction: "Tune title, H1, intro answer block, role examples, FAQs, internal links, and audit CTA for the exact small-business intent.",
+    current: "GSC-backed tuning shipped 2026-09-10 in public-site commit 10e35b9",
+    nextAction: "Wait for recrawl, then compare query/page impressions and average position in the next GSC snapshot.",
   },
   {
     term: "AI visibility optimization",
