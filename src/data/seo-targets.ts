@@ -112,7 +112,7 @@ export const siteStandingScores: SiteStandingScore[] = [
     currentStanding:
       "Core production pages return 200, builds pass, sitemap/robots/llms files work, and event forwarding is live.",
     proofNeeded: "Ongoing production checks, lower lint noise, Search Console coverage, and error monitoring.",
-    nextAction: "Clean existing lint warnings and connect Search Console/Bing when credentials are available.",
+    nextAction: "Clean existing lint warnings and keep Search Console/API checks in the weekly review.",
   },
   {
     area: "Crawlability",
@@ -121,8 +121,8 @@ export const siteStandingScores: SiteStandingScore[] = [
     trend: "improving",
     currentStanding:
       "Strategic pages are crawlable and included in sitemap plus llms files. Internal links now support the newer pages.",
-    proofNeeded: "Search Console indexing status, Bing indexing status, and recrawl confirmation for newer pages.",
-    nextAction: "Submit/check the new diagnostic and commercial URLs when Search Console/Bing access is connected.",
+    proofNeeded: "Search Console indexing status and recrawl confirmation for newer pages.",
+    nextAction: "Inspect the new diagnostic and commercial URLs in Search Console, then use GSC rows to decide support links.",
   },
   {
     area: "SEO",
@@ -190,7 +190,7 @@ export const siteStandingScores: SiteStandingScore[] = [
     targetScore: 8,
     trend: "baseline",
     currentStanding:
-      "Command-center events show tiny volume: 6 page views in 7 days, 2 audit starts in 30 days, and no CTA/phone/email/report unlock proof yet.",
+      "Command-center events show tiny qualified volume and no CTA/phone/email/report unlock proof yet.",
     proofNeeded: "At least 100 qualified page views, multiple audit starts, report unlocks, calls/emails, and lead-quality notes.",
     nextAction: "Prioritize traffic and proof before drawing conversion conclusions.",
   },
@@ -211,8 +211,8 @@ export const siteStandingScores: SiteStandingScore[] = [
     trend: "improving",
     currentStanding:
       "Public event ingestion is live, command-center metrics work, 30-day visitor IDs are deduped, and Search Console summary plus performance rows are available from the command center.",
-    proofNeeded: "Bing Webmaster, stored keyword baselines, AI visibility snapshots, lead quality, bookings, and revenue attribution.",
-    nextAction: "Use the Search Console performance endpoint for recurring operator baselines; keep Bing and lead attribution as the next source gaps.",
+    proofNeeded: "Automated keyword baseline refreshes, AI visibility snapshots, lead quality, bookings, and revenue attribution.",
+    nextAction: "Use the Search Console performance endpoint for recurring operator baselines; keep AI visibility and lead attribution as the next source gaps.",
   },
   {
     area: "Trust/proof assets",
@@ -255,7 +255,7 @@ export const authorityTargets: AuthorityTarget[] = [
     rationale:
       "Clean citations help entity clarity and give prospects third-party places to verify the business.",
     nextAction:
-      "Build a directory checklist for Google Business Profile, Bing Places, LinkedIn company page, Crunchbase-style profiles if appropriate, and relevant local/business directories.",
+      "Build a directory checklist for Google Business Profile, LinkedIn company page, relevant local/business directories, and credible business profiles.",
   },
   {
     name: "Anonymized workflow teardown",
@@ -677,7 +677,7 @@ export const aiVisibilityTargets: AiVisibilityTarget[] = [
     priority: "P2",
     targetPage: "/ai-visibility-optimization",
     currentVisibility: "Target page live; first answer-engine snapshot pending",
-    nextAction: "Check ChatGPT, Gemini, Perplexity, Google, and Bing after indexing, then add citations or clearer answer sections where 247ROI is absent.",
+    nextAction: "Check ChatGPT, Gemini, Perplexity, and Google AI surfaces after indexing, then add citations or clearer answer sections where 247ROI is absent.",
   },
   {
     prompt: "How do I make my company show up in AI search results?",
@@ -702,8 +702,8 @@ export const growthActions: GrowthAction[] = [
     cadence: "one-time",
     owner: "Athena + B",
     status: "active",
-    proof: "Search Console, Bing Webmaster, analytics, and event ingestion appear in dashboard.",
-    nextAction: "Search Console summary/performance endpoints, event ingestion, and the first stored keyword snapshot are live. Next measurement source is Bing Webmaster.",
+    proof: "Search Console, analytics, and event ingestion appear in dashboard.",
+    nextAction: "Search Console summary/performance endpoints, event ingestion, and the first stored keyword snapshot are live. Next measurement work is AI visibility snapshots and lead attribution.",
   },
   {
     name: "Baseline target keyword rankings",

@@ -11,10 +11,12 @@ import {
   MonitorUp,
   Search,
   Settings,
+  Workflow,
 } from "lucide-react";
 
 const navItems = [
   { href: "/", label: "Snapshot", icon: LayoutDashboard },
+  { href: "/strategy", label: "Strategy Map", icon: Workflow },
   { href: "/work", label: "Work Ledger", icon: ListChecks },
   { href: "/social", label: "Social", icon: Flame },
   { href: "/seo", label: "SEO / Visibility", icon: Search },

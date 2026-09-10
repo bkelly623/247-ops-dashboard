@@ -128,7 +128,7 @@ export const workLedger: WorkLedgerEntry[] = [
       "More trustworthy operator metrics, clearer health status, and accurate 30-day audit start/unlock counts.",
     evidenceStatus: "verified",
     evidence: "Typecheck, lint, and build passed locally; production API recheck follows deployment.",
-    followUp: "Connect Search Console, Bing, and lead/booking attribution so source-of-truth metrics cover acquisition and revenue.",
+    followUp: "Use connected Search Console rows and add lead/booking attribution so source-of-truth metrics cover acquisition and revenue.",
   },
   {
     date: "2026-09-01",
@@ -263,7 +263,7 @@ export const workLedger: WorkLedgerEntry[] = [
     why: "The AI Opportunity Audit needed to feel like a useful diagnostic path instead of a generic chat/intake.",
     expectedEffect: "More audit starts, better completion, and clearer lead context.",
     evidenceStatus: "needs-data",
-    evidence: "Command center shows 2 audit starts but no unlocks yet.",
+    evidence: "Command-center events are live; current audit starts and unlocks should be read from the dynamic snapshot.",
     followUp: "Capture before/after screenshots and wait for more qualified traffic before changing again.",
   },
   {
@@ -277,7 +277,7 @@ export const workLedger: WorkLedgerEntry[] = [
     expectedEffect: "More search relevance and a better answer-engine landing page.",
     evidenceStatus: "pending",
     evidence: "Page is live; AI answer and rank snapshots are pending.",
-    followUp: "Check ChatGPT, Gemini, Perplexity, and Google/Bing visibility.",
+    followUp: "Check ChatGPT, Gemini, Perplexity, and Google AI visibility.",
   },
   {
     date: "2026-08-24",

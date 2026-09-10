@@ -75,7 +75,7 @@ export const standingScores: StandingScore[] = [
     proofHave:
       "Production APIs are live and command-center integration status reports Supabase, PostFast, and brand-site tracking configured.",
     proofMissing:
-      "Search Console coverage, Bing Webmaster coverage, production error monitoring, and a cleaner lint baseline.",
+      "Search Console coverage review, production error monitoring, and a cleaner lint baseline.",
     nextAction: "Add the technical checks to the weekly command-center review.",
     evidence: ["/settings", "https://247-ops-dashboard.vercel.app/api/integrations/status"],
   },
@@ -90,8 +90,8 @@ export const standingScores: StandingScore[] = [
       "Strategic pages are crawlable and included in the sitemap and llms files. Internal links support the newer pages.",
     proofHave:
       "Sitemap includes the current core service, audit, article, referral, and AI visibility pages with Sep 1 timestamps.",
-    proofMissing: "Search Console and Bing indexing status for newer commercial pages.",
-    nextAction: "Submit and inspect P1 URLs once account-level webmaster access is available.",
+    proofMissing: "Search Console indexing status and recrawl confirmation for newer commercial pages.",
+    nextAction: "Inspect P1 URLs through Search Console and use GSC rows before broad manual checks.",
     evidence: ["https://www.get247roi.com/sitemap.xml", "https://www.get247roi.com/llms.txt"],
   },
   {
@@ -106,7 +106,7 @@ export const standingScores: StandingScore[] = [
     proofHave:
       "P1 and P2 page list exists; manual site searches show Google has discovered the domain and several core URLs; GSC reports live impressions; /ai-employees-for-small-business now has stronger workflow copy and internal links to role examples.",
     proofMissing:
-      "Clicks, stronger target URL matches, Bing data, and multiple monthly deltas.",
+      "Clicks, stronger target URL matches, and multiple monthly deltas.",
     nextAction: "Wait for recrawl, then compare the next GSC keyword snapshot and start the first stored AI visibility prompt baseline.",
     evidence: ["/seo", "/visibility"],
   },
@@ -137,7 +137,7 @@ export const standingScores: StandingScore[] = [
       "The site has llms files, schema, and AI visibility pages, but answer-engine presence has not been proven.",
     proofHave: "Dedicated AI visibility and GEO pages are live.",
     proofMissing:
-      "ChatGPT, Gemini, Perplexity, Bing, and Google AI answer snapshots for tracked prompts.",
+      "ChatGPT, Gemini, Perplexity, and Google AI answer snapshots for tracked prompts.",
     nextAction: "Run the first AI answer snapshot and store absence as useful evidence, not failure.",
     evidence: ["/visibility", "https://www.get247roi.com/ai-visibility-optimization"],
   },
@@ -151,7 +151,7 @@ export const standingScores: StandingScore[] = [
     currentStanding:
       "The site has a clearer audit path, but there is too little traffic to judge conversion performance.",
     proofHave:
-      "Command-center events show 2 AI Opportunity Audit starts and working event ingestion.",
+      "Command-center events are live and currently show audit starts, with counts pulled dynamically on the snapshot page.",
     proofMissing:
       "CTA clicks, phone clicks, email clicks, report unlocks, booked calls, lead quality notes, and enough qualified sessions.",
     nextAction: "Drive qualified traffic before making fine conversion judgments.",
@@ -184,8 +184,8 @@ export const standingScores: StandingScore[] = [
     proofHave:
       "Supabase, PostFast, brand-site tracking, Search Console, production event counts, GSC rows, and the first stored keyword snapshot are live.",
     proofMissing:
-      "Bing Webmaster, automated keyword history refreshes, AI snapshot automation, booked-call attribution, and revenue attribution.",
-    nextAction: "Use connected search and event APIs for every operator run, refresh keyword history monthly, and add Bing coverage.",
+      "Automated keyword history refreshes, AI snapshot automation, booked-call attribution, and revenue attribution.",
+    nextAction: "Use connected Search Console and event APIs for every operator run, refresh keyword history monthly, and ignore Bing unless B explicitly reopens it.",
     evidence: [
       "/settings",
       "https://247-ops-dashboard.vercel.app/api/brand-site/overview",

@@ -134,7 +134,7 @@ export const moduleCards = [
     href: "/visibility",
     status: "Active build",
     description:
-      "Manual and future connected checks for Google, Bing, ChatGPT, Gemini, Perplexity, and AI surfaces.",
+      "Manual and connected checks for Google, ChatGPT, Gemini, Perplexity, and AI surfaces.",
     icon: Radar,
   },
   {

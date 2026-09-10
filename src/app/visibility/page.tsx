@@ -151,7 +151,7 @@ export default function VisibilityPage() {
                   <h2 className="mt-3 text-base font-semibold leading-7 text-[#171511]">{snapshot.queryOrPrompt}</h2>
                 </div>
                 <div className="flex items-center gap-2 rounded-md bg-[#171511] px-3 py-2 text-sm font-semibold text-[#d6a034]">
-                  {snapshot.engine === "Google" || snapshot.engine === "Bing" ? <Search size={16} /> : <Bot size={16} />}
+                  {snapshot.engine === "Google" || snapshot.engine === "Google AI Surface" ? <Search size={16} /> : <Bot size={16} />}
                   {snapshot.targetPage}
                 </div>
               </div>

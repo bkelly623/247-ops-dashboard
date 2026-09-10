@@ -8,6 +8,7 @@ import {
   ListChecks,
   MousePointerClick,
   PhoneCall,
+  Search,
   TrendingUp,
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
@@ -17,12 +18,28 @@ import { workLedger } from "@/data/work-ledger";
 import { visibilitySnapshots } from "@/data/visibility-snapshots";
 import { visualProgressItems } from "@/data/visual-progress";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
+import { getSearchConsolePerformance } from "@/lib/search-console/server";
 
 export const dynamic = "force-dynamic";
 
 function metricValue(value: number | null | undefined) {
   if (typeof value !== "number") return "Pending";
   return value.toLocaleString();
+}
+
+function pos(value: number | null | undefined) {
+  if (typeof value !== "number") return "Pending";
+  return value.toFixed(value >= 10 ? 1 : 2);
+}
+
+function pageLabel(url: string | undefined) {
+  if (!url) return "Pending";
+  try {
+    const parsed = new URL(url);
+    return parsed.pathname === "/" ? "/" : parsed.pathname;
+  } catch {
+    return url;
+  }
 }
 
 function statusTone(status: string) {
@@ -47,12 +64,29 @@ async function loadBrandOverview() {
   }
 }
 
+async function loadSearchConsolePerformance() {
+  try {
+    return await getSearchConsolePerformance();
+  } catch {
+    return null;
+  }
+}
+
 export default async function Home() {
-  const brandOverview = await loadBrandOverview();
+  const [brandOverview, searchConsole] = await Promise.all([
+    loadBrandOverview(),
+    loadSearchConsolePerformance(),
+  ]);
   const latestWork = workLedger.slice(0, 4);
   const weakestScores = [...standingScores].sort((a, b) => a.score - b.score).slice(0, 4);
   const activeVisibility = visibilitySnapshots.slice(0, 4);
   const queuedVisuals = visualProgressItems.filter((item) => item.screenshotStatus !== "captured").slice(0, 3);
+  const topQuery = [...(searchConsole?.queries ?? [])].sort(
+    (a, b) => b.impressions - a.impressions || a.position - b.position,
+  )[0];
+  const topPage = [...(searchConsole?.pages ?? [])].sort(
+    (a, b) => b.impressions - a.impressions || a.position - b.position,
+  )[0];
 
   const liveMetrics = [
     {
@@ -66,6 +100,18 @@ export default async function Home() {
       value: metricValue(brandOverview?.siteEvents.uniqueVisitorEvents30Days),
       note: "Deduped tracked visitor IDs, not raw event count.",
       icon: Eye,
+    },
+    {
+      label: "GSC impressions",
+      value: metricValue(searchConsole?.impressions),
+      note: `Google Search Console window: ${searchConsole?.startDate ?? "pending"} to ${searchConsole?.endDate ?? "pending"}.`,
+      icon: Search,
+    },
+    {
+      label: "Avg rank",
+      value: pos(searchConsole?.averagePosition),
+      note: "Average Google position across the connected Search Console query set.",
+      icon: TrendingUp,
     },
     {
       label: "Audit starts",
@@ -98,7 +144,7 @@ export default async function Home() {
         action={<StatusBadge tone="gold">Source of truth</StatusBadge>}
       />
 
-      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-5">
+      <div className="mb-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-6">
         {liveMetrics.map((metric) => {
           const Icon = metric.icon;
 
@@ -111,7 +157,7 @@ export default async function Home() {
                     <Icon size={20} />
                   </div>
                 </div>
-                <p className="text-sm leading-6 text-[#665d4e]">{metric.note}</p>
+                <p className="text-sm leading-6 text-[#c9c9c9]">{metric.note}</p>
               </div>
             </DashboardCard>
           );
@@ -119,7 +165,7 @@ export default async function Home() {
       </div>
 
       <div className="mb-5 grid gap-5 xl:grid-cols-[1.1fr_0.9fr]">
-        <DashboardCard title="Current Read" eyebrow="What matters now">
+        <DashboardCard title="Current Read" eyebrow="Where we stand">
           <div className="grid gap-3 md:grid-cols-3">
             <div className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[#171511]">
@@ -127,7 +173,7 @@ export default async function Home() {
                 Working
               </div>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
-                The site is live, clearer, tracked, internally linked, and indexed enough for Google to see core pages.
+                The site is live, tracked, internally linked, and Search Console is connected.
               </p>
             </div>
             <div className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
@@ -136,7 +182,7 @@ export default async function Home() {
                 Weakest Point
               </div>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
-                Proof is thin: low traffic, no CTA/contact clicks, no report unlocks, and no connected Search Console or Bing data.
+                Proof is thin: {metricValue(brandOverview?.siteEvents.pageViews7Days)} qualified 7-day page views, 0 CTA/contact clicks, and 0 report unlocks.
               </p>
             </div>
             <div className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
@@ -145,7 +191,23 @@ export default async function Home() {
                 Next Priority
               </div>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
-                Make every shipped change visible in the Work Ledger, then capture visual proof and manual visibility snapshots.
+                Run the first AI visibility baseline and build the vetted authority target list before adding more cron sprawl.
+              </p>
+            </div>
+          </div>
+          <div className="mt-4 grid gap-3 lg:grid-cols-2">
+            <div className="rounded-md border border-[#ff5a1f]/30 bg-[#ff5a1f]/10 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff6a2a]">Top Google query</p>
+              <p className="mt-2 text-base font-semibold text-white">{topQuery?.keys[0] ?? "Pending"}</p>
+              <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">
+                {metricValue(topQuery?.impressions)} impressions, avg position {pos(topQuery?.position)}.
+              </p>
+            </div>
+            <div className="rounded-md border border-[#ff5a1f]/30 bg-[#ff5a1f]/10 p-4">
+              <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff6a2a]">Top Google page</p>
+              <p className="mt-2 text-base font-semibold text-white">{pageLabel(topPage?.keys[0])}</p>
+              <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">
+                {metricValue(topPage?.impressions)} impressions, avg position {pos(topPage?.position)}.
               </p>
             </div>
           </div>
@@ -155,8 +217,9 @@ export default async function Home() {
           <div className="grid gap-3">
             {[
               { href: "/work", label: "Work Ledger", note: "What shipped, why, evidence, and follow-up." },
+              { href: "/strategy", label: "Strategy Map", note: "Visual operating model, active queue, approvals, and execution loops." },
               { href: "/seo", label: "Growth Standing", note: "Scores, targets, authority, and recurring growth work." },
-              { href: "/visibility", label: "Rank Proof", note: "Google, Bing, AI answer checks, and next fixes." },
+              { href: "/visibility", label: "Rank Proof", note: "Google and AI answer checks, page rank, and next fixes." },
               { href: "/progress", label: "Visual Progress", note: "Before/after changes and screenshot queue." },
             ].map((item) => (
               <Link
