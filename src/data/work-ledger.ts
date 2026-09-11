@@ -46,7 +46,7 @@ export const workLedger: WorkLedgerEntry[] = [
       "Future operator and cron work can pull from one visible board, with separate pages for SEO, authority, AI visibility, automation run history, and decisions.",
     evidenceStatus: "verified",
     evidence:
-      "Local typecheck, lint, production build, and route checks passed for /, /work, /automation, /decisions, /pipeline/seo, /pipeline/authority, /pipeline/visibility, and /strategy redirecting to /work. Production deployment dpl_55TDWFpAeMstesPsoTN7MVB5d8CA is live.",
+      "Local typecheck, lint, production build, route checks, and Vercel production deployment passed for /, /work, /automation, /decisions, /pipeline/seo, /pipeline/authority, /pipeline/visibility, and /strategy redirecting to /work.",
     followUp:
       "Next upgrade is making command-state editable through the dashboard or a database-backed API instead of editing JSON directly.",
   },
