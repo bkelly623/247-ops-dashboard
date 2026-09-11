@@ -11,16 +11,20 @@ import {
   MonitorUp,
   Search,
   Settings,
+  ShieldCheck,
   Workflow,
 } from "lucide-react";
 
 const navItems = [
-  { href: "/", label: "Snapshot", icon: LayoutDashboard },
-  { href: "/strategy", label: "Strategy Map", icon: Workflow },
-  { href: "/work", label: "Work Ledger", icon: ListChecks },
+  { href: "/", label: "Owner Snapshot", icon: LayoutDashboard },
+  { href: "/work", label: "Work Board", icon: ListChecks },
+  { href: "/pipeline/seo", label: "SEO Pipeline", icon: Search },
+  { href: "/pipeline/authority", label: "Authority Pipeline", icon: ShieldCheck },
+  { href: "/pipeline/visibility", label: "AI Visibility", icon: Eye },
+  { href: "/automation", label: "Automation", icon: Workflow },
+  { href: "/decisions", label: "Decisions", icon: CircleDot },
   { href: "/social", label: "Social", icon: Flame },
   { href: "/seo", label: "SEO / Visibility", icon: Search },
-  { href: "/visibility", label: "Rank Proof", icon: Eye },
   { href: "/progress", label: "Visual Progress", icon: MonitorUp },
   { href: "/settings", label: "Settings", icon: Settings },
 ];

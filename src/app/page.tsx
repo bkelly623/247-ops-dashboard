@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
+import { commandState } from "@/data/command-center-state";
 import { standingScores } from "@/data/growth-standing";
 import { workLedger } from "@/data/work-ledger";
 import { visibilitySnapshots } from "@/data/visibility-snapshots";
@@ -138,9 +139,9 @@ export default async function Home() {
   return (
     <AppShell>
       <PageHeader
-        eyebrow="Executive Snapshot"
-        title="Track what changed, what moved, what is blocked, and what gets built next."
-        description="This is the owner view for 247ROI growth work: shipped changes, current proof, ranking visibility, conversion signals, and visual progress."
+        eyebrow="Owner Snapshot"
+        title="Qualified attention, search movement, funnel signal, authority progress, bottleneck, and next move."
+        description="This is the first readout. It should tell B where 247ROI stands before anyone opens a board, pipeline, or ledger."
         action={<StatusBadge tone="gold">Source of truth</StatusBadge>}
       />
 
@@ -179,19 +180,19 @@ export default async function Home() {
             <div className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[#171511]">
                 <AlertTriangle size={17} className="text-[#8b6a22]" />
-                Weakest Point
+                Current bottleneck
               </div>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
-                Proof is thin: {metricValue(brandOverview?.siteEvents.pageViews7Days)} qualified 7-day page views, 0 CTA/contact clicks, and 0 report unlocks.
+                {commandState.ownerSnapshot.currentBottleneck}
               </p>
             </div>
             <div className="rounded-md border border-[#ded6c8] bg-white/55 p-4">
               <div className="flex items-center gap-2 text-sm font-semibold text-[#171511]">
                 <CircleDot size={17} className="text-[#8b6a22]" />
-                Next Priority
+                Next move
               </div>
               <p className="mt-3 text-sm leading-6 text-[#665d4e]">
-                Run the first AI visibility baseline and build the vetted authority target list before adding more cron sprawl.
+                {commandState.ownerSnapshot.nextMove}
               </p>
             </div>
           </div>
@@ -213,14 +214,15 @@ export default async function Home() {
           </div>
         </DashboardCard>
 
-        <DashboardCard title="Fast Links" eyebrow="Control surfaces">
+        <DashboardCard title="Control Surfaces" eyebrow="Use these to manage work">
           <div className="grid gap-3">
             {[
-              { href: "/work", label: "Work Ledger", note: "What shipped, why, evidence, and follow-up." },
-              { href: "/strategy", label: "Strategy Map", note: "Visual operating model, active queue, approvals, and execution loops." },
-              { href: "/seo", label: "Growth Standing", note: "Scores, targets, authority, and recurring growth work." },
-              { href: "/visibility", label: "Rank Proof", note: "Google and AI answer checks, page rank, and next fixes." },
-              { href: "/progress", label: "Visual Progress", note: "Before/after changes and screenshot queue." },
+              { href: "/work", label: "Work Board", note: "Backlog, this week, in progress, blocked, approvals, and done." },
+              { href: "/pipeline/seo", label: "SEO/Page Pipeline", note: "Pages, target queries, impressions, rank, and next action." },
+              { href: "/pipeline/authority", label: "Authority Pipeline", note: "Targets, risk, approval gates, required assets, and proof." },
+              { href: "/pipeline/visibility", label: "AI Visibility Pipeline", note: "Prompts, engines, presence, cited competitors, and fixes." },
+              { href: "/automation", label: "Automation Center", note: "Cron purpose, run history, next work, and retire rules." },
+              { href: "/decisions", label: "Decision Log", note: "Locked decisions so settled issues stop reopening." },
             ].map((item) => (
               <Link
                 key={item.href}
@@ -239,6 +241,23 @@ export default async function Home() {
       </div>
 
       <div className="mb-5 grid gap-5 xl:grid-cols-[1fr_1fr]">
+        <DashboardCard title="Changed Since Last Week" eyebrow="Concrete movement">
+          <div className="space-y-3">
+            {commandState.ownerSnapshot.changedSinceLastWeek.map((item) => (
+              <div key={item} className="flex gap-3 rounded-md border border-[#ded6c8] bg-white/55 p-4">
+                <CheckCircle2 className="mt-1 shrink-0 text-[#2f5a2e]" size={17} />
+                <p className="text-sm leading-6 text-[#665d4e]">{item}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-4 rounded-md border border-[#ff5a1f]/30 bg-[#ff5a1f]/10 p-4">
+            <p className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff8a3d]">Authority progress</p>
+            <p className="mt-2 text-sm leading-6 text-[#d8d8d8]">
+              {commandState.ownerSnapshot.authority.completed} completed / {commandState.ownerSnapshot.authority.planned} planned. {commandState.ownerSnapshot.authority.read}
+            </p>
+          </div>
+        </DashboardCard>
+
         <DashboardCard title="Latest Work" eyebrow="What changed">
           <div className="space-y-3">
             {latestWork.map((entry) => (

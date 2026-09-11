@@ -1,0 +1,303 @@
+{
+  "updatedAt": "2026-09-11T16:45:00Z",
+  "ownerSnapshot": {
+    "currentBottleneck": "247ROI has early search visibility and audit starts, but not enough authority, proof, AI-answer presence, or contact actions to prove demand yet.",
+    "nextMove": "Make the Work Board the source of truth, then advance AI visibility baselines and approved authority setup before adding more page or cron sprawl.",
+    "changedSinceLastWeek": [
+      "Search Console performance is connected to the command center.",
+      "The first durable keyword snapshot exists.",
+      "The AI employees small-business page was tuned from GSC evidence.",
+      "Authority targets were researched and stored for approval-gated execution.",
+      "Bing is explicitly deprioritized unless reopened."
+    ],
+    "authority": {
+      "completed": 2,
+      "planned": 8,
+      "read": "Founder/referral assets exist; third-party authority still needs approved profiles, citations, proof assets, and legitimate mentions."
+    }
+  },
+  "workItems": [
+    {
+      "id": "work-board-foundation",
+      "title": "Build persistent command-center Work Board",
+      "lane": "Ops",
+      "status": "Done",
+      "priority": "P0",
+      "why": "The command center cannot be useful if tasks live only in chat or static page sections.",
+      "expectedImpact": "Creates one place for backlog, this week, in-progress, blocked, approval-needed, and done work.",
+      "proofRequired": "Work Board renders from JSON-backed command state and exposes task lane, priority, owner, proof, links, and status. Local typecheck, lint, build, and route checks passed.",
+      "owner": "Athena",
+      "dueOrCadence": "Now",
+      "links": ["/work", "src/data/command-center-state.json"],
+      "metricToWatch": "Whether future cron/operator runs pull from the board instead of inventing new work."
+    },
+    {
+      "id": "ai-visibility-baseline",
+      "title": "Run true AI visibility baseline",
+      "lane": "Measurement",
+      "status": "This Week",
+      "priority": "P0",
+      "why": "AI visibility cannot be managed from guesses or one Google manual check.",
+      "expectedImpact": "Creates a repeatable comparison floor for ChatGPT, Gemini, Perplexity, and Google AI surfaces.",
+      "proofRequired": "Prompt, engine, 247ROI presence, competitors cited, cited domains, absence notes, and next fix stored in the AI Visibility Pipeline.",
+      "owner": "Athena",
+      "dueOrCadence": "First baseline, then monthly if useful",
+      "links": ["/pipeline/visibility", "/visibility"],
+      "metricToWatch": "Number of tracked prompts where 247ROI appears or where cited-source gaps are clear."
+    },
+    {
+      "id": "authority-profile-copy",
+      "title": "Prepare Google Business Profile and LinkedIn company copy",
+      "lane": "Authority",
+      "status": "Needs B Approval",
+      "priority": "P0",
+      "why": "Authority work requires legitimate public profiles, but submissions should not happen without approval.",
+      "expectedImpact": "Moves authority from research into controlled execution without risky outreach or unapproved claims.",
+      "proofRequired": "Draft fields, required assets, approval request, and no public submission until B approves.",
+      "owner": "Athena + B",
+      "dueOrCadence": "This week",
+      "links": ["/pipeline/authority"],
+      "metricToWatch": "Completed approved profiles and live third-party entity signals."
+    },
+    {
+      "id": "commercial-pages-no-gsc",
+      "title": "Baseline commercial pages with no GSC rows",
+      "lane": "SEO",
+      "status": "This Week",
+      "priority": "P1",
+      "why": "Important offer pages may be live but invisible, too new, or under-supported internally.",
+      "expectedImpact": "Focuses internal links and content updates only on pages that need support.",
+      "proofRequired": "Tracked URL, target query, GSC row status, manual index/rank check, and next action.",
+      "owner": "Athena",
+      "dueOrCadence": "After Work Board foundation",
+      "links": ["/pipeline/seo", "/seo"],
+      "metricToWatch": "GSC impressions and average position for priority offer pages."
+    },
+    {
+      "id": "ai-employees-recrawl",
+      "title": "Compare AI employees page after recrawl",
+      "lane": "SEO",
+      "status": "Waiting / Blocked",
+      "priority": "P1",
+      "why": "The page was tuned from GSC evidence and needs enough crawl delay before judging movement.",
+      "expectedImpact": "Shows whether the page update improved a real query cluster.",
+      "proofRequired": "GSC comparison against 2026-09-09 and 2026-09-10 snapshots.",
+      "owner": "Athena",
+      "dueOrCadence": "After next comparable GSC window",
+      "links": ["/pipeline/seo", "/ai-employees-for-small-business"],
+      "metricToWatch": "Impressions, clicks, average position, and landing page match."
+    },
+    {
+      "id": "workflow-proof-asset",
+      "title": "Build one workflow teardown proof asset",
+      "lane": "Content",
+      "status": "Backlog",
+      "priority": "P2",
+      "why": "The site needs concrete proof without inventing client claims.",
+      "expectedImpact": "Gives visitors, partners, and AI/search systems a specific artifact to understand 247ROI's work.",
+      "proofRequired": "Public proof page or asset with problem, system shape, approval points, measurable outcome, and audit CTA.",
+      "owner": "Athena",
+      "dueOrCadence": "After authority setup",
+      "links": ["/work"],
+      "metricToWatch": "Page views, internal clicks to audit, and reuse in warm outreach."
+    },
+    {
+      "id": "conversion-redesign-hold",
+      "title": "Hold broad conversion redesigns",
+      "lane": "Conversion",
+      "status": "Waiting / Blocked",
+      "priority": "P3",
+      "why": "Traffic and contact events are too low to infer conversion friction reliably.",
+      "expectedImpact": "Prevents redesign churn from weak data.",
+      "proofRequired": "Enough qualified traffic, audit completions/unlocks, contact clicks, or direct sales feedback.",
+      "owner": "Athena",
+      "dueOrCadence": "Review weekly",
+      "links": ["/"],
+      "metricToWatch": "Audit starts, unlocks, CTA clicks, call clicks, email clicks, and lead quality."
+    }
+  ],
+  "automation": [
+    {
+      "id": "autonomous-growth-operator",
+      "name": "247ROI Autonomous Growth Operator",
+      "status": "Useful",
+      "schedule": "Weekdays at 14:00 UTC, staggered",
+      "purpose": "Inspect live metrics, read the Work Board, choose one highest-leverage safe growth action, implement, verify, and update state.",
+      "lastRan": "2026-09-11 14:11 UTC",
+      "lastOutput": "Stored first verifiable visibility baseline and authority target batch.",
+      "nextPlannedRun": "2026-09-14 14:00 UTC window",
+      "nextPlannedWork": "Pull from active Work Board items; likely AI visibility baseline or authority approval drafts.",
+      "retireRule": "Retire or pause if it reports without shipping, records stale status, or creates work outside the board."
+    },
+    {
+      "id": "weekly-growth-report",
+      "name": "247ROI Weekly Growth Report",
+      "status": "Useful",
+      "schedule": "Fridays at 16:00 UTC",
+      "purpose": "Summarize shipped work, verification, production status, blockers, and next week's focus.",
+      "lastRan": "2026-09-04 16:00 UTC",
+      "lastOutput": "Reported prior shipped work and next focus before the command-center redesign push.",
+      "nextPlannedRun": "2026-09-11 16:00 UTC window",
+      "nextPlannedWork": "Report from Work Board, Done Ledger, metrics, and decisions.",
+      "retireRule": "Retire if it becomes a narrative summary instead of a board/metric delta."
+    },
+    {
+      "id": "authority-operator",
+      "name": "Authority/GEO Operator",
+      "status": "Candidate",
+      "schedule": "Not scheduled",
+      "purpose": "Advance one vetted authority target, profile opportunity, partner target, or proof asset per run.",
+      "lastRan": "Never",
+      "lastOutput": "Not created.",
+      "nextPlannedRun": "Candidate only",
+      "nextPlannedWork": "Do not create until authority pipeline has approved target statuses and run-history storage.",
+      "retireRule": "Do not activate if it duplicates Athena's orchestration or needs public actions without approval."
+    }
+  ],
+  "decisions": [
+    {
+      "id": "bing-deprioritized",
+      "decision": "Bing is deprioritized.",
+      "reason": "B explicitly rejected Bing as insignificant for the current strategy.",
+      "date": "2026-09-10",
+      "status": "Locked",
+      "reopenCondition": "Only reopen if B asks or evidence shows Bing materially affects qualified demand."
+    },
+    {
+      "id": "audit-main-spine",
+      "decision": "AI Opportunity Audit is the main conversion spine.",
+      "reason": "It names the actual offer and routes buyers into the correct system decision before implementation.",
+      "date": "2026-09-07",
+      "status": "Locked",
+      "reopenCondition": "Only reopen with lead quality or sales evidence that a different front door converts better."
+    },
+    {
+      "id": "athena-orchestrates-authority",
+      "decision": "Athena orchestrates authority work.",
+      "reason": "A separate standing agent would add drift; temporary agents can handle bounded research.",
+      "date": "2026-09-10",
+      "status": "Locked",
+      "reopenCondition": "Only reopen if authority work volume becomes too large for one orchestrator."
+    },
+    {
+      "id": "approval-before-public-actions",
+      "decision": "No public outreach, profile submissions, paid listings, or public claims without B approval.",
+      "reason": "Authority building can affect brand trust and external reputation.",
+      "date": "2026-09-11",
+      "status": "Locked",
+      "reopenCondition": "Do not reopen; this is an operating boundary."
+    },
+    {
+      "id": "ai-receptionist-supporting-asset",
+      "decision": "AI receptionist is a supporting proof/demo asset, not the company identity.",
+      "reason": "247ROI is positioned as business systems, AI automation, dashboards, internal apps, and AI agents, not a narrow receptionist company.",
+      "date": "2026-09-11",
+      "status": "Locked",
+      "reopenCondition": "Only reopen if validated demand justifies a separate vertical offer."
+    }
+  ],
+  "pipelines": {
+    "seo": [
+      {
+        "id": "ai-employees-small-business",
+        "page": "/ai-employees-for-small-business",
+        "targetQuery": "ai employee for small business",
+        "status": "Live, waiting for recrawl",
+        "impressions": 68,
+        "clicks": 0,
+        "averagePosition": 72.98,
+        "nextAction": "Compare after recrawl against stored GSC snapshots.",
+        "linkedWorkItem": "ai-employees-recrawl"
+      },
+      {
+        "id": "ops-coordinator-proof",
+        "page": "/ai-employees/ai-operations-coordinator",
+        "targetQuery": "AI operations coordinator role proof",
+        "status": "Live, supporting proof",
+        "impressions": 21,
+        "clicks": 0,
+        "averagePosition": 15.38,
+        "nextAction": "Use as internal support for small-business AI employee pages.",
+        "linkedWorkItem": "ai-employees-recrawl"
+      },
+      {
+        "id": "custom-business-dashboard",
+        "page": "/custom-business-dashboard",
+        "targetQuery": "custom business dashboard",
+        "status": "Needs baseline",
+        "impressions": null,
+        "clicks": null,
+        "averagePosition": null,
+        "nextAction": "Check GSC row presence and add support links only if the page is not earning evidence.",
+        "linkedWorkItem": "commercial-pages-no-gsc"
+      }
+    ],
+    "authority": [
+      {
+        "id": "google-business-profile",
+        "target": "Google Business Profile",
+        "type": "Entity profile",
+        "status": "Needs B Approval",
+        "risk": "Medium",
+        "approvalNeeded": true,
+        "requiredAssets": "Business category, service area, description, phone, website, photos/logo if available.",
+        "nextAction": "Draft fields for approval before creating or submitting anything.",
+        "proof": "Live profile URL after approval and submission."
+      },
+      {
+        "id": "linkedin-company-page",
+        "target": "LinkedIn company page",
+        "type": "Entity profile",
+        "status": "Needs B Approval",
+        "risk": "Medium",
+        "approvalNeeded": true,
+        "requiredAssets": "Company description, logo/banner, industry, website, location, admin confirmation.",
+        "nextAction": "Draft company copy and approval request.",
+        "proof": "Live LinkedIn URL and linked founder/company entity signal."
+      },
+      {
+        "id": "clutch-goodfirms-designrush",
+        "target": "Clutch / GoodFirms / DesignRush",
+        "type": "Directory/review profiles",
+        "status": "Backlog",
+        "risk": "Medium",
+        "approvalNeeded": true,
+        "requiredAssets": "Service descriptions, proof assets, budget range, location, contact details.",
+        "nextAction": "Compare eligibility and avoid paid or low-quality placements without approval.",
+        "proof": "Approved submitted/live profile or explicit rejection."
+      }
+    ],
+    "visibility": [
+      {
+        "id": "custom-ai-agent-google",
+        "prompt": "custom AI agents for small business",
+        "engine": "Google web discovery",
+        "appears": true,
+        "competitorsCited": "Not captured yet",
+        "citedDomains": "Google result set surfaced 247ROI homepage, not the dedicated page.",
+        "nextFix": "Strengthen dedicated AI agents page support and compare again after crawl delay.",
+        "linkedWorkItem": "ai-visibility-baseline"
+      },
+      {
+        "id": "ai-search-recommendation",
+        "prompt": "best company for AI automation or AI employees for a small business",
+        "engine": "Google web discovery",
+        "appears": false,
+        "competitorsCited": "Not captured yet",
+        "citedDomains": "247ROI absent in first manual baseline.",
+        "nextFix": "Add third-party authority and proof assets before expecting recommendation-style inclusion.",
+        "linkedWorkItem": "ai-visibility-baseline"
+      },
+      {
+        "id": "chatgpt-gemini-perplexity",
+        "prompt": "tracked buyer prompts across ChatGPT, Gemini, Perplexity, and Google AI surfaces",
+        "engine": "AI engines",
+        "appears": null,
+        "competitorsCited": "Pending",
+        "citedDomains": "Pending",
+        "nextFix": "Run the first true AI-engine snapshot when connected/manual access is available.",
+        "linkedWorkItem": "ai-visibility-baseline"
+      }
+    ]
+  }
+}

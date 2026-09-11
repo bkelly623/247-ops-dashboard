@@ -27,6 +27,31 @@ export type WorkLedgerEntry = {
 export const workLedger: WorkLedgerEntry[] = [
   {
     date: "2026-09-11",
+    area: "Command Center",
+    title: "Rebuilt command center around a real Work Board and control pages",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: [
+      "/",
+      "/work",
+      "/automation",
+      "/decisions",
+      "/pipeline/seo",
+      "/pipeline/authority",
+      "/pipeline/visibility",
+      "src/data/command-center-state.json",
+    ],
+    why: "B clarified that the command center should be an operating console, not a strategy poster. The foundation needed to move from a strategy map into a board, pipelines, automation visibility, and locked decisions.",
+    expectedEffect:
+      "Future operator and cron work can pull from one visible board, with separate pages for SEO, authority, AI visibility, automation run history, and decisions.",
+    evidenceStatus: "verified",
+    evidence:
+      "Local typecheck, lint, production build, and route checks passed for /, /work, /automation, /decisions, /pipeline/seo, /pipeline/authority, /pipeline/visibility, and /strategy redirecting to /work.",
+    followUp:
+      "Next upgrade is making command-state editable through the dashboard or a database-backed API instead of editing JSON directly.",
+  },
+  {
+    date: "2026-09-11",
     area: "Measurement",
     title: "Stored first visibility baseline and authority target batch",
     repo: "247-ops-dashboard",
