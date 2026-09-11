@@ -27,6 +27,29 @@ export type WorkLedgerEntry = {
 export const workLedger: WorkLedgerEntry[] = [
   {
     date: "2026-09-11",
+    area: "Measurement",
+    title: "Stored first visibility baseline and authority target batch",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: [
+      "/visibility",
+      "/seo",
+      "/strategy",
+      "src/data/visibility-snapshots.ts",
+      "src/data/seo-targets.ts",
+      "src/data/growth-control-plane.ts",
+    ],
+    why: "The growth queue needed a dated AI/search visibility baseline and a vetted authority backlog before more GEO or backlink work.",
+    expectedEffect:
+      "Future runs can compare visibility movement for custom AI agent and AI-search prompts, while authority work now has concrete targets, risks, required assets, and approval gates.",
+    evidenceStatus: "verified",
+    evidence:
+      "Live command-center metrics checked first: 16 qualified 7-day page views, 24 qualified 30-day page views, 5 audit starts in 7 days, 8 in 30 days, 0 contact/CTA/unlock events; GSC current window still shows 96 impressions and 0 clicks.",
+    followUp:
+      "Run real ChatGPT/Gemini/Perplexity/Google AI-surface snapshots when available; next authority action is preparing Google Business Profile and LinkedIn field copy for B approval.",
+  },
+  {
+    date: "2026-09-11",
     area: "Command Center",
     title: "Turned Strategy Map into Growth OS control plane",
     repo: "247-ops-dashboard",

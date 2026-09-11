@@ -21,6 +21,36 @@ export type VisibilitySnapshot = {
 
 export const visibilitySnapshots: VisibilitySnapshot[] = [
   {
+    checkedAt: "2026-09-11",
+    engine: "Google",
+    queryOrPrompt: '"custom AI agents for small businesses" "247ROI"',
+    targetPage: "/ai-agents-for-business",
+    observedUrl: "/",
+    standing: "stale",
+    position: "Observed as homepage, not the dedicated AI agents page",
+    answerSummary:
+      "Google web results can now surface 247ROI for custom AI agent language, but the visible result is the homepage snippet instead of the dedicated /ai-agents-for-business target page.",
+    competitorsOrEntities:
+      "247ROI, Layer3 Labs, Activepieces, Rocketeams, Makeitfuture, ZYLO, Monreal IT",
+    nextAction:
+      "Strengthen internal links and entity copy from the homepage, services, llms files, and AI employee pages into /ai-agents-for-business before the next recrawl.",
+  },
+  {
+    checkedAt: "2026-09-11",
+    engine: "Google",
+    queryOrPrompt: '"optimize my business for ChatGPT" "247ROI" OR "get247roi"',
+    targetPage: "/ai-visibility-optimization",
+    observedUrl: null,
+    standing: "absent",
+    position: "No 247ROI result observed in the checked web result set",
+    answerSummary:
+      "The AI visibility offer is live, but this prompt family is currently dominated by AI visibility platforms, SEO guides, and broader GEO commentary rather than 247ROI.",
+    competitorsOrEntities:
+      "Visiblo, Numerous.ai, GrowME Marketing, Loamly, AirOps, Neil Patel commentary",
+    nextAction:
+      "Add third-party authority signals and one proof-style AI visibility checklist/example before expanding GEO copy further.",
+  },
+  {
     checkedAt: "2026-09-01",
     engine: "Google",
     queryOrPrompt: "site:get247roi.com 247ROI",

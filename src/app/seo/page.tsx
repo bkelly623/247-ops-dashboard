@@ -464,6 +464,26 @@ export default async function SeoPage() {
                   <Link2 className="mt-1 shrink-0 text-[#ff5a1f]" size={18} />
                   <div>
                     <p className="text-sm font-semibold text-white">{target.name}</p>
+                    <p className="mt-1 text-xs font-semibold uppercase tracking-[0.13em] text-[#ff6a2a]">
+                      {target.type}
+                      {target.risk ? ` / ${target.risk} risk` : ""}
+                    </p>
+                    {target.url ? (
+                      <p className="mt-2 break-words text-xs leading-5 text-[#a8a8a8]">{target.url}</p>
+                    ) : null}
+                    <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">{target.rationale}</p>
+                    {target.requiredAssets ? (
+                      <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">
+                        <span className="font-semibold text-white">Assets: </span>
+                        {target.requiredAssets}
+                      </p>
+                    ) : null}
+                    {target.approvalNeed ? (
+                      <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">
+                        <span className="font-semibold text-white">Approval: </span>
+                        {target.approvalNeed}
+                      </p>
+                    ) : null}
                     <p className="mt-2 text-sm leading-6 text-[#c9c9c9]">{target.nextAction}</p>
                   </div>
                 </div>

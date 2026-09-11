@@ -71,6 +71,11 @@ export type AuthorityTarget = {
   type: "profile" | "directory" | "partner" | "proof";
   priority: "P1" | "P2" | "P3";
   status: "needed" | "queued" | "blocked" | "done";
+  url?: string;
+  submissionPath?: string;
+  requiredAssets?: string;
+  risk?: "low" | "medium" | "high";
+  approvalNeed?: string;
   rationale: string;
   nextAction: string;
 };
@@ -232,6 +237,11 @@ export const authorityTargets: AuthorityTarget[] = [
     type: "profile",
     priority: "P1",
     status: "done",
+    url: "https://www.get247roi.com/brendan-kelly",
+    submissionPath: "Use as canonical URL in approved external profiles.",
+    requiredAssets: "Founder title, company description, website URL, and consistent Brendan Kelly entity copy.",
+    risk: "low",
+    approvalNeed: "Approval needed before editing or submitting public profiles.",
     rationale:
       "Search and AI systems need consistent entity signals connecting Brendan Kelly, 247ROI, business systems, AI automation, and get247roi.com.",
     nextAction:
@@ -242,26 +252,116 @@ export const authorityTargets: AuthorityTarget[] = [
     type: "partner",
     priority: "P1",
     status: "done",
+    url: "https://www.get247roi.com/referral-partners",
+    submissionPath: "Share only through B-approved direct notes, partner messages, or warm introductions.",
+    requiredAssets: "Referral-page URL, one-sentence fit description, and approved share note.",
+    risk: "low",
+    approvalNeed: "Approval needed before public posting, email, DM, or partner outreach.",
     rationale:
       "Warm traffic should come from people who already serve SMB owners but do not build custom AI/business systems.",
     nextAction:
       "Use /referral-partners in approved warm introductions and track assisted visits, replies, and audit starts.",
   },
   {
-    name: "Local and professional directories",
+    name: "Google Business Profile",
     type: "directory",
     priority: "P1",
-    status: "needed",
+    status: "queued",
+    url: "https://business.google.com/",
+    submissionPath: "Create or claim the 247ROI profile in Google Business Profile.",
+    requiredAssets: "Business name, service area/address decision, phone, website, category, description, logo, and verification access.",
+    risk: "medium",
+    approvalNeed: "B must approve listing details and complete any ownership or verification step.",
     rationale:
-      "Clean citations help entity clarity and give prospects third-party places to verify the business.",
+      "This is the highest-trust local entity listing and can reinforce 247ROI's business identity in Google Search and Maps.",
     nextAction:
-      "Build a directory checklist for Google Business Profile, LinkedIn company page, relevant local/business directories, and credible business profiles.",
+      "Prepare listing field copy around Business Systems & AI Consultant; do not submit or verify without B.",
+  },
+  {
+    name: "LinkedIn company page",
+    type: "profile",
+    priority: "P1",
+    status: "queued",
+    url: "https://www.linkedin.com/company/setup/new/",
+    submissionPath: "Create or update the public 247ROI company page.",
+    requiredAssets: "Logo, tagline, website, industry, location/service area, short description, founder profile link.",
+    risk: "low",
+    approvalNeed: "B approval needed before creating or modifying public LinkedIn company presence.",
+    rationale:
+      "LinkedIn is a clean founder/company entity source and supports warm traffic, recruiting-style trust, and AI/search validation.",
+    nextAction:
+      "Draft profile fields using /brendan-kelly and the bottleneck-first positioning, then hold for approval.",
+  },
+  {
+    name: "Clutch profile",
+    type: "directory",
+    priority: "P1",
+    status: "queued",
+    url: "https://clutch.co/",
+    submissionPath: "Create a provider profile if 247ROI has enough services/proof to avoid looking thin.",
+    requiredAssets: "Services, hourly/project minimum decision, company description, website, portfolio/proof links, founder profile.",
+    risk: "medium",
+    approvalNeed: "B approval needed before claiming, publishing, or paying for any listing tier.",
+    rationale:
+      "Clutch is a major B2B service-provider marketplace and can become a credible third-party validation surface if the profile is complete.",
+    nextAction:
+      "Prepare a no-paid-listing profile draft and required-asset checklist; publish only after B approves proof level.",
+  },
+  {
+    name: "GoodFirms AI consulting listing",
+    type: "directory",
+    priority: "P2",
+    status: "queued",
+    url: "https://www.goodfirms.co/",
+    submissionPath: "Evaluate the AI consulting and AI agent development categories before creating a profile.",
+    requiredAssets: "Company profile, service categories, founder details, website, proof assets, and review strategy.",
+    risk: "medium",
+    approvalNeed: "B approval needed before profile creation or any review/request workflow.",
+    rationale:
+      "GoodFirms has AI consulting and AI agent development categories, but it is useful only if 247ROI can avoid thin-directory positioning.",
+    nextAction:
+      "Score fit after Clutch and LinkedIn are prepared; keep as second-wave authority unless easy and free.",
+  },
+  {
+    name: "DesignRush AI or software listing",
+    type: "directory",
+    priority: "P2",
+    status: "needed",
+    url: "https://www.designrush.com/",
+    submissionPath: "Research whether a free or low-friction listing fits 247ROI's service categories.",
+    requiredAssets: "Service description, company profile, category selection, and proof/portfolio links.",
+    risk: "medium",
+    approvalNeed: "B approval needed before submission or paid placement.",
+    rationale:
+      "DesignRush can support software/AI service discovery, but buyer quality and listing costs need review before action.",
+    nextAction:
+      "Keep in the vetted target batch, but do not prioritize over Google Business Profile, LinkedIn, or Clutch.",
+  },
+  {
+    name: "Alignable or local chamber profile",
+    type: "directory",
+    priority: "P2",
+    status: "needed",
+    url: "https://www.alignable.com/",
+    submissionPath: "Use only if B wants local SMB networking and can approve public profile details.",
+    requiredAssets: "Location/service area, founder profile URL, business description, category, and contact preference.",
+    risk: "low",
+    approvalNeed: "B approval needed because this can create public local-network visibility and messages.",
+    rationale:
+      "Local SMB networking profiles can support warm introductions, but they matter only if B wants the local/referral channel active.",
+    nextAction:
+      "Draft once the direct warm-traffic/referral lane is ready; avoid creating another unmanaged inbox.",
   },
   {
     name: "Anonymized workflow teardown",
     type: "proof",
     priority: "P1",
     status: "queued",
+    url: "https://www.get247roi.com/demo",
+    submissionPath: "Publish as a site proof asset and link from services, demo, AI Opportunity Audit, and llms files.",
+    requiredAssets: "Workflow pain, before/after system shape, human approval points, measurable outcome estimate, audit CTA.",
+    risk: "low",
+    approvalNeed: "No external approval needed if claims stay anonymized and non-client-specific.",
     rationale:
       "The site needs proof-style artifacts that show useful output without fabricating client results.",
     nextAction:
@@ -272,6 +372,11 @@ export const authorityTargets: AuthorityTarget[] = [
     type: "profile",
     priority: "P2",
     status: "needed",
+    url: "TBD",
+    submissionPath: "Research and draft only; outreach requires B approval.",
+    requiredAssets: "Target name, angle, audience fit, URL, contact route, and approved pitch.",
+    risk: "medium",
+    approvalNeed: "B must approve each pitch and target before outreach.",
     rationale:
       "Relevant appearances and expert quotes can create warm traffic plus credible mentions.",
     nextAction:

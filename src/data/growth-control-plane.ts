@@ -161,8 +161,8 @@ export const cronJobs: CronJobRecord[] = [
     status: "active",
     schedule: "Weekdays at 14:00 UTC, up to 15 minutes stagger",
     delivery: "Telegram announcement to B when something meaningful ships, breaks, or needs approval",
-    lastRun: "2026-09-10 14:11 UTC, ok",
-    nextRun: "2026-09-11 14:11 UTC",
+    lastRun: "2026-09-11 14:11 UTC, ok",
+    nextRun: "2026-09-14 14:00 UTC window",
     purpose:
       "Inspect live metrics, read the control plane, choose one highest-leverage safe growth action, implement, verify, and update state.",
     operatingRule:
@@ -238,8 +238,8 @@ export const growthQueue: GrowthQueueItem[] = [
     priority: "P0",
     impact: "Turns AI visibility from assumption into a repeatable baseline.",
     evidenceSource: "Missing baseline in /visibility and growth scorecard.",
-    proof: "Prompt, answer engine, cited domains, competitors, 247ROI presence, citation status, and next improvement.",
-    nextAction: "Record the first ChatGPT, Gemini, Perplexity, and Google AI-surface read for the tracked prompts.",
+    proof: "2026-09-11 stored Google web-discovery baseline: one stale 247ROI homepage result for custom AI agents and one absent AI-search-recommendation result; true ChatGPT, Gemini, Perplexity, and Google AI-surface snapshots still need connected/manual engine access.",
+    nextAction: "Run real ChatGPT, Gemini, Perplexity, and Google AI-surface reads when available; use the stored Google baseline as the comparison floor.",
   },
   {
     area: "Acquisition",
@@ -266,13 +266,13 @@ export const growthQueue: GrowthQueueItem[] = [
   {
     area: "Authority",
     title: "Create vetted authority target list",
-    status: "active",
+    status: "done",
     owner: "Athena",
     priority: "P0",
     impact: "Creates the backlog for legitimate authority work without jumping into spammy backlinks or unapproved outreach.",
     evidenceSource: "Authority score 2.5/10 and B request for systematic authority execution.",
-    proof: "Target name, URL, type, relevance, authority rationale, submission path, risk, required assets, and approval need.",
-    nextAction: "Use temporary research agents for a bounded target batch, then score and filter before any public action.",
+    proof: "Command-center authority pipeline now stores target name, URL, type, rationale, submission path, required assets, risk, approval need, and next action for Google Business Profile, LinkedIn, Clutch, GoodFirms, DesignRush, Alignable/local chamber, proof assets, and outreach research.",
+    nextAction: "Prepare Google Business Profile and LinkedIn field copy for B approval before any public submission.",
   },
   {
     area: "Authority",
