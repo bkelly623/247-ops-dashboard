@@ -13,12 +13,12 @@ import {
 } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState } from "@/data/command-center-state";
 import { standingScores } from "@/data/growth-standing";
 import { workLedger } from "@/data/work-ledger";
 import { visibilitySnapshots } from "@/data/visibility-snapshots";
 import { visualProgressItems } from "@/data/visual-progress";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
+import { getCommandState } from "@/lib/command-state/server";
 import { getSearchConsolePerformance } from "@/lib/search-console/server";
 
 export const dynamic = "force-dynamic";
@@ -74,9 +74,10 @@ async function loadSearchConsolePerformance() {
 }
 
 export default async function Home() {
-  const [brandOverview, searchConsole] = await Promise.all([
+  const [brandOverview, searchConsole, commandState] = await Promise.all([
     loadBrandOverview(),
     loadSearchConsolePerformance(),
+    getCommandState(),
   ]);
   const latestWork = workLedger.slice(0, 4);
   const weakestScores = [...standingScores].sort((a, b) => a.score - b.score).slice(0, 4);

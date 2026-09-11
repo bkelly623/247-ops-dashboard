@@ -1,7 +1,7 @@
 import { Eye, SearchX } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState } from "@/data/command-center-state";
+import { getCommandState } from "@/lib/command-state/server";
 
 function appearsLabel(value: boolean | null) {
   if (value === true) return "appears";
@@ -15,7 +15,11 @@ function appearsTone(value: boolean | null) {
   return "warn";
 }
 
-export default function AiVisibilityPipelinePage() {
+export const dynamic = "force-dynamic";
+
+export default async function AiVisibilityPipelinePage() {
+  const commandState = await getCommandState();
+
   return (
     <AppShell>
       <PageHeader

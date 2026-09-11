@@ -98,7 +98,8 @@ export type CommandState = {
   };
 };
 
-export const commandState = rawState as CommandState;
+export const commandStateSeed = rawState as CommandState;
+export const commandState = commandStateSeed;
 
 export const workColumns: WorkStatus[] = [
   "Backlog",

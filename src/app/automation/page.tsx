@@ -1,7 +1,8 @@
 import { Clock3, History, Power, Workflow } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState, type AutomationRecord } from "@/data/command-center-state";
+import { type AutomationRecord } from "@/data/command-center-state";
+import { getCommandState } from "@/lib/command-state/server";
 
 function statusTone(status: AutomationRecord["status"]) {
   if (status === "Useful") return "good";
@@ -10,7 +11,11 @@ function statusTone(status: AutomationRecord["status"]) {
   return "neutral";
 }
 
-export default function AutomationPage() {
+export const dynamic = "force-dynamic";
+
+export default async function AutomationPage() {
+  const commandState = await getCommandState();
+
   return (
     <AppShell>
       <PageHeader

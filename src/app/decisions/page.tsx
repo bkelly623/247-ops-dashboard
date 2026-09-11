@@ -1,9 +1,12 @@
 import { LockKeyhole, RotateCcw } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState } from "@/data/command-center-state";
+import { getCommandState } from "@/lib/command-state/server";
 
-export default function DecisionsPage() {
+export const dynamic = "force-dynamic";
+
+export default async function DecisionsPage() {
+  const commandState = await getCommandState();
   const locked = commandState.decisions.filter((decision) => decision.status === "Locked").length;
 
   return (

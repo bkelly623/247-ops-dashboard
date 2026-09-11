@@ -1,7 +1,7 @@
 import { ShieldAlert } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState } from "@/data/command-center-state";
+import { getCommandState } from "@/lib/command-state/server";
 
 function riskTone(risk: string) {
   if (risk === "High") return "danger";
@@ -9,7 +9,10 @@ function riskTone(risk: string) {
   return "good";
 }
 
-export default function AuthorityPipelinePage() {
+export const dynamic = "force-dynamic";
+
+export default async function AuthorityPipelinePage() {
+  const commandState = await getCommandState();
   const needsApproval = commandState.pipelines.authority.filter((item) => item.approvalNeeded).length;
 
   return (

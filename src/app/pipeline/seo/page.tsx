@@ -1,7 +1,7 @@
 import { ArrowUpRight, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState } from "@/data/command-center-state";
+import { getCommandState } from "@/lib/command-state/server";
 
 function metric(value: number | null) {
   if (typeof value !== "number") return "Pending";
@@ -13,7 +13,11 @@ function position(value: number | null) {
   return value.toFixed(value >= 10 ? 1 : 2);
 }
 
-export default function SeoPipelinePage() {
+export const dynamic = "force-dynamic";
+
+export default async function SeoPipelinePage() {
+  const commandState = await getCommandState();
+
   return (
     <AppShell>
       <PageHeader

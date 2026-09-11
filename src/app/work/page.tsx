@@ -1,77 +1,21 @@
 import { ArrowUpRight, GitCommitHorizontal, ListChecks } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
-import { commandState, workColumns, type CommandWorkItem, type WorkPriority, type WorkStatus } from "@/data/command-center-state";
+import { WorkBoardClient } from "@/components/work-board-client";
 import { workLedger } from "@/data/work-ledger";
+import { getCommandState } from "@/lib/command-state/server";
 
-function priorityTone(priority: WorkPriority) {
-  if (priority === "P0") return "danger";
-  if (priority === "P1") return "gold";
-  if (priority === "P2") return "warn";
-  return "neutral";
-}
-
-function statusTone(status: WorkStatus | string) {
+function statusTone(status: string) {
   if (status === "Done" || status === "verified") return "good";
   if (status === "This Week" || status === "In Progress" || status === "pending" || status === "needs-data") return "warn";
   if (status === "Needs B Approval" || status === "Waiting / Blocked" || status === "blocked") return "danger";
   return "neutral";
 }
 
-function itemsFor(status: WorkStatus) {
-  return commandState.workItems.filter((item) => item.status === status);
-}
+export const dynamic = "force-dynamic";
 
-function WorkCard({ item }: { item: CommandWorkItem }) {
-  return (
-    <article className="rounded-md border border-white/10 bg-white/5 p-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusBadge tone={priorityTone(item.priority)}>{item.priority}</StatusBadge>
-        <StatusBadge tone={statusTone(item.status)}>{item.status}</StatusBadge>
-        <StatusBadge tone="neutral">{item.lane}</StatusBadge>
-      </div>
-      <h2 className="mt-3 text-base font-semibold leading-6 text-white">{item.title}</h2>
-      <div className="mt-3 space-y-2 text-sm leading-6 text-[#c9c9c9]">
-        <p>
-          <span className="font-semibold text-white">Why: </span>
-          {item.why}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Expected impact: </span>
-          {item.expectedImpact}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Proof required: </span>
-          {item.proofRequired}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Owner: </span>
-          {item.owner}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Due/cadence: </span>
-          {item.dueOrCadence}
-        </p>
-      </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {item.links.map((link) => (
-          <span key={link} className="inline-flex items-center gap-1 rounded bg-white/10 px-2 py-1 text-xs font-semibold text-[#d6d6d6]">
-            {link.startsWith("/") ? <ArrowUpRight size={13} /> : null}
-            {link}
-          </span>
-        ))}
-      </div>
-      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#ff8a3d]">
-        Watch: {item.metricToWatch}
-      </p>
-    </article>
-  );
-}
-
-export default function WorkPage() {
-  const inMotion = commandState.workItems.filter((item) => item.status === "This Week" || item.status === "In Progress").length;
-  const approvals = itemsFor("Needs B Approval").length;
-  const blocked = itemsFor("Waiting / Blocked").length;
+export default async function WorkPage() {
+  const commandState = await getCommandState();
   const latestLedger = workLedger.slice(0, 8);
 
   return (
@@ -79,46 +23,11 @@ export default function WorkPage() {
       <PageHeader
         eyebrow="Work Board"
         title="The command center starts here: backlog, this week, in progress, blocked, approvals, and done."
-        description="This board is backed by command-center state, not chat memory. Cron jobs and operator runs should pull from these items."
+        description="This board is backed by persisted command-center snapshots, not chat memory. Cron jobs and operator runs should pull from these items."
         action={<StatusBadge tone="gold">State updated {new Date(commandState.updatedAt).toISOString().slice(0, 10)}</StatusBadge>}
       />
 
-      <div className="mb-5 grid gap-4 md:grid-cols-4">
-        {[
-          { label: "Board items", value: commandState.workItems.length, note: "Persistent command-state tasks." },
-          { label: "In motion", value: inMotion, note: "This Week or In Progress." },
-          { label: "Needs approval", value: approvals, note: "External-facing work cannot proceed alone." },
-          { label: "Waiting/blocked", value: blocked, note: "Paused for data, crawl delay, or proof." },
-        ].map((metric) => (
-          <DashboardCard key={metric.label} title={metric.label}>
-            <p className="text-4xl font-semibold text-white">{metric.value}</p>
-            <p className="mt-3 text-sm leading-6 text-[#c9c9c9]">{metric.note}</p>
-          </DashboardCard>
-        ))}
-      </div>
-
-      <DashboardCard title="Board" eyebrow="Cron and operator source of truth" className="mb-5">
-        <div className="grid gap-4 xl:grid-cols-3 2xl:grid-cols-6">
-          {workColumns.map((column) => (
-            <section key={column} className="min-h-40 rounded-md border border-white/10 bg-black/35 p-3">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-white">{column}</h2>
-                <StatusBadge tone={statusTone(column)}>{itemsFor(column).length}</StatusBadge>
-              </div>
-              <div className="space-y-3">
-                {itemsFor(column).map((item) => (
-                  <WorkCard key={item.id} item={item} />
-                ))}
-                {itemsFor(column).length === 0 ? (
-                  <p className="rounded-md border border-dashed border-white/10 p-3 text-sm leading-6 text-[#8f8f8f]">
-                    Empty by design. Add work here only when it has a clear proof requirement.
-                  </p>
-                ) : null}
-              </div>
-            </section>
-          ))}
-        </div>
-      </DashboardCard>
+      <WorkBoardClient initialState={commandState} />
 
       <DashboardCard title="Done Ledger" eyebrow="Proof of shipped work">
         <div className="space-y-4">

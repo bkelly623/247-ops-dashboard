@@ -28,6 +28,28 @@ export const workLedger: WorkLedgerEntry[] = [
   {
     date: "2026-09-11",
     area: "Command Center",
+    title: "Added persisted Work Board updates",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: [
+      "/work",
+      "/api/command-state",
+      "src/lib/command-state/server.ts",
+      "src/components/work-board-client.tsx",
+      "COMMAND_CENTER_WRITE_TOKEN",
+    ],
+    why: "The command center needed to stop depending on code deploys for routine board status updates.",
+    expectedEffect:
+      "B and Athena can test moving board items between Backlog, This Week, In Progress, Waiting/Blocked, Needs B Approval, and Done while snapshots persist in Supabase.",
+    evidenceStatus: "verified",
+    evidence:
+      "Local command-state GET and protected PATCH succeeded, using the existing Supabase event stream as append-only state storage. Typecheck, lint, and production build passed.",
+    followUp:
+      "Next upgrade is full item creation/editing from the dashboard and richer run history records for automation outputs.",
+  },
+  {
+    date: "2026-09-11",
+    area: "Command Center",
     title: "Rebuilt command center around a real Work Board and control pages",
     repo: "247-ops-dashboard",
     commit: "a4975f0",

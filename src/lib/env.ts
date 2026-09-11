@@ -18,6 +18,7 @@ type ServerEnv = PublicEnv & {
   googleSearchConsoleRefreshToken?: string;
   googleSearchConsoleQuotaProjectId?: string;
   googleSearchConsoleSiteUrl?: string;
+  commandCenterWriteToken?: string;
 };
 
 function required(name: string): string {
@@ -54,5 +55,6 @@ export function getServerEnv(): ServerEnv {
     googleSearchConsoleRefreshToken: process.env.GOOGLE_SEARCH_CONSOLE_REFRESH_TOKEN,
     googleSearchConsoleQuotaProjectId: process.env.GOOGLE_SEARCH_CONSOLE_QUOTA_PROJECT_ID,
     googleSearchConsoleSiteUrl: process.env.GSC_SITE_URL,
+    commandCenterWriteToken: process.env.COMMAND_CENTER_WRITE_TOKEN,
   };
 }
