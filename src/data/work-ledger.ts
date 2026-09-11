@@ -26,6 +26,22 @@ export type WorkLedgerEntry = {
 
 export const workLedger: WorkLedgerEntry[] = [
   {
+    date: "2026-09-11",
+    area: "Command Center",
+    title: "Turned Strategy Map into Growth OS control plane",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: ["/strategy", "src/data/growth-control-plane.ts", "src/data/work-ledger.ts"],
+    why: "B needed the command center to show what has been done, where 247ROI stands, what is left, which work lanes exist, what recurring jobs run, and how priorities are chosen.",
+    expectedEffect:
+      "The command center becomes the daily operating surface instead of a loose dashboard, with visible lanes, queue status, priorities, cron registry, approval boundaries, and latest shipped work.",
+    evidenceStatus: "verified",
+    evidence:
+      "Local typecheck, lint, and production build passed before deployment.",
+    followUp:
+      "Next command-center upgrade should make the queue editable/persistent instead of static TypeScript data.",
+  },
+  {
     date: "2026-09-10",
     area: "Command Center",
     title: "Rebuilt command center around strategy map and live operating read",
