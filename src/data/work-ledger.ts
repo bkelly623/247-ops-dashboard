@@ -28,6 +28,22 @@ export const workLedger: WorkLedgerEntry[] = [
   {
     date: "2026-09-11",
     area: "Command Center",
+    title: "Replaced homepage hero with owner-console readout",
+    repo: "247-ops-dashboard",
+    commit: "this commit",
+    changed: ["/", "src/app/page.tsx"],
+    why: "The command-center homepage still opened like a presentation page instead of immediately answering what needs attention, what is blocked, what needs approval, and what changed.",
+    expectedEffect:
+      "B can judge the command center from a dense first-screen operating readout before drilling into the board, automation, decisions, or pipeline pages.",
+    evidenceStatus: "verified",
+    evidence:
+      "Local desktop and mobile screenshots were reviewed after replacing the PageHeader/card intro. Typecheck, lint, and production build passed.",
+    followUp:
+      "Use B's next review to decide whether the homepage readout is the right control surface or whether the board itself should become the default route.",
+  },
+  {
+    date: "2026-09-11",
+    area: "Command Center",
     title: "Added persisted Work Board updates",
     repo: "247-ops-dashboard",
     commit: "this commit",

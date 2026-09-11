@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-09-11T16:45:00Z",
+  "updatedAt": "2026-09-11T17:45:00Z",
   "ownerSnapshot": {
     "currentBottleneck": "247ROI has early search visibility and audit starts, but not enough authority, proof, AI-answer presence, or contact actions to prove demand yet.",
     "nextMove": "Make the Work Board the source of truth, then advance AI visibility baselines and approved authority setup before adding more page or cron sprawl.",
@@ -8,6 +8,7 @@
       "The first durable keyword snapshot exists.",
       "The AI employees small-business page was tuned from GSC evidence.",
       "Authority targets were researched and stored for approval-gated execution.",
+      "The command-center homepage was stripped of the hero treatment and rebuilt as an owner-console readout.",
       "Bing is explicitly deprioritized unless reopened."
     ],
     "authority": {
