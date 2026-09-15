@@ -7,6 +7,7 @@ import {
   Filter,
   Eye,
 } from "lucide-react";
+import { AgentSections } from "@/components/agent-sections";
 import { AppShell } from "@/components/app-shell";
 import { getCommandStateReport } from "@/lib/command-state/server";
 import { getBrandSiteOverview } from "@/lib/brand-site/server";
@@ -76,12 +77,13 @@ export default async function Home() {
       <div className="page-title">
         <div>
           <h1>Situation room</h1>
-          <p>The objective. The obstacles. The next move.</p>
+          <p>Shared oversight. Agent-owned sections. Clear next actions.</p>
         </div>
         <Link className="button primary" href="/work">
           Open operations <ArrowRight size={14} />
         </Link>
       </div>
+      <AgentSections />
       <div className="briefing">
         <div>
           <p className="eyebrow">Command intent</p>
@@ -91,13 +93,14 @@ export default async function Home() {
           </p>
         </div>
         <div>
-          <p className="eyebrow">
-            Recorded assessment · not live intelligence
-          </p>
+          <p className="eyebrow">Recorded assessment · not live intelligence</p>
           <p>{s.ownerSnapshot.currentBottleneck}</p>
         </div>
       </div>
       {report.warning ? <div className="notice">{report.warning}</div> : null}
+      <p className="eyebrow mb-3">
+        Website growth signals · not total company or social performance
+      </p>
       <div className="metric-strip">
         {[
           {
@@ -142,7 +145,8 @@ export default async function Home() {
         <section className="panel">
           <div className="panel-head">
             <h2>
-              Priority orders <span className="muted">/ {active.length}</span>
+              Shared priority orders{" "}
+              <span className="muted">/ {active.length}</span>
             </h2>
             <Link href="/work?view=active">Manage queue →</Link>
           </div>
@@ -219,7 +223,7 @@ export default async function Home() {
       </div>
       <section className="panel mb-5">
         <div className="panel-head">
-          <h2>Campaign fronts</h2>
+          <h2>Growth campaign fronts</h2>
           <Link href="/decisions">Strategy & doctrine →</Link>
         </div>
         <div className="front-grid">

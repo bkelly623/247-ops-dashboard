@@ -1,86 +1,109 @@
-import { Clock3, History, Power, Workflow } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import {
-  DashboardCard,
-  PageHeader,
-  StatusBadge,
-} from "@/components/dashboard-card";
-import { type AutomationRecord } from "@/data/command-center-state";
+import { getAutomationEvidence } from "@/lib/automation-evidence";
 import { getCommandState } from "@/lib/command-state/server";
-
-function statusTone(status: AutomationRecord["status"]) {
-  if (status === "Useful") return "good";
-  if (status === "Candidate") return "warn";
-  if (status === "Noisy") return "danger";
-  return "neutral";
-}
-
 export const dynamic = "force-dynamic";
-
+function date(value: string | null) {
+  return value
+    ? new Date(value).toISOString().slice(0, 16).replace("T", " ") + " UTC"
+    : "Not recorded";
+}
 export default async function AutomationPage() {
-  const commandState = await getCommandState();
-
+  const [evidence, state] = await Promise.all([
+    getAutomationEvidence(),
+    getCommandState(),
+  ]);
   return (
     <AppShell>
-      <PageHeader
-        eyebrow="Automation Center"
-        title="Automation watch"
-        description="Recorded schedules and last reported outputs. This view is not a live scheduler connection; it cannot start or stop jobs."
-        action={
-          <StatusBadge tone="gold">
-            {commandState.automation.length} tracked jobs
-          </StatusBadge>
-        }
-      />
-
-      <p className="notice">
-        Snapshot recorded {commandState.updatedAt.slice(0, 10)}. Verify current
-        execution in OpenClaw before relying on these schedules.
-      </p>
-      <div className="grid gap-5 xl:grid-cols-2">
-        {commandState.automation.map((job) => (
-          <DashboardCard key={job.id} title={job.name} eyebrow={job.schedule}>
-            <div className="flex flex-wrap items-center gap-2">
-              <StatusBadge tone={statusTone(job.status)}>
-                {job.status}
-              </StatusBadge>
-              <StatusBadge tone="neutral">{job.nextPlannedRun}</StatusBadge>
-            </div>
-            <div className="mt-5 space-y-4 text-sm leading-6 text-[#c9c9c9]">
-              <div className="flex gap-3">
-                <Workflow className="mt-1 shrink-0 text-[#ff8a3d]" size={18} />
-                <p>
-                  <span className="font-semibold text-white">Purpose: </span>
-                  {job.purpose}
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <History className="mt-1 shrink-0 text-[#ff8a3d]" size={18} />
-                <p>
-                  <span className="font-semibold text-white">Last run: </span>
-                  {job.lastRan}. {job.lastOutput}
-                </p>
-              </div>
-              <div className="flex gap-3">
-                <Clock3 className="mt-1 shrink-0 text-[#ff8a3d]" size={18} />
-                <p>
-                  <span className="font-semibold text-white">Next work: </span>
-                  {job.nextPlannedWork}
-                </p>
-              </div>
-              <div className="flex gap-3 rounded-md border border-white/10 bg-white/5 p-3">
-                <Power className="mt-1 shrink-0 text-[#fca5a5]" size={18} />
-                <p>
-                  <span className="font-semibold text-white">
-                    Retire rule:{" "}
-                  </span>
-                  {job.retireRule}
-                </p>
-              </div>
-            </div>
-          </DashboardCard>
-        ))}
+      <div className="page-title">
+        <div>
+          <h1>Automation watch</h1>
+          <p>Actual recorded runs, failures, and next scheduled work.</p>
+        </div>
+        <span className="pill">Read-only evidence</span>
       </div>
+      <div className="notice">
+        {evidence
+          ? `Observed ${date(evidence.observedAt)} via OpenClaw. Scope: ${evidence.scope}. This is a dated import, not a live scheduler connection.`
+          : "No scheduler evidence imported yet. Execution status is unknown."}{" "}
+        Other agents’ jobs are not visible from this session; absence here does
+        not mean they have no automations.
+      </div>
+      {evidence?.jobs.map((job) => (
+        <section className="panel mb-5" key={job.id}>
+          <div className="panel-head">
+            <div>
+              <h2>{job.name}</h2>
+              <p className="source-note mb-0 mt-1">
+                {job.owner} · {job.schedule}
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <span className="pill">
+                {job.enabled ? "Enabled" : "Disabled"}
+              </span>
+              <span
+                className={`pill ${job.lastStatus === "error" ? "red" : job.lastStatus === "ok" ? "green" : ""}`}
+              >
+                Last run: {job.lastStatus}
+              </span>
+            </div>
+          </div>
+          <div className="panel-body">
+            <p className="muted text-xs">
+              Next scheduled at observation: {date(job.nextRunAt)}
+            </p>
+          </div>
+          <div className="table-wrap">
+            <table className="ops-table">
+              <thead>
+                <tr>
+                  <th>Run time</th>
+                  <th>Result</th>
+                  <th>Duration</th>
+                  <th>Recorded output / failure</th>
+                </tr>
+              </thead>
+              <tbody>
+                {job.runs.map((run) => (
+                  <tr key={run.at}>
+                    <td>{date(run.at)}</td>
+                    <td>
+                      <span
+                        className={`pill ${run.status === "error" ? "red" : "green"}`}
+                      >
+                        {run.status}
+                      </span>
+                    </td>
+                    <td>{Math.round(run.durationMs / 1000)}s</td>
+                    <td>{run.summary}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </section>
+      ))}
+      <details className="panel">
+        <summary className="panel-head">
+          Planning registry · not execution history ({state.automation.length}{" "}
+          entries)
+        </summary>
+        <div className="panel-body">
+          {state.automation.map((job) => (
+            <div key={job.id} className="strategy-step">
+              <h3>{job.name}</h3>
+              <p>{job.purpose}</p>
+              <p>Planned next work: {job.nextPlannedWork}</p>
+              <p>Retire rule: {job.retireRule}</p>
+            </div>
+          ))}
+        </div>
+      </details>
+      <p className="source-note">
+        No run, pause, or retry controls are exposed. Inspect and change actual
+        schedules in OpenClaw; a recorded successful run is not independent
+        verification of its claimed output.
+      </p>
     </AppShell>
   );
 }

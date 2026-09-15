@@ -1,4 +1,5 @@
 import "server-only";
+import { createHash } from "node:crypto";
 import {
   commandStateSeed,
   type CommandState,
@@ -63,18 +64,38 @@ export async function getCommandState(): Promise<CommandState> {
   return (await getCommandStateReport()).state;
 }
 
-export async function saveCommandState(state: CommandState, reason: string) {
+export class CommandConflictError extends Error {}
+
+// One successor per version: the existing primary-key constraint makes competing
+// inserts atomic. All command-state writers must use this function/protocol.
+export async function saveCommandState(
+  state: CommandState,
+  reason: string,
+  parentVersion: string,
+) {
+  const hash = createHash("sha256")
+    .update(`247roi-command-successor:${parentVersion}`)
+    .digest("hex");
+  const id = `${hash.slice(0, 8)}-${hash.slice(8, 12)}-${hash.slice(12, 16)}-${hash.slice(16, 20)}-${hash.slice(20, 32)}`;
   const supabase = createSupabaseAdminClient();
   const { error } = await supabase.from("site_events").insert({
+    id,
     event_name: "command_state_snapshot",
     source: "command_center",
     metadata: {
       reason,
+      parentVersion,
       state,
     },
   });
 
   if (error) {
-    throw new Error(`Command state snapshot failed: ${error.message}`);
+    if (error.code === "23505")
+      throw new CommandConflictError(
+        "Another operator saved first. Reload before saving your changes.",
+      );
+    throw new Error(
+      "Command state could not be saved. Your edits have not been discarded.",
+    );
   }
 }

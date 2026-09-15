@@ -720,4 +720,97 @@ textarea {
   }
 }
 
-.situation-grid { align-items: start; }
+.situation-grid {
+  align-items: start;
+}
+
+.agent-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.agent-section {
+  padding: 20px;
+}
+.agent-section + .agent-section {
+  border-left: 1px solid var(--line);
+}
+.agent-section h3 {
+  font-size: 21px;
+  font-weight: 600;
+  margin: 5px 0 10px;
+}
+.agent-section > p {
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.6;
+}
+.agent-section small {
+  display: block;
+  font-size: 10px;
+  color: var(--muted);
+  margin-top: 14px;
+  line-height: 1.6;
+}
+.agent-components {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin-top: 15px;
+  font-size: 12px;
+  color: var(--muted);
+  list-style: disc;
+  padding-left: 15px;
+}
+.command-nav .nav-group {
+  margin: 13px 0;
+}
+.command-nav .nav-link {
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+@media (max-width: 760px) {
+  .agent-grid {
+    grid-template-columns: 1fr;
+  }
+  .agent-section + .agent-section {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .panel-head {
+    flex-wrap: wrap;
+  }
+}
+
+/* Adapt preserved modules' original light surfaces to the shared dark shell.
+   Keep ownership/content in the module; theme compatibility belongs here. */
+.legacy-module
+  :is(
+    [class~="bg-white/55"],
+    [class~="bg-[#ece5d7]"],
+    [class~="bg-[#fbf6ea]"],
+    [class~="bg-[#f5fbf2]"]
+  ) {
+  background-color: #202d3b;
+}
+.legacy-module
+  :is(
+    [class~="border-[#ded6c8]"],
+    [class~="border-[#eee7da]"],
+    [class~="border-[#d6dfd2]"]
+  ) {
+  border-color: #3a485a;
+}
+.legacy-module
+  :is(
+    [class~="text-[#665d4e]"],
+    [class~="text-[#4f473a]"],
+    [class~="text-[#4f624a]"]
+  ) {
+  color: #b6c2d1;
+}
+.legacy-module :is([class~="text-[#171511]"], [class~="text-[#2f5a2e]"]) {
+  color: #dfebf3;
+}
+.legacy-module [class~="text-[#8b6a22]"] {
+  color: #b5cfc8;
+}

@@ -55,3 +55,11 @@ This repository is the unified command center for 247ROI operations.
 - Cards are allowed for individual repeated items and dashboard panels; do not create nested card stacks.
 - Use lucide icons for controls/status where useful.
 - Avoid one-note color palettes and decorative background blobs.
+
+## Shared command and agent sections
+
+- Preserve all agent-owned entry points when redesigning the shell or homepage. Shared command must not replace an agent module or hide it behind another agent's pipeline.
+- `src/data/agent-sections.ts` is the shared directory: Hermes owns `/social`; Athena currently operates `/seo` (growth/search/web), with `/visibility` and `/progress` as supporting evidence views.
+- Keep module internals intact unless the task explicitly requires changing them. Shared order counts are not a substitute for an agent's separate pipeline.
+- Command-state writes must call `saveCommandState` with the parent version. The deterministic successor ID uses the database primary key to reject concurrent writes atomically. Do not insert random-ID command snapshots through another writer.
+- Automation evidence is caller-scoped, dated, sanitized data. Do not infer that invisible agents have no jobs, or describe imported records as live control.

@@ -30,7 +30,7 @@ const blank = (): CommandWorkItem => ({
   why: "",
   expectedImpact: "",
   proofRequired: "",
-  owner: "Athena",
+  owner: "",
   dueOrCadence: "This week",
   links: [],
   metricToWatch: "",
@@ -58,6 +58,7 @@ export function WorkBoardClient({
     [access, setAccess] = useState(false),
     [query, setQuery] = useState(""),
     [lane, setLane] = useState("All fronts"),
+    [owner, setOwner] = useState("All owners"),
     [view, setView] = useState(initialView ?? "all"),
     [board, setBoard] = useState(false),
     [item, setItem] = useState<CommandWorkItem | null>(
@@ -82,6 +83,7 @@ export function WorkBoardClient({
     .filter(
       (i) =>
         (lane === "All fronts" || i.lane === lane) &&
+        (owner === "All owners" || i.owner === owner) &&
         (!query ||
           `${i.title} ${i.owner} ${i.why}`
             .toLowerCase()
@@ -136,6 +138,10 @@ export function WorkBoardClient({
   }
   return (
     <>
+      <p className="source-note">
+        Shared orders only. Agent-specific pipelines remain in their own command
+        sections; they are not silently merged into this board.
+      </p>
       <div className="toolbar">
         <Search size={17} className="muted" />
         <input
@@ -145,6 +151,17 @@ export function WorkBoardClient({
           value={query}
           onChange={(e) => setQuery(e.target.value)}
         />
+        <select
+          aria-label="Filter owner"
+          className="field"
+          value={owner}
+          onChange={(e) => setOwner(e.target.value)}
+        >
+          <option>All owners</option>
+          {[...new Set(state.workItems.map((i) => i.owner))].sort().map((o) => (
+            <option key={o}>{o}</option>
+          ))}
+        </select>
         <select
           aria-label="Filter front"
           className="field"

@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  CommandConflictError,
   getCommandStateReport,
   saveCommandState,
 } from "@/lib/command-state/server";
@@ -40,7 +41,7 @@ export async function PATCH(req: NextRequest) {
       { status: 503 },
     );
   const state = report.state;
-  // Reject stale tabs before appending a new snapshot. This is not a database transaction.
+  // Fast stale-tab check; saveCommandState also atomically rejects competing successors.
   if (body.expectedUpdatedAt !== state.updatedAt)
     return NextResponse.json(
       {
@@ -93,10 +94,13 @@ export async function PATCH(req: NextRequest) {
         ),
       };
     }
-    next.updatedAt = new Date().toISOString();
+    next.updatedAt = new Date(
+      Math.max(Date.now(), Date.parse(state.updatedAt) + 1),
+    ).toISOString();
     await saveCommandState(
       next,
       `${String(body.action ?? "status")} order from Operations`,
+      state.updatedAt,
     );
     return NextResponse.json({ ok: true, state: next });
   } catch (error) {
@@ -105,7 +109,7 @@ export async function PATCH(req: NextRequest) {
         ok: false,
         error: error instanceof Error ? error.message : "Unable to save order.",
       },
-      { status: 400 },
+      { status: error instanceof CommandConflictError ? 409 : 400 },
     );
   }
 }

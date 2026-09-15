@@ -15,7 +15,10 @@ import {
   Settings,
   ArrowUpRight,
   Filter,
+  Users,
+  MonitorUp,
 } from "lucide-react";
+import { agentSections } from "@/data/agent-sections";
 const groups = [
   {
     label: "COMMAND",
@@ -26,7 +29,18 @@ const groups = [
     ],
   },
   {
-    label: "FRONTS",
+    label: "AGENT SECTIONS",
+    items: [
+      { href: "/agents", label: "All agent sections", icon: Users },
+      ...agentSections.map((agent) => ({
+        href: agent.href,
+        label: `${agent.name} · ${agent.id === "hermes" ? "Social" : "Growth"}`,
+        icon: agent.id === "hermes" ? Radio : Search,
+      })),
+    ],
+  },
+  {
+    label: "GROWTH PIPELINES",
     items: [
       { href: "/pipeline/seo", label: "Search acquisition", icon: Search },
       {
@@ -36,13 +50,14 @@ const groups = [
       },
       { href: "/pipeline/visibility", label: "AI visibility", icon: Eye },
       { href: "/pipeline/conversion", label: "Conversion", icon: Filter },
-      { href: "/social", label: "Social operations", icon: Radio },
     ],
   },
   {
     label: "SYSTEMS",
     items: [
       { href: "/automation", label: "Automation watch", icon: Workflow },
+      { href: "/visibility", label: "Rank proof", icon: Eye },
+      { href: "/progress", label: "Visual progress", icon: MonitorUp },
       { href: "/settings", label: "Connections", icon: Settings },
     ],
   },
@@ -117,7 +132,11 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               ))}
           </nav>
         </details>
-        <main className="command-content">{children}</main>
+        <main
+          className={`command-content ${["/social", "/seo", "/visibility", "/progress", "/settings"].includes(path) ? "legacy-module" : ""}`}
+        >
+          {children}
+        </main>
       </div>
     </div>
   );
