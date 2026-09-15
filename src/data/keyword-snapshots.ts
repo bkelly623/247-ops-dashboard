@@ -34,6 +34,172 @@ export type KeywordSnapshot = {
 };
 
 export const keywordSnapshots: KeywordSnapshot[] = [
+{
+  "checkedAt": "2026-09-15T14:12:38Z",
+  "source": "Google Search Console",
+  "property": "sc-domain:get247roi.com",
+  "windowStart": "2026-08-16",
+  "windowEnd": "2026-09-13",
+  "clicks": 0,
+  "impressions": 117,
+  "ctr": 0,
+  "averagePosition": 52.794871794871796,
+  "summary": "117 impressions, 0 clicks; +21 impressions versus Sep 10 (overlapping rolling windows, not an experiment). URL Inspection still reports an Aug 13 crawl for the small-business page, so Sep 10 edits cannot yet be credited. Six inspected commercial/audit URLs are unknown to Google despite live 200 responses and sitemap coverage.",
+  "queryRows": [
+    {
+      "query": "ai employee for home services",
+      "targetPage": "/ai-employees-for-service-businesses",
+      "clicks": 0,
+      "impressions": 2,
+      "ctr": 0,
+      "averagePosition": 88,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    },
+    {
+      "query": "ai employee for service business",
+      "targetPage": "/ai-employees-for-service-businesses",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "averagePosition": 70,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    },
+    {
+      "query": "ai employee for service businesses",
+      "targetPage": "/ai-employees-for-service-businesses",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "averagePosition": 47.333333333333336,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    },
+    {
+      "query": "ai employee for small business",
+      "targetPage": "/ai-employees-for-small-business",
+      "clicks": 0,
+      "impressions": 64,
+      "ctr": 0,
+      "averagePosition": 72,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    },
+    {
+      "query": "ai employees for small business",
+      "targetPage": "/ai-employees-for-small-business",
+      "clicks": 0,
+      "impressions": 3,
+      "ctr": 0,
+      "averagePosition": 67.33333333333333,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    },
+    {
+      "query": "ai operations coordinator",
+      "targetPage": "/ai-employees/ai-operations-coordinator",
+      "clicks": 0,
+      "impressions": 4,
+      "ctr": 0,
+      "averagePosition": 7.5,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    },
+    {
+      "query": "loyee-ai",
+      "targetPage": "/ai-employees-for-small-business",
+      "clicks": 0,
+      "impressions": 1,
+      "ctr": 0,
+      "averagePosition": 56,
+      "read": "Rolling-window query signal; not proof of a post-edit ranking change.",
+      "nextAction": "Confirm recrawl before judging the Sep 10 update; prioritize discovery of core business-system offers."
+    }
+  ],
+  "pageRows": [
+    {
+      "page": "/",
+      "clicks": 0,
+      "impressions": 15,
+      "ctr": 0,
+      "averagePosition": 1.6,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/about",
+      "clicks": 0,
+      "impressions": 8,
+      "ctr": 0,
+      "averagePosition": 3.375,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/ai-employees-for-service-businesses",
+      "clicks": 0,
+      "impressions": 17,
+      "ctr": 0,
+      "averagePosition": 37,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/ai-employees-for-small-business",
+      "clicks": 0,
+      "impressions": 85,
+      "ctr": 0,
+      "averagePosition": 61.89411764705882,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/ai-employees/ai-operations-coordinator",
+      "clicks": 0,
+      "impressions": 21,
+      "ctr": 0,
+      "averagePosition": 15.380952380952381,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/ai-lead-response-system",
+      "clicks": 0,
+      "impressions": 7,
+      "ctr": 0,
+      "averagePosition": 5,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/contact",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "averagePosition": 5.5,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/services",
+      "clicks": 0,
+      "impressions": 9,
+      "ctr": 0,
+      "averagePosition": 13.88888888888889,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/terms-of-service",
+      "clicks": 0,
+      "impressions": 6,
+      "ctr": 0,
+      "averagePosition": 3.5,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    },
+    {
+      "page": "/transcripts/missed-calls-12740-week",
+      "clicks": 0,
+      "impressions": 5,
+      "ctr": 0,
+      "averagePosition": 8.2,
+      "read": "Page-level aggregation; not interchangeable with query-level position."
+    }
+  ]
+},
   {
     checkedAt: "2026-09-09T14:12:47Z",
     source: "Google Search Console",

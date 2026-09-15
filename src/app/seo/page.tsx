@@ -1,3 +1,4 @@
+import inspectionBaseline from "@/data/search-inspection-baseline.json";
 import {
   ArrowUpRight,
   CalendarClock,
@@ -297,6 +298,29 @@ export default async function SeoPage() {
           rows={searchConsole?.dailyQueries ?? []}
           fallbackQuery={aiEmployeeSignal?.keys[0] ?? firstTuneTarget?.keys[0]}
         />
+      </DashboardCard>
+
+      <DashboardCard title="Google Indexation Baseline" eyebrow="URL Inspection · 2026-09-15" className="mb-5">
+        <p className="text-sm leading-6 text-[#c9c9c9]">
+          Six commercial/audit URLs are unknown to Google despite returning 200 and appearing in the sitemap.
+          The small-business page is indexed, but its reported crawl predates the September edits.
+          These are dated index records, not live Googlebot tests or ranking guarantees.
+        </p>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[700px] text-left text-sm">
+            <thead><tr><th className="p-3">URL / inspection evidence</th><th className="p-3">Google status</th><th className="p-3">Last reported crawl</th></tr></thead>
+            <tbody>
+              {inspectionBaseline.inspections.map((row) => (
+                <tr key={row.path} className="border-t border-white/10">
+                  <td className="p-3"><a className="underline" href={row.inspectionResultLink} target="_blank" rel="noreferrer">{row.path}</a></td>
+                  <td className="p-3">{row.indexStatusResult.coverageState}</td>
+                  <td className="p-3">{row.indexStatusResult.lastCrawlTime ?? "Not reported"}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <p className="mt-3 text-sm text-[#c9c9c9]">Blocker: no sitemap is recorded on the domain property. Submission returned 403: the current Google credential is read-only. Submit the canonical sitemap in Search Console, then verify processing and reinspect in seven days. No GSC row alone does not prove non-indexation.</p>
       </DashboardCard>
 
       <DashboardCard title="Keyword Snapshot History" eyebrow="Durable baseline" className="mb-5">
