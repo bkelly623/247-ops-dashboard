@@ -1,7 +1,7 @@
 import rawState from "@/data/command-center-state.json";
 
 export type WorkLane =
-  "SEO" | "Authority" | "Conversion" | "Measurement" | "Content" | "Ops";
+  "SEO" | "Authority" | "Conversion" | "Measurement" | "Content" | "Ops" | "Prospecting" | "Engineering";
 export type WorkStatus =
   | "Backlog"
   | "This Week"
@@ -26,6 +26,7 @@ export type CommandWorkItem = {
   metricToWatch: string;
   completionEvidence?: string;
   completedAt?: string;
+  approval?: { verdict: "approved" | "changes-requested"; note: string; at: string; scope: string };
 };
 
 export type AutomationRecord = {
@@ -85,7 +86,13 @@ export type VisibilityPipelineItem = {
   linkedWorkItem: string;
 };
 
+export type CommandAuditEntry = {
+  id: string; at: string; orderId: string; title: string; action: string;
+  actor: "Operator credential"; from?: WorkStatus; to: WorkStatus; note: string;
+};
+
 export type CommandState = {
+  commandLog?: CommandAuditEntry[];
   updatedAt: string;
   ownerSnapshot: {
     currentBottleneck: string;

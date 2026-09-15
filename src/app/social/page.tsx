@@ -32,6 +32,7 @@ const stageTone = {
 export default function SocialPage() {
   return (
     <AppShell>
+      <div className="notice" role="note"><strong>Planning workspace — not live social telemetry.</strong> Scores, view counts, scheduling labels and cleanup countdowns below are recorded example/planning data, not verified publishing results or running automations. Do not use them as performance evidence.</div>
       <PageHeader
         eyebrow="Social Command Center"
         title="Build the 247ROI media machine without letting the mess win."

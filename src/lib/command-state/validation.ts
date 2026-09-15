@@ -38,6 +38,8 @@ export function validateOrder(input: unknown): CommandWorkItem {
       "Measurement",
       "Content",
       "Ops",
+      "Prospecting",
+      "Engineering",
     ].includes(item.lane) ||
     !workColumns.includes(item.status) ||
     !["P0", "P1", "P2", "P3"].includes(item.priority)

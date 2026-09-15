@@ -1,115 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
-import {
-  CommandConflictError,
-  getCommandStateReport,
-  saveCommandState,
-} from "@/lib/command-state/server";
-import { validateOrder } from "@/lib/command-state/validation";
+import { randomUUID, timingSafeEqual } from "node:crypto";
+import { CommandConflictError, getCommandStateReport, saveCommandState } from "@/lib/command-state/server";
 import { getServerEnv } from "@/lib/env";
-import { workColumns, type WorkStatus } from "@/data/command-center-state";
+import { applyCommandAction } from "@/lib/command-state/actions";
 export async function GET() {
   const report = await getCommandStateReport();
-  return NextResponse.json({ ok: true, ...report });
+  return NextResponse.json({ ok: true, ...report }, { headers: { "Cache-Control": "no-store" } });
 }
 export async function PATCH(req: NextRequest) {
+  const expected = getServerEnv().commandCenterWriteToken;
+  const provided = req.headers.get("x-command-center-write-token") ?? "";
+  if (!expected || Buffer.byteLength(provided) !== Buffer.byteLength(expected) || !timingSafeEqual(Buffer.from(provided), Buffer.from(expected)))
+    return NextResponse.json({ ok: false, error: "Unlock controls with a valid operator token." }, { status: 401 });
   let body: Record<string, unknown>;
   try {
-    const parsed = await req.json();
-    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed))
-      throw new Error();
+    const text = await req.text();
+    if (text.length > 64000) throw new Error();
+    const parsed = JSON.parse(text);
+    if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error();
     body = parsed;
   } catch {
-    return NextResponse.json(
-      { ok: false, error: "Invalid request." },
-      { status: 400 },
-    );
+    return NextResponse.json({ ok: false, error: "Invalid request." }, { status: 400 });
   }
-  const expected = getServerEnv().commandCenterWriteToken;
-  if (!expected || req.headers.get("x-command-center-write-token") !== expected)
-    return NextResponse.json(
-      { ok: false, error: "Unlock controls with a valid operator token." },
-      { status: 401 },
-    );
   const report = await getCommandStateReport();
   if (report.source !== "persistent")
-    return NextResponse.json(
-      {
-        ok: false,
-        error:
-          "Persistent state unavailable. Changes are disabled to protect saved work.",
-      },
-      { status: 503 },
-    );
+    return NextResponse.json({ ok: false, error: "Persistent state unavailable. Changes are disabled to protect saved work." }, { status: 503 });
   const state = report.state;
-  // Fast stale-tab check; saveCommandState also atomically rejects competing successors.
   if (body.expectedUpdatedAt !== state.updatedAt)
-    return NextResponse.json(
-      {
-        ok: false,
-        error:
-          "Operations changed since you opened this view. Reload before saving.",
-      },
-      { status: 409 },
-    );
+    return NextResponse.json({ ok: false, error: "Operations changed since you opened this view. Reload before saving; copy any unsaved edits first." }, { status: 409 });
   try {
-    let next;
-    if (body.action === "create" || body.action === "update") {
-      const item = validateOrder(body.item);
-      const existing = state.workItems.find((i) => i.id === item.id);
-      if (body.action === "create" && existing)
-        throw new Error("Order ID already exists.");
-      if (body.action === "update" && !existing)
-        throw new Error("Order no longer exists.");
-      const saved = {
-        ...item,
-        completedAt:
-          item.status === "Done"
-            ? (existing?.completedAt ?? new Date().toISOString())
-            : undefined,
-      };
-      next = {
-        ...state,
-        workItems:
-          body.action === "create"
-            ? [...state.workItems, saved]
-            : state.workItems.map((i) => (i.id === item.id ? saved : i)),
-      };
-    } else {
-      const existing = state.workItems.find((i) => i.id === body.workItemId);
-      if (!existing || !workColumns.includes(body.status as WorkStatus))
-        throw new Error("Invalid order or status.");
-      if (body.status === "Done" && !existing.completionEvidence)
-        throw new Error("Open the order and record completion evidence first.");
-      next = {
-        ...state,
-        workItems: state.workItems.map((i) =>
-          i.id === existing.id
-            ? {
-                ...i,
-                status: body.status as WorkStatus,
-                completedAt:
-                  body.status === "Done" ? new Date().toISOString() : undefined,
-              }
-            : i,
-        ),
-      };
-    }
-    next.updatedAt = new Date(
-      Math.max(Date.now(), Date.parse(state.updatedAt) + 1),
-    ).toISOString();
-    await saveCommandState(
-      next,
-      `${String(body.action ?? "status")} order from Operations`,
-      state.updatedAt,
-    );
+    const at = new Date(Math.max(Date.now(), Date.parse(state.updatedAt) + 1)).toISOString();
+    const next = applyCommandAction(state, body, at, randomUUID());
+    await saveCommandState(next, `${String(body.action ?? "status")} order from Operations`, state.updatedAt);
     return NextResponse.json({ ok: true, state: next });
   } catch (error) {
-    return NextResponse.json(
-      {
-        ok: false,
-        error: error instanceof Error ? error.message : "Unable to save order.",
-      },
-      { status: error instanceof CommandConflictError ? 409 : 400 },
-    );
+    return NextResponse.json({ ok: false, error: error instanceof Error ? error.message : "Unable to save order." }, { status: error instanceof CommandConflictError ? 409 : 400 });
   }
 }

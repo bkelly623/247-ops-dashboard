@@ -32,9 +32,11 @@ export const dynamic = "force-dynamic";
 export default async function WorkPage({
   searchParams,
 }: {
-  searchParams: Promise<{ task?: string; view?: string }>;
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const params = await searchParams;
+  const raw = await searchParams;
+  const one = (value: string | string[] | undefined) => Array.isArray(value) ? value[0] : value;
+  const params = { task: one(raw.task), view: one(raw.view), owner: one(raw.owner), new: one(raw.new) };
   const commandState = await getCommandState();
   const latestLedger = workLedger.slice(0, 8);
 
@@ -53,10 +55,12 @@ export default async function WorkPage({
       />
 
       <WorkBoardClient
-        key={`${params.task ?? ""}-${params.view ?? ""}`}
+        key={`${params.task ?? ""}-${params.view ?? ""}-${params.owner ?? ""}-${params.new ?? ""}`}
         initialState={commandState}
         initialTask={params.task}
         initialView={params.view}
+        initialOwner={params.owner}
+        initialNew={params.new === "1"}
       />
 
       <DashboardCard

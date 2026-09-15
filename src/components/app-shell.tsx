@@ -23,15 +23,16 @@ const groups = [
   {
     label: "COMMAND",
     items: [
-      { href: "/", label: "Situation room", icon: LayoutDashboard },
-      { href: "/work", label: "Operations", icon: ListChecks },
-      { href: "/decisions", label: "Strategy & doctrine", icon: Compass },
+      { href: "/", label: "Mission control", icon: LayoutDashboard },
+      { href: "/work", label: "Work orders", icon: ListChecks },
+      { href: "/decisions", label: "Decision desk", icon: Compass },
+      { href: "/agents", label: "Agent roster", icon: Users },
+      { href: "/automation", label: "Automation", icon: Workflow },
     ],
   },
   {
     label: "AGENT SECTIONS",
     items: [
-      { href: "/agents", label: "All agent sections", icon: Users },
       ...agentSections.map((agent) => ({
         href: agent.href,
         label: `${agent.name} · ${agent.id === "hermes" ? "Social" : "Growth"}`,
@@ -55,7 +56,6 @@ const groups = [
   {
     label: "SYSTEMS",
     items: [
-      { href: "/automation", label: "Automation watch", icon: Workflow },
       { href: "/visibility", label: "Rank proof", icon: Eye },
       { href: "/progress", label: "Visual progress", icon: MonitorUp },
       { href: "/settings", label: "Connections", icon: Settings },
@@ -67,6 +67,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
   const current = groups.flatMap((g) => g.items).find((i) => i.href === path);
   return (
     <div className="command-shell">
+      <a className="skip-link" href="#command-content">Skip to content</a>
       <aside className="command-nav">
         <Link href="/" className="brand">
           <span className="brand-mark">
@@ -96,7 +97,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           ))}
         </nav>
         <div className="nav-foot">
-          <span className="signal-dot" /> Strategy → execution → evidence
+          Orders → decisions → evidence
           <Link
             href="https://www.get247roi.com"
             target="_blank"
@@ -113,12 +114,12 @@ export function AppShell({ children }: { children: React.ReactNode }) {
             {current?.label ?? "Intelligence"}
           </span>
           <span className="top-note">
-            Owner operations <span className="signal-dot" />
+            Operator workspace
           </span>
         </header>
-        <details className="mobile-menu">
+        <details className="mobile-menu" key={path}>
           <summary>Navigate · {current?.label ?? "Command"}</summary>
-          <nav>
+          <nav aria-label="Mobile navigation">
             {groups
               .flatMap((g) => g.items)
               .map((i) => (
@@ -133,6 +134,8 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           </nav>
         </details>
         <main
+          id="command-content"
+          tabIndex={-1}
           className={`command-content ${["/social", "/seo", "/visibility", "/progress", "/settings"].includes(path) ? "legacy-module" : ""}`}
         >
           {children}

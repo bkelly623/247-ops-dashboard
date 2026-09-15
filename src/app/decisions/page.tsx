@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { LockKeyhole, RotateCcw } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import {
@@ -19,12 +20,22 @@ export default async function DecisionsPage() {
     <AppShell>
       <PageHeader
         eyebrow="Decision Log"
-        title="Strategy & doctrine"
-        description="Win qualified demand through discoverability, credible proof, and the AI Opportunity Audit. These decisions keep execution aligned."
+        title="Decision desk"
+        description="Decide what moves forward. Inspect the exact scope, record constraints, or return an order for revision."
         action={<StatusBadge tone="gold">{locked} locked</StatusBadge>}
       />
 
       <section className="panel mb-5">
+        <div className="panel-head"><h2>Awaiting your decision</h2><span className="pill amber">{commandState.workItems.filter(i => i.status === "Needs B Approval").length} pending</span></div>
+        {commandState.workItems.filter(i => i.status === "Needs B Approval").map(i => <Link className="attention-item" href={`/work?task=${encodeURIComponent(i.id)}`} key={i.id}><span className="eyebrow">{i.priority} / {i.owner}</span><strong>{i.title}</strong><p>{i.expectedImpact}</p><p style={{color:"var(--accent)"}}>Inspect scope & decide →</p></Link>)}
+        {!commandState.workItems.some(i => i.status === "Needs B Approval") && <p className="empty">No orders awaiting approval.</p>}
+      </section>
+      <section className="panel mb-5"><div className="panel-head"><h2>Decision history</h2><span className="pill">Recorded, not dispatched</span></div>
+        {(commandState.commandLog ?? []).filter(e => ["approve", "request-changes"].includes(e.action)).reverse().slice(0,10).map(e => <Link key={e.id} href={`/work?task=${encodeURIComponent(e.orderId)}`} className="attention-item"><span className="eyebrow">{e.at.slice(0,16).replace("T"," ")} UTC / {e.actor}</span><strong>{e.title}</strong><p>{e.action === "approve" ? "Approved" : "Changes requested"} · {e.note}</p></Link>)}
+        {!(commandState.commandLog ?? []).some(e => ["approve", "request-changes"].includes(e.action)) && <p className="empty">Approval decisions will appear here with their recorded reason and scope.</p>}
+      </section>
+      <details className="mb-5"><summary className="button">Growth strategy & locked doctrine</summary>
+      <section className="panel mt-4 mb-5">
         <div className="panel-head">
           <h2>Campaign sequence</h2>
           <span className="pill">Operating direction</span>
@@ -87,6 +98,7 @@ export default async function DecisionsPage() {
           </DashboardCard>
         ))}
       </div>
+      </details>
     </AppShell>
   );
 }

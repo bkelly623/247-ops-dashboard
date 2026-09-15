@@ -20,6 +20,8 @@ const lanes = [
   "Measurement",
   "Content",
   "Ops",
+  "Prospecting",
+  "Engineering",
 ];
 const blank = (): CommandWorkItem => ({
   id: crypto.randomUUID(),
@@ -48,26 +50,33 @@ export function WorkBoardClient({
   initialState,
   initialTask,
   initialView,
+  initialOwner,
+  initialNew = false,
 }: {
   initialState: CommandState;
   initialTask?: string;
   initialView?: string;
+  initialOwner?: string;
+  initialNew?: boolean;
 }) {
   const [state, setState] = useState(initialState),
     [token, setToken] = useState(""),
     [access, setAccess] = useState(false),
     [query, setQuery] = useState(""),
     [lane, setLane] = useState("All fronts"),
-    [owner, setOwner] = useState("All owners"),
+    [owner, setOwner] = useState(initialOwner ?? "All owners"),
     [view, setView] = useState(initialView ?? "all"),
     [board, setBoard] = useState(false),
     [item, setItem] = useState<CommandWorkItem | null>(
-      initialState.workItems.find((i) => i.id === initialTask) ?? null,
+      () => initialNew ? {...blank(), owner: initialOwner ?? ""} : initialState.workItems.find((i) => i.id === initialTask) ?? null,
     ),
-    [creating, setCreating] = useState(false),
+    [creating, setCreating] = useState(initialNew),
+    [decisionNote, setDecisionNote] = useState(""),
     [message, setMessage] = useState(""),
     [saving, setSaving] = useState(false);
   const drawer = useRef<HTMLDivElement>(null);
+  const recordedItem = item ? state.workItems.find(i => i.id === item.id) : undefined;
+  const dirty = !!item && JSON.stringify(item) !== JSON.stringify(recordedItem);
   useEffect(() => {
     if (!item) return;
     const previous = document.activeElement as HTMLElement | null;
@@ -83,7 +92,7 @@ export function WorkBoardClient({
     .filter(
       (i) =>
         (lane === "All fronts" || i.lane === lane) &&
-        (owner === "All owners" || i.owner === owner) &&
+        (owner === "All owners" || i.owner.toLowerCase() === owner.toLowerCase() || i.owner.toLowerCase().split(/\s*\+\s*/).includes(owner.toLowerCase())) &&
         (!query ||
           `${i.title} ${i.owner} ${i.why}`
             .toLowerCase()
@@ -99,10 +108,14 @@ export function WorkBoardClient({
   const edit = (i: CommandWorkItem) => {
     setItem({ ...i, links: [...i.links] });
     setCreating(false);
+    setDecisionNote("");
     setMessage("");
   };
-  async function save() {
+  async function save(action?: "approve" | "request-changes") {
     if (!item) return;
+    if (action && JSON.stringify(item) !== JSON.stringify(state.workItems.find(i => i.id === item.id))) {
+      setMessage("Save or discard your order edits before deciding on the recorded scope."); return;
+    }
     setSaving(true);
     setMessage("");
     try {
@@ -113,7 +126,9 @@ export function WorkBoardClient({
           "x-command-center-write-token": token,
         },
         body: JSON.stringify({
-          action: creating ? "create" : "update",
+          action: action ?? (creating ? "create" : "update"),
+          workItemId: item.id,
+          note: action ? decisionNote : undefined,
           item,
           expectedUpdatedAt: state.updatedAt,
         }),
@@ -122,7 +137,8 @@ export function WorkBoardClient({
       if (!response.ok) throw new Error(payload.error ?? "Save failed");
       setState(payload.state);
       setItem(null);
-      setMessage("Order saved to operations.");
+      setMessage(action === "approve" ? "Approval recorded for this scope. Ready for agent handoff; nothing was dispatched." : action === "request-changes" ? "Changes requested. Order returned to backlog." : "Order saved to operations.");
+      setDecisionNote("");
     } catch (e) {
       setMessage(
         e instanceof Error
@@ -142,6 +158,7 @@ export function WorkBoardClient({
         Shared orders only. Agent-specific pipelines remain in their own command
         sections; they are not silently merged into this board.
       </p>
+      <datalist id="agent-owners">{["Athena", "Hermes", "Flint", "Slim", "Lumen"].map(name => <option key={name} value={name} />)}</datalist>
       <div className="toolbar">
         <Search size={17} className="muted" />
         <input
@@ -158,7 +175,7 @@ export function WorkBoardClient({
           onChange={(e) => setOwner(e.target.value)}
         >
           <option>All owners</option>
-          {[...new Set(state.workItems.map((i) => i.owner))].sort().map((o) => (
+          {[...new Set(["Athena", "Hermes", "Flint", "Slim", "Lumen", ...state.workItems.map((i) => i.owner)])].sort().map((o) => (
             <option key={o}>{o}</option>
           ))}
         </select>
@@ -175,7 +192,7 @@ export function WorkBoardClient({
         </select>
         <button className="button" onClick={() => setAccess(!access)}>
           <LockKeyhole size={14} />
-          {token ? "Operator access" : "Unlock controls"}
+          {token ? "Edit operator token" : "Unlock controls"}
         </button>
         <button
           className="button primary"
@@ -319,6 +336,15 @@ export function WorkBoardClient({
         {new Date(state.updatedAt).toISOString().slice(0, 16).replace("T", " ")}{" "}
         UTC · Marking an order Done requires completion evidence.
       </p>
+      <section className="panel mb-5" aria-label="Command activity">
+        <div className="panel-head"><h2>Command activity</h2><span className="pill">Recorded actions</span></div>
+        {(state.commandLog ?? []).length ? [...state.commandLog!].reverse().slice(0, 12).map(event => (
+          <button type="button" className="order-row w-full text-left" key={event.id} onClick={() => { const target = state.workItems.find(i => i.id === event.orderId); if (target) edit(target); }}>
+            <div className="order-main"><h3>{event.title}</h3><p>{event.action === "approve" ? "Approved" : event.action === "request-changes" ? "Changes requested" : event.action === "create" ? "Order created" : "Order updated"} · {event.from ? `${event.from} → ` : ""}{event.to}</p><p>{event.note}</p><small className="muted">{event.at.slice(0,16).replace("T", " ")} UTC · {event.actor}</small></div>
+          </button>
+        )) : <p className="empty">New order changes and approval decisions will appear here. Older work is in the historical ledger below.</p>}
+        <p className="source-note px-5">Shared credential attribution, not verified personal identity. Latest 12 actions shown; retained in operational snapshots.</p>
+      </section>
       {item ? (
         <div
           className="drawer-backdrop"
@@ -372,6 +398,39 @@ export function WorkBoardClient({
                 <X size={18} />
               </button>
             </div>
+            {!creating ? (
+              <section className="order-brief">
+                <span className={`pill ${tone(item.status)}`}>{item.status}</span>
+                <h3 className="text-xl font-semibold mt-3">{item.title}</h3>
+                <p className="muted text-sm leading-6 mt-2">{item.why}</p>
+                <p className="eyebrow mt-4">Success criteria</p>
+                <p className="text-sm leading-6 mt-2">{item.proofRequired}</p>
+                <p className="source-note">{item.owner} · {item.priority} · {item.dueOrCadence}</p>
+                {item.completionEvidence ? <div className="notice"><strong>Reported evidence</strong><p>{item.completionEvidence}</p><small>Not independently verified by the console.</small></div> : null}
+                {item.approval && !dirty ? <div className="notice"><strong>{item.approval.verdict === "approved" ? "Scope approved" : "Changes requested"}</strong><p>{item.approval.note}</p><small>{item.approval.at.slice(0, 16).replace("T", " ")} UTC · Operator credential</small></div> : null}
+                {dirty ? <p className="notice">Unsaved changes. Save this specification before making a decision or copying an agent handoff.</p> : null}
+                <button type="button" className="button" disabled={dirty} onClick={async () => {
+                  if (dirty) return;
+                  try {
+                    await navigator.clipboard.writeText(`Operational handoff — ${item.title}\nOrder: ${item.id}\nOwner: ${item.owner}\nPriority: ${item.priority}\nStatus: ${item.status}\nObjective: ${item.expectedImpact}\nWhy: ${item.why}\nAcceptance: ${item.proofRequired}\nTiming: ${item.dueOrCadence}\nReferences: ${item.links.join(", ")}\nApproval: ${item.approval?.verdict ?? "not recorded"}\nApproval note: ${item.approval?.note ?? "none"}\nRead the current order before acting. Acknowledge ownership, report blockers, and return concrete verification. Do not interpret this handoff as approval for public, destructive, or paid actions.`);
+                    setMessage("Handoff copied. Paste into the assigned agent’s chat; no agent was started.");
+                  } catch { setMessage("Clipboard unavailable. Copy the order details manually."); }
+                }}>Copy agent handoff</button>
+                {item.status === "Needs B Approval" ? <div className="notice">
+                  <strong>Decision required</strong>
+                  <p className="text-xs mt-2">Approve the recorded scope or return it for revision. Approval is logged, not an execution trigger.</p>
+                  <label>Decision reason / constraints<textarea className="field" maxLength={2000} value={decisionNote} onChange={e => setDecisionNote(e.target.value)} /></label>
+                  <label>Operator token<input className="field" type="password" autoComplete="off" value={token} onChange={e => setToken(e.target.value)} /></label>
+                  <div className="flex flex-wrap gap-2">
+                    <button className="button primary" type="button" disabled={saving || !token || !decisionNote.trim()} onClick={() => save("approve")}>Approve order</button>
+                    <button className="button" type="button" disabled={saving || !token || !decisionNote.trim()} onClick={() => save("request-changes")}>Request changes</button>
+                  </div>
+                </div> : null}
+                {message ? <p role="status" className="notice">{message}</p> : null}
+              </section>
+            ) : null}
+            <details open={creating} className="order-edit">
+            <summary className="button mt-4">{creating ? "Order specification" : "Edit order specification"}</summary>
             <form
               onSubmit={(e) => {
                 e.preventDefault();
@@ -430,6 +489,7 @@ export function WorkBoardClient({
                 <label>
                   Owner
                   <input
+                    list="agent-owners"
                     required
                     className="field"
                     value={item.owner}
@@ -495,7 +555,7 @@ export function WorkBoardClient({
                   onChange={(e) => field("completionEvidence", e.target.value)}
                 />
               </label>
-              {!token ? (
+              {(
                 <label>
                   Unlock to save
                   <input
@@ -507,7 +567,7 @@ export function WorkBoardClient({
                     onChange={(e) => setToken(e.target.value)}
                   />
                 </label>
-              ) : null}
+              )}
               {message ? (
                 <p className="notice" role="alert">
                   {message}
@@ -525,6 +585,7 @@ export function WorkBoardClient({
                 {saving ? "Saving…" : "Save order"}
               </button>
             </form>
+            </details>
           </div>
         </div>
       ) : null}
