@@ -15,13 +15,13 @@ export function DashboardCard({
   return (
     <section
       className={cn(
-        "rounded-lg border border-white/10 bg-[#111111] p-5 text-white shadow-[0_18px_60px_rgba(0,0,0,0.28)]",
+        "rounded-lg border border-[#2a3645] bg-[#171f2a] p-5 text-[#e3eaf1]",
         className,
       )}
     >
       <div className="mb-4">
         {eyebrow ? (
-          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ff6a2a]">
+          <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8ac9ba]">
             {eyebrow}
           </p>
         ) : null}
@@ -67,15 +67,15 @@ export function PageHeader({
   action?: React.ReactNode;
 }) {
   return (
-    <div className="mb-7 flex flex-col gap-4 border-b border-white/10 pb-6 lg:flex-row lg:items-end lg:justify-between">
+    <div className="mb-5 flex flex-col gap-3 border-b border-white/10 pb-4 lg:flex-row lg:items-end lg:justify-between">
       <div>
-        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#ff6a2a]">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-[#8ac9ba]">
           {eyebrow}
         </p>
-        <h1 className="mt-2 max-w-4xl text-3xl font-semibold tracking-normal text-white sm:text-4xl">
+        <h1 className="mt-1 max-w-4xl text-xl font-semibold tracking-tight text-white sm:text-2xl">
           {title}
         </h1>
-        <p className="mt-3 max-w-3xl text-base leading-7 text-[#c9c9c9]">
+        <p className="mt-2 max-w-3xl text-sm leading-6 text-[#c9c9c9]">
           {description}
         </p>
       </div>

@@ -1,7 +1,14 @@
 import rawState from "@/data/command-center-state.json";
 
-export type WorkLane = "SEO" | "Authority" | "Conversion" | "Measurement" | "Content" | "Ops";
-export type WorkStatus = "Backlog" | "This Week" | "In Progress" | "Waiting / Blocked" | "Needs B Approval" | "Done";
+export type WorkLane =
+  "SEO" | "Authority" | "Conversion" | "Measurement" | "Content" | "Ops";
+export type WorkStatus =
+  | "Backlog"
+  | "This Week"
+  | "In Progress"
+  | "Waiting / Blocked"
+  | "Needs B Approval"
+  | "Done";
 export type WorkPriority = "P0" | "P1" | "P2" | "P3";
 
 export type CommandWorkItem = {
@@ -17,6 +24,8 @@ export type CommandWorkItem = {
   dueOrCadence: string;
   links: string[];
   metricToWatch: string;
+  completionEvidence?: string;
+  completedAt?: string;
 };
 
 export type AutomationRecord = {

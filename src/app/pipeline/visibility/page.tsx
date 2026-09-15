@@ -1,6 +1,10 @@
 import { Eye, SearchX } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { DashboardCard, PageHeader, StatusBadge } from "@/components/dashboard-card";
+import {
+  DashboardCard,
+  PageHeader,
+  StatusBadge,
+} from "@/components/dashboard-card";
 import { getCommandState } from "@/lib/command-state/server";
 
 function appearsLabel(value: boolean | null) {
@@ -22,26 +26,44 @@ export default async function AiVisibilityPipelinePage() {
 
   return (
     <AppShell>
+      <p className="source-note">
+        Recorded pipeline intelligence · {commandState.updatedAt.slice(0, 10)}.
+        Refresh evidence before making a new decision.
+      </p>
       <PageHeader
         eyebrow="AI Visibility Pipeline"
-        title="Tracked prompts, engines, 247ROI presence, competitors, cited domains, and next fixes."
+        title="AI visibility"
         description="Absence is useful evidence. It shows whether the next fix should be authority, proof, entity clarity, or page support."
-        action={<StatusBadge tone="gold">{commandState.pipelines.visibility.length} tracked checks</StatusBadge>}
+        action={
+          <StatusBadge tone="gold">
+            {commandState.pipelines.visibility.length} tracked checks
+          </StatusBadge>
+        }
       />
 
       <div className="space-y-4">
         {commandState.pipelines.visibility.map((item) => (
-          <DashboardCard key={item.id} title={item.prompt} eyebrow={item.engine}>
+          <DashboardCard
+            key={item.id}
+            title={item.prompt}
+            eyebrow={item.engine}
+          >
             <div className="grid gap-4 lg:grid-cols-[0.75fr_1.25fr]">
               <div>
-                <StatusBadge tone={appearsTone(item.appears)}>{appearsLabel(item.appears)}</StatusBadge>
+                <StatusBadge tone={appearsTone(item.appears)}>
+                  {appearsLabel(item.appears)}
+                </StatusBadge>
                 <div className="mt-5 space-y-3 text-sm leading-6 text-[#c9c9c9]">
                   <p>
-                    <span className="font-semibold text-white">Competitors cited: </span>
+                    <span className="font-semibold text-white">
+                      Competitors cited:{" "}
+                    </span>
                     {item.competitorsCited}
                   </p>
                   <p>
-                    <span className="font-semibold text-white">Cited domains: </span>
+                    <span className="font-semibold text-white">
+                      Cited domains:{" "}
+                    </span>
                     {item.citedDomains}
                   </p>
                 </div>

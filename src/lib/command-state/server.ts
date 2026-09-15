@@ -1,5 +1,8 @@
 import "server-only";
-import { commandStateSeed, type CommandState, type WorkStatus } from "@/data/command-center-state";
+import {
+  commandStateSeed,
+  type CommandState,
+} from "@/data/command-center-state";
 import { createSupabaseAdminClient } from "@/lib/supabase/server";
 
 type CommandStateEventRow = {
@@ -23,7 +26,11 @@ function stateFromMetadata(metadata: unknown): CommandState | null {
   return state as unknown as CommandState;
 }
 
-export async function getCommandState(): Promise<CommandState> {
+export async function getCommandStateReport(): Promise<{
+  state: CommandState;
+  source: "persistent" | "seed";
+  warning: string | null;
+}> {
   try {
     const supabase = createSupabaseAdminClient();
     const { data, error } = await supabase
@@ -33,14 +40,27 @@ export async function getCommandState(): Promise<CommandState> {
       .eq("source", "command_center")
       .order("created_at", { ascending: false })
       .limit(1);
-
-    if (error) return commandStateSeed;
-
-    const row = ((data ?? []) as CommandStateEventRow[])[0];
-    return stateFromMetadata(row?.metadata) ?? commandStateSeed;
+    if (error) throw new Error("State store unavailable");
+    const state = stateFromMetadata(
+      ((data ?? []) as CommandStateEventRow[])[0]?.metadata,
+    );
+    if (state) return { state, source: "persistent", warning: null };
+    return {
+      state: commandStateSeed,
+      source: "seed",
+      warning: "Showing baseline plan. No saved operational snapshot found.",
+    };
   } catch {
-    return commandStateSeed;
+    return {
+      state: commandStateSeed,
+      source: "seed",
+      warning:
+        "State connection unavailable. Showing the baseline plan; writes are disabled until the connection recovers.",
+    };
   }
+}
+export async function getCommandState(): Promise<CommandState> {
+  return (await getCommandStateReport()).state;
 }
 
 export async function saveCommandState(state: CommandState, reason: string) {
@@ -57,28 +77,4 @@ export async function saveCommandState(state: CommandState, reason: string) {
   if (error) {
     throw new Error(`Command state snapshot failed: ${error.message}`);
   }
-}
-
-export async function updateWorkItemStatus(
-  workItemId: string,
-  status: WorkStatus,
-  reason: string,
-) {
-  const state = await getCommandState();
-  const workItem = state.workItems.find((item) => item.id === workItemId);
-
-  if (!workItem) {
-    throw new Error("Unknown work item.");
-  }
-
-  const nextState: CommandState = {
-    ...state,
-    updatedAt: new Date().toISOString(),
-    workItems: state.workItems.map((item) =>
-      item.id === workItemId ? { ...item, status } : item,
-    ),
-  };
-
-  await saveCommandState(nextState, reason || `Updated ${workItem.title} to ${status}.`);
-  return nextState;
 }

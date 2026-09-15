@@ -1,229 +1,516 @@
 "use client";
-
-import { useMemo, useState } from "react";
-import { ArrowUpRight, Loader2 } from "lucide-react";
-import { DashboardCard, StatusBadge } from "@/components/dashboard-card";
+import { useEffect, useRef, useState } from "react";
+import {
+  Plus,
+  X,
+  Search,
+  LockKeyhole,
+  LayoutList,
+  Columns3,
+} from "lucide-react";
 import {
   workColumns,
   type CommandState,
   type CommandWorkItem,
-  type WorkPriority,
-  type WorkStatus,
 } from "@/data/command-center-state";
-
-function priorityTone(priority: WorkPriority) {
-  if (priority === "P0") return "danger";
-  if (priority === "P1") return "gold";
-  if (priority === "P2") return "warn";
-  return "neutral";
-}
-
-function statusTone(status: WorkStatus | string) {
-  if (status === "Done" || status === "verified") return "good";
-  if (status === "This Week" || status === "In Progress" || status === "pending" || status === "needs-data") return "warn";
-  if (status === "Needs B Approval" || status === "Waiting / Blocked" || status === "blocked") return "danger";
-  return "neutral";
-}
-
-function WorkCard({
-  item,
-  writeToken,
-  onStatusChange,
+const lanes = [
+  "SEO",
+  "Authority",
+  "Conversion",
+  "Measurement",
+  "Content",
+  "Ops",
+];
+const blank = (): CommandWorkItem => ({
+  id: crypto.randomUUID(),
+  title: "",
+  lane: "Ops",
+  status: "Backlog",
+  priority: "P2",
+  why: "",
+  expectedImpact: "",
+  proofRequired: "",
+  owner: "Athena",
+  dueOrCadence: "This week",
+  links: [],
+  metricToWatch: "",
+  completionEvidence: "",
+});
+const tone = (status: string) =>
+  status === "Done"
+    ? "green"
+    : status === "Waiting / Blocked"
+      ? "red"
+      : status === "Needs B Approval"
+        ? "amber"
+        : "";
+export function WorkBoardClient({
+  initialState,
+  initialTask,
+  initialView,
 }: {
-  item: CommandWorkItem;
-  writeToken: string;
-  onStatusChange: (workItemId: string, status: WorkStatus) => Promise<void>;
+  initialState: CommandState;
+  initialTask?: string;
+  initialView?: string;
 }) {
-  const [pendingStatus, setPendingStatus] = useState<WorkStatus | null>(null);
-
-  async function updateStatus(status: WorkStatus) {
-    setPendingStatus(status);
-    try {
-      await onStatusChange(item.id, status);
-    } finally {
-      setPendingStatus(null);
-    }
-  }
-
-  return (
-    <article className="rounded-md border border-white/10 bg-white/5 p-4">
-      <div className="flex flex-wrap items-center gap-2">
-        <StatusBadge tone={priorityTone(item.priority)}>{item.priority}</StatusBadge>
-        <StatusBadge tone={statusTone(item.status)}>{item.status}</StatusBadge>
-        <StatusBadge tone="neutral">{item.lane}</StatusBadge>
-      </div>
-      <h2 className="mt-3 text-base font-semibold leading-6 text-white">{item.title}</h2>
-      <div className="mt-3 space-y-2 text-sm leading-6 text-[#c9c9c9]">
-        <p>
-          <span className="font-semibold text-white">Why: </span>
-          {item.why}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Expected impact: </span>
-          {item.expectedImpact}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Proof required: </span>
-          {item.proofRequired}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Owner: </span>
-          {item.owner}
-        </p>
-        <p>
-          <span className="font-semibold text-white">Due/cadence: </span>
-          {item.dueOrCadence}
-        </p>
-      </div>
-      <div className="mt-3 flex flex-wrap gap-2">
-        {item.links.map((link) => (
-          <span key={link} className="inline-flex items-center gap-1 rounded bg-white/10 px-2 py-1 text-xs font-semibold text-[#d6d6d6]">
-            {link.startsWith("/") ? <ArrowUpRight size={13} /> : null}
-            {link}
-          </span>
-        ))}
-      </div>
-      <p className="mt-3 text-xs font-semibold uppercase tracking-[0.14em] text-[#ff8a3d]">
-        Watch: {item.metricToWatch}
-      </p>
-      <div className="mt-4">
-        <label className="text-xs font-semibold uppercase tracking-[0.14em] text-[#8f8f8f]" htmlFor={`status-${item.id}`}>
-          Move item
-        </label>
-        <div className="mt-2 flex items-center gap-2">
-          <select
-            id={`status-${item.id}`}
-            value={item.status}
-            disabled={!writeToken || Boolean(pendingStatus)}
-            onChange={(event) => updateStatus(event.target.value as WorkStatus)}
-            className="min-w-0 flex-1 rounded-md border border-white/10 bg-black px-3 py-2 text-sm text-white disabled:cursor-not-allowed disabled:opacity-50"
-          >
-            {workColumns.map((status) => (
-              <option key={status} value={status}>
-                {status}
-              </option>
-            ))}
-          </select>
-          {pendingStatus ? <Loader2 className="animate-spin text-[#ff8a3d]" size={18} /> : null}
-        </div>
-      </div>
-    </article>
-  );
-}
-
-export function WorkBoardClient({ initialState }: { initialState: CommandState }) {
-  const [state, setState] = useState(initialState);
-  const [writeToken, setWriteToken] = useState(() =>
-    typeof window === "undefined"
-      ? ""
-      : window.localStorage.getItem("command-center-write-token") ?? "",
-  );
-  const [message, setMessage] = useState("Enter write token to update board status.");
-
-  const counts = useMemo(() => {
-    return {
-      boardItems: state.workItems.length,
-      inMotion: state.workItems.filter((item) => item.status === "This Week" || item.status === "In Progress").length,
-      approvals: state.workItems.filter((item) => item.status === "Needs B Approval").length,
-      blocked: state.workItems.filter((item) => item.status === "Waiting / Blocked").length,
+  const [state, setState] = useState(initialState),
+    [token, setToken] = useState(""),
+    [access, setAccess] = useState(false),
+    [query, setQuery] = useState(""),
+    [lane, setLane] = useState("All fronts"),
+    [view, setView] = useState(initialView ?? "all"),
+    [board, setBoard] = useState(false),
+    [item, setItem] = useState<CommandWorkItem | null>(
+      initialState.workItems.find((i) => i.id === initialTask) ?? null,
+    ),
+    [creating, setCreating] = useState(false),
+    [message, setMessage] = useState(""),
+    [saving, setSaving] = useState(false);
+  const drawer = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    if (!item) return;
+    const previous = document.activeElement as HTMLElement | null;
+    drawer.current?.focus();
+    const old = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = old;
+      previous?.focus();
     };
-  }, [state.workItems]);
-
-  function itemsFor(status: WorkStatus) {
-    return state.workItems.filter((item) => item.status === status);
-  }
-
-  async function updateStatus(workItemId: string, status: WorkStatus) {
-    setMessage("Saving board update...");
-    const response = await fetch("/api/command-state", {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-        "x-command-center-write-token": writeToken,
-      },
-      body: JSON.stringify({
-        workItemId,
-        status,
-        reason: `Moved ${workItemId} to ${status} from the Work Board UI.`,
-      }),
-    });
-
-    const payload = (await response.json()) as { ok: boolean; state?: CommandState; error?: string };
-    if (!response.ok || !payload.ok || !payload.state) {
-      setMessage(payload.error ?? "Board update failed.");
-      return;
+  }, [item?.id]); // eslint-disable-line react-hooks/exhaustive-deps
+  const visible = state.workItems
+    .filter(
+      (i) =>
+        (lane === "All fronts" || i.lane === lane) &&
+        (!query ||
+          `${i.title} ${i.owner} ${i.why}`
+            .toLowerCase()
+            .includes(query.toLowerCase())) &&
+        (view === "all" ||
+          (view === "active" &&
+            ["This Week", "In Progress"].includes(i.status)) ||
+          (view === "attention" &&
+            ["Needs B Approval", "Waiting / Blocked"].includes(i.status)) ||
+          (view === "done" && i.status === "Done")),
+    )
+    .sort((a, b) => a.priority.localeCompare(b.priority));
+  const edit = (i: CommandWorkItem) => {
+    setItem({ ...i, links: [...i.links] });
+    setCreating(false);
+    setMessage("");
+  };
+  async function save() {
+    if (!item) return;
+    setSaving(true);
+    setMessage("");
+    try {
+      const response = await fetch("/api/command-state", {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          "x-command-center-write-token": token,
+        },
+        body: JSON.stringify({
+          action: creating ? "create" : "update",
+          item,
+          expectedUpdatedAt: state.updatedAt,
+        }),
+      });
+      const payload = await response.json();
+      if (!response.ok) throw new Error(payload.error ?? "Save failed");
+      setState(payload.state);
+      setItem(null);
+      setMessage("Order saved to operations.");
+    } catch (e) {
+      setMessage(
+        e instanceof Error
+          ? e.message
+          : "Connection lost. Your edits are still here; retry saving.",
+      );
+    } finally {
+      setSaving(false);
     }
-
-    setState(payload.state);
-    setMessage(`Saved. State updated ${new Date(payload.state.updatedAt).toLocaleString()}.`);
   }
-
-  function saveToken(value: string) {
-    setWriteToken(value);
-    window.localStorage.setItem("command-center-write-token", value);
+  function field(key: keyof CommandWorkItem, value: string) {
+    setItem((i) => (i ? { ...i, [key]: value } : i));
   }
-
   return (
     <>
-      <div className="mb-5 grid gap-4 md:grid-cols-4">
-        {[
-          { label: "Board items", value: counts.boardItems, note: "Persistent command-state tasks." },
-          { label: "In motion", value: counts.inMotion, note: "This Week or In Progress." },
-          { label: "Needs approval", value: counts.approvals, note: "External-facing work cannot proceed alone." },
-          { label: "Waiting/blocked", value: counts.blocked, note: "Paused for data, crawl delay, or proof." },
-        ].map((metric) => (
-          <DashboardCard key={metric.label} title={metric.label}>
-            <p className="text-4xl font-semibold text-white">{metric.value}</p>
-            <p className="mt-3 text-sm leading-6 text-[#c9c9c9]">{metric.note}</p>
-          </DashboardCard>
-        ))}
+      <div className="toolbar">
+        <Search size={17} className="muted" />
+        <input
+          aria-label="Search orders"
+          className="field"
+          placeholder="Find an order, owner, or objective…"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+        <select
+          aria-label="Filter front"
+          className="field"
+          value={lane}
+          onChange={(e) => setLane(e.target.value)}
+        >
+          <option>All fronts</option>
+          {lanes.map((l) => (
+            <option key={l}>{l}</option>
+          ))}
+        </select>
+        <button className="button" onClick={() => setAccess(!access)}>
+          <LockKeyhole size={14} />
+          {token ? "Operator access" : "Unlock controls"}
+        </button>
+        <button
+          className="button primary"
+          onClick={() => {
+            setItem(blank());
+            setCreating(true);
+            setMessage("");
+          }}
+        >
+          <Plus size={14} />
+          New order
+        </button>
       </div>
-
-      <DashboardCard title="Board Controls" eyebrow="Protected writes" className="mb-5">
-        <div className="grid gap-3 lg:grid-cols-[0.8fr_1.2fr]">
-          <label className="block">
-            <span className="text-xs font-semibold uppercase tracking-[0.14em] text-[#ff8a3d]">Write token</span>
+      {access ? (
+        <div className="panel panel-body mb-4">
+          <label className="text-xs muted">
+            Operator token{" "}
             <input
-              value={writeToken}
-              onChange={(event) => saveToken(event.target.value)}
               type="password"
-              placeholder="Paste token to enable status updates"
-              className="mt-2 w-full rounded-md border border-white/10 bg-black px-3 py-2 text-sm text-white outline-none focus:border-[#ff8a3d]"
+              autoComplete="off"
+              className="field ml-3"
+              value={token}
+              onChange={(e) => setToken(e.target.value)}
             />
           </label>
-          <div className="rounded-md border border-white/10 bg-white/5 p-3 text-sm leading-6 text-[#c9c9c9]">
-            {message}
-          </div>
+          <p className="source-note mb-0">
+            Token is held only for this page session. Authorization is checked
+            when you save.
+          </p>
         </div>
-      </DashboardCard>
-
-      <DashboardCard title="Board" eyebrow="Cron and operator source of truth" className="mb-5">
-        <div className="grid gap-4 xl:grid-cols-3 2xl:grid-cols-6">
-          {workColumns.map((column) => (
-            <section key={column} className="min-h-40 rounded-md border border-white/10 bg-black/35 p-3">
-              <div className="mb-3 flex items-center justify-between gap-2">
-                <h2 className="text-sm font-semibold text-white">{column}</h2>
-                <StatusBadge tone={statusTone(column)}>{itemsFor(column).length}</StatusBadge>
-              </div>
-              <div className="space-y-3">
-                {itemsFor(column).map((item) => (
-                  <WorkCard
-                    key={item.id}
-                    item={item}
-                    writeToken={writeToken}
-                    onStatusChange={updateStatus}
-                  />
+      ) : null}
+      <div className="flex justify-between gap-3 flex-wrap">
+        <div className="view-tabs">
+          {[
+            ["all", "All orders"],
+            ["active", "Active"],
+            ["attention", "Needs attention"],
+            ["done", "Completed"],
+          ].map(([id, label]) => (
+            <button
+              className={view === id ? "active" : ""}
+              key={id}
+              onClick={() => setView(id)}
+            >
+              {label}
+            </button>
+          ))}
+        </div>
+        <div className="view-tabs">
+          <button
+            aria-label="List view"
+            className={!board ? "active" : ""}
+            onClick={() => setBoard(false)}
+          >
+            <LayoutList size={17} />
+          </button>
+          <button
+            aria-label="Board view"
+            className={board ? "active" : ""}
+            onClick={() => setBoard(true)}
+          >
+            <Columns3 size={17} />
+          </button>
+        </div>
+      </div>
+      {!item && message ? (
+        <p role="status" className="notice">
+          {message}
+        </p>
+      ) : null}
+      {board ? (
+        <div className="kanban">
+          {workColumns.map((c) => (
+            <section className="kanban-column" key={c}>
+              <h2>
+                {c}
+                <span className="muted">
+                  {visible.filter((i) => i.status === c).length}
+                </span>
+              </h2>
+              {visible
+                .filter((i) => i.status === c)
+                .map((i) => (
+                  <button
+                    key={i.id}
+                    className="kanban-item"
+                    onClick={() => edit(i)}
+                  >
+                    <span className="pill">
+                      {i.priority} · {i.lane}
+                    </span>
+                    <strong>{i.title}</strong>
+                    <small>{i.owner}</small>
+                  </button>
                 ))}
-                {itemsFor(column).length === 0 ? (
-                  <p className="rounded-md border border-dashed border-white/10 p-3 text-sm leading-6 text-[#8f8f8f]">
-                    Empty by design. Add work here only when it has a clear proof requirement.
-                  </p>
-                ) : null}
-              </div>
             </section>
           ))}
         </div>
-      </DashboardCard>
+      ) : (
+        <section className="panel table-wrap">
+          <table className="ops-table">
+            <thead>
+              <tr>
+                <th>Order / intended outcome</th>
+                <th>Front</th>
+                <th>Status</th>
+                <th>Owner</th>
+                <th>Timing</th>
+              </tr>
+            </thead>
+            <tbody>
+              {visible.map((i) => (
+                <tr key={i.id}>
+                  <td>
+                    <button className="task-link" onClick={() => edit(i)}>
+                      {i.title}
+                    </button>
+                    <p className="muted text-xs mt-1 leading-5">
+                      {i.priority} · {i.expectedImpact}
+                    </p>
+                  </td>
+                  <td>{i.lane}</td>
+                  <td>
+                    <span className={`pill ${tone(i.status)}`}>{i.status}</span>
+                  </td>
+                  <td>{i.owner}</td>
+                  <td className="muted">{i.dueOrCadence}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+          {!visible.length ? (
+            <p className="empty">
+              No orders match this view. Adjust the filters or create an order.
+            </p>
+          ) : null}
+        </section>
+      )}
+      <p className="source-note">
+        {visible.length} orders shown · Saved{" "}
+        {new Date(state.updatedAt).toISOString().slice(0, 16).replace("T", " ")}{" "}
+        UTC · Marking an order Done requires completion evidence.
+      </p>
+      {item ? (
+        <div
+          className="drawer-backdrop"
+          onClick={(e) => {
+            if (e.target === e.currentTarget && !saving) setItem(null);
+          }}
+        >
+          <div
+            ref={drawer}
+            className="drawer"
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="order-heading"
+            tabIndex={-1}
+            onKeyDown={(e) => {
+              if (e.key === "Escape" && !saving) setItem(null);
+              if (e.key === "Tab") {
+                const elements = drawer.current?.querySelectorAll<HTMLElement>(
+                  "button:not(:disabled), input, select, textarea, a[href]",
+                );
+                if (!elements?.length) return;
+                const first = elements[0],
+                  last = elements[elements.length - 1];
+                if (
+                  e.shiftKey &&
+                  (document.activeElement === first ||
+                    document.activeElement === drawer.current)
+                ) {
+                  e.preventDefault();
+                  last.focus();
+                } else if (!e.shiftKey && document.activeElement === last) {
+                  e.preventDefault();
+                  first.focus();
+                }
+              }
+            }}
+          >
+            <div className="flex justify-between items-center">
+              <div>
+                <p className="eyebrow">Operational order</p>
+                <h2 id="order-heading">
+                  {creating ? "Create an order" : "Review & direct"}
+                </h2>
+              </div>
+              <button
+                className="button"
+                disabled={saving}
+                aria-label="Close order"
+                onClick={() => setItem(null)}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                save();
+              }}
+            >
+              <label>
+                Order title
+                <input
+                  required
+                  maxLength={200}
+                  className="field"
+                  value={item.title}
+                  onChange={(e) => field("title", e.target.value)}
+                />
+              </label>
+              <div className="form-pair">
+                <label>
+                  Status
+                  <select
+                    className="field"
+                    value={item.status}
+                    onChange={(e) => field("status", e.target.value)}
+                  >
+                    {workColumns.map((c) => (
+                      <option key={c}>{c}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Priority
+                  <select
+                    className="field"
+                    value={item.priority}
+                    onChange={(e) => field("priority", e.target.value)}
+                  >
+                    {["P0", "P1", "P2", "P3"].map((p) => (
+                      <option key={p}>{p}</option>
+                    ))}
+                  </select>
+                </label>
+              </div>
+              <div className="form-pair">
+                <label>
+                  Front
+                  <select
+                    className="field"
+                    value={item.lane}
+                    onChange={(e) => field("lane", e.target.value)}
+                  >
+                    {lanes.map((l) => (
+                      <option key={l}>{l}</option>
+                    ))}
+                  </select>
+                </label>
+                <label>
+                  Owner
+                  <input
+                    required
+                    className="field"
+                    value={item.owner}
+                    onChange={(e) => field("owner", e.target.value)}
+                  />
+                </label>
+              </div>
+              {(
+                [
+                  ["why", "Why this matters"],
+                  ["expectedImpact", "Expected outcome"],
+                  ["proofRequired", "Acceptance criteria"],
+                  ["metricToWatch", "Metric to watch"],
+                  ["dueOrCadence", "Due date / cadence"],
+                ] as const
+              ).map(([key, label]) => (
+                <label key={key}>
+                  {label}
+                  <textarea
+                    required
+                    className="field"
+                    value={item[key]}
+                    onChange={(e) => field(key, e.target.value)}
+                  />
+                </label>
+              ))}
+              <label>
+                References · one per line
+                <textarea
+                  className="field"
+                  value={item.links.join("\n")}
+                  onChange={(e) =>
+                    setItem({ ...item, links: e.target.value.split("\n") })
+                  }
+                />
+              </label>
+              <div className="flex gap-2 flex-wrap">
+                {item.links
+                  .filter(
+                    (l) =>
+                      /^https?:\/\//.test(l) ||
+                      (l.startsWith("/") && !l.startsWith("//")),
+                  )
+                  .map((l, n) => (
+                    <a
+                      key={`${l}-${n}`}
+                      className="button"
+                      href={l}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      Open reference {n + 1} ↗
+                    </a>
+                  ))}
+              </div>
+              <label>
+                Completion evidence · required for Done
+                <textarea
+                  className="field"
+                  required={item.status === "Done"}
+                  placeholder="What shipped, verification performed, and evidence reference"
+                  value={item.completionEvidence ?? ""}
+                  onChange={(e) => field("completionEvidence", e.target.value)}
+                />
+              </label>
+              {!token ? (
+                <label>
+                  Unlock to save
+                  <input
+                    className="field"
+                    type="password"
+                    autoComplete="off"
+                    placeholder="Operator token"
+                    value={token}
+                    onChange={(e) => setToken(e.target.value)}
+                  />
+                </label>
+              ) : null}
+              {message ? (
+                <p className="notice" role="alert">
+                  {message}
+                </p>
+              ) : null}
+              <p className="source-note">
+                Changing status records a decision. It does not execute an
+                automation or publish external work.
+              </p>
+              <button
+                className="button primary"
+                disabled={saving || !token}
+                type="submit"
+              >
+                {saving ? "Saving…" : "Save order"}
+              </button>
+            </form>
+          </div>
+        </div>
+      ) : null}
     </>
   );
 }

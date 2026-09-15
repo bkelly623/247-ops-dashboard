@@ -13,7 +13,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "247 Ops Dashboard",
+  title: "247ROI | Command Center",
   description: "Private command center for 247ROI operations.",
 };
 
